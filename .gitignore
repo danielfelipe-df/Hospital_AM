@@ -1,0 +1,6 @@
+x.*
+*.zip
+Data/
+*.csv
+*.pdf
+coso.cpp
