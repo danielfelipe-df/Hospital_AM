@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <math.h>
 #include "Random64.h"
 #include "bases.h"
 #include "trabajadores.h"
@@ -36,7 +37,7 @@ int main(void)
   Crandom gseed(1717171);
 
   //Defino la cantidad de tiempo de la corrida
-  int T = 140;
+  int T = 420;
   double t;
 
   //Defino las variables del acordeón
@@ -45,12 +46,15 @@ int main(void)
   int loops = T/(nu+delta);
 
   //Defino el número de corridas
-  int ensemble = 1;
+  int ensemble = 10;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[26] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
 			 reaction10, reaction11, reaction12, reaction13, reaction14, reaction15, reaction16, reaction17, reaction18,
 			 reaction19, reaction20, reaction21, reaction22, reaction23, reaction24, reaction25};
+
+  //Defino las variables para la gaussiana de la prevalencia
+  double Ap = 0.22, promp = 230.0, sigmap = 55.0;
 
   //Variables auxiliares
   std::vector<double> ti_in;
@@ -68,8 +72,8 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){susal[j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){susba[j] = j;    bajos[j].init();}
 
-    //name = "Data/datos_" + std::to_string(i) + ".csv";
-    name = "prueba.csv";
+    name = "Data/datos_" + std::to_string(i) + ".csv";
+    //name = "prueba.csv";
     fout.open(name);
 
     //Inicio el tiempo
@@ -88,6 +92,9 @@ int main(void)
       aux = 0.0;
       r = 1.0;
       while(aux < nu){
+	//Calculo la prevalencia según la función
+	prev = Ap*std::exp(-(t-promp)*(t-promp)/(2*sigmap*sigmap));
+	
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, r);
 
