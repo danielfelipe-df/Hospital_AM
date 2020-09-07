@@ -1,9 +1,13 @@
 #include "trabajadores.h"
 
 void trabajadores::init(){
-  //infected = false;
-  //susceptible = true;
-  //exposed = false;
-  //recovered = false;
+  kind[0] = true;
+  for(unsigned int i=1; i<9; i++){kind[i] = false;}
   time = 0;
+  tmax = 0;
+}
+
+
+void trabajadores::change(int now, int past){
+  kind[past] = false;  kind[now] = true;
 }
