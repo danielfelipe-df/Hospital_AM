@@ -2,10 +2,10 @@
 #include <algorithm>
 #include "dynamics.h"
 
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTAa, double PTAb, double La, double Lb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double r){
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTAa, double PTAb, double La, double Lb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran){
 
   //Número de proponsidades
-  const int n = 26;
+  const int n = 22;
 
   //Creo el arreglo de las propensidades
   double As[n];
@@ -26,41 +26,34 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
   As[6] = USDpg*(1-kappa)*(1-psi)*Pa;
   As[7] = USDpg*(1-kappa)*(1-psi)*Pb;
 
-  //Propensidad de ser testeado y aislado siendo pre-sintomático (masivo)
-  As[8] = (r*theta*xi/Tt)*kappa*Pa;
-  As[9] = (r*theta*xi/Tt)*kappa*Pb;
-
   //Propensidad de ser aislado siendo leve (continuo)
-  As[10] = (iota*xi/Tt)*La;
-  As[11] = (iota*xi/Tt)*Lb;
-
-  //Propensidad de ser testeado y aislado siendo leve (masivo)
-  As[12] = (r*theta*xi*(1-iota*xi)/Tt)*La;
-  As[13] = (r*theta*xi*(1-iota*xi)/Tt)*Lb;
-
+  As[8] = (iota*xi/Tt)*La;
+  As[9] = (iota*xi/Tt)*Lb;
+  
   //Propensidades de recuperarse siendo asintomático
-  As[14] = USDplil*(1-r*theta*xi)*kappa*Pa;
-  As[15] = USDplil*(1-r*theta*xi)*kappa*Pb;
-
+  As[10] = USDplil*kappa*Pa;
+  As[11] = USDplil*kappa*Pb;
+  
   //Propensidades de recuperarse siendo leve
-  As[16] = USDil*(1-r*theta*xi)*(1-iota*xi)*La;
-  As[17] = USDil*(1-r*theta*xi)*(1-iota*xi)*Lb;
+  As[12] = USDil*(1-iota*xi)*La;
+  As[13] = USDil*(1-iota*xi)*Lb;
 
   //Propensidades de recuperarse siendo asintomático aislado
-  As[18] = USrho*PTAa;
-  As[19] = USrho*PTAb;
+  As[14] = USrho*PTAa;
+  As[15] = USrho*PTAb;
 
   //Propensidades de recuperarse siendo leve aislado
-  As[20] = USlambda*LAa;
-  As[21] = USlambda*LAb;
+  As[16] = USlambda*LAa;
+  As[17] = USlambda*LAb;
 
   //Propensidades de recuperarse siendo leve testeado y aislado
-  As[22] = UStau*LTAa;
-  As[23] = UStau*LTAb;
+  As[18] = UStau*LTAa;
+  As[19] = UStau*LTAb;
   
   //Propensidades de recuperarse siendo infeccioso grave aislado
-  As[24] = USepsilon*IAa;
-  As[25] = USepsilon*IAb;
+  As[20] = USepsilon*IAa;
+  As[21] = USepsilon*IAb;
+
 
   //Arreglo de los tiempos
   double ts[n];
@@ -78,13 +71,15 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
   result[1] = std::distance(ts, pointer); //Índice de la reacción
 
   return result;
-
 }
 
 
-void mother_reaction(grupo &Out, grupo &In, Crandom &ran){
+void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, int typeout, int typein){
   int index = (int)(ran.r()*Out.size());
-  In.push_back(Out[index]);
+  int agent = Out[index];
+  In.push_back(agent);
   Out.erase(Out.begin() + index);
+  family[agent].kind[typeout] = false;
+  family[agent].kind[typein] = true;
 }
 
