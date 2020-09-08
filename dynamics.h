@@ -17,6 +17,10 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
 void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, int typeout, int typein);
 
 
+/* Esta función es la que genera la reacción en el testeo masivo */
+void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo &LTA, grupo &R, Crandom &ran, trabajadores *family);
+
+
 /* Esta función me hace la reacción de contagio para un susceptible alto */
 inline void reaction0(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
   mother_reaction(Sa, Ea, ran, altos, 0, 1);

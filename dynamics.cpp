@@ -83,3 +83,13 @@ void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, 
   family[agent].kind[typein] = true;
 }
 
+
+void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo &LTA, grupo &R, Crandom &ran, trabajadores *family){
+  int N = S.size() + E.size() + P.size() + L.size() + R.size();
+  int num = (int)(ran.r()*N);
+
+  if(ran.r() < xi){
+    if(num < P.size()){mother_reaction(P, PTA, ran, family, 2, 3);}
+    else if(num < P.size() + L.size()){mother_reaction(L, LTA, ran, family, 4, 5);}
+  }
+}

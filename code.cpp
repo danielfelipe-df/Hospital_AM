@@ -40,9 +40,14 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double r;
   double nu = 2, delta = 5;
   int loops = T/(nu+delta);
+
+  //Defino las variables para el testeo masivo
+  int tests = 500;
+  double dt = nu/((double)tests);
+  //double timetest[tests];
+  //for(int i=0; i<tests; i++){timetest[i] = ((double)i)*dt;}
 
   //Defino el número de corridas
   int ensemble = 1;
@@ -54,7 +59,7 @@ int main(void)
 
   //Variables auxiliares
   std::vector<double> ti_in;
-  int n;
+  int n1, n2, index;
   double aux;
   
   std::ofstream fout;
@@ -84,23 +89,33 @@ int main(void)
     fout << infAal.size() << '\t' << infAba.size() << '\t';
     fout << recal.size() << '\t' << recba.size() << std::endl;
 
-    for(unsigned j=0; j<loops; j++){
+    for(unsigned int j=0; j<loops; j++){
+      
+      //Región de testeo masivo
       aux = 0.0;
-      r = 1.0;
-      while(aux < nu){
+      n1 = 0;
+      while(aux < nu){     
 	//Obtengo el tiempo e índice de la reacción       
 	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed);
-
+      
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
-
+      
 	//Genero la reacción según el índice que acabo de obtener	
 	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTAal, preTAba, leval, levba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
-
+      
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
 	aux += ti_in[0];
 
+	//Genero los tests masivos
+	n2 = (int)(aux/dt);
+	for(unsigned int k=n1; k<n2 && k<tests; k++){
+	  if(gseed.r()*N < Na){massive_reaction(susal, expal, preal, preTAal, leval, levTAal, recal, gseed, altos);}
+	  else{massive_reaction(susba, expba, preba, preTAba, levba, levTAba, recba, gseed, bajos);}	  
+	}
+	n1 = n2;
+      
 	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
@@ -115,22 +130,22 @@ int main(void)
 	ti_in.clear();
       }
 
+      //Región sin testeo masivo
       aux = 0.0;
-      r = 0.0;
-      while(aux < delta){
-	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, r);
-
+      while(aux < delta){     
+	//Obtengo el tiempo e índice de la reacción       
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed);
+      
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
-
-	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTAal, preTAba, leval, levba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed);
-
+      
+	//Genero la reacción según el índice que acabo de obtener	
+	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTAal, preTAba, leval, levba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+      
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
 	aux += ti_in[0];
-
+      
 	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
