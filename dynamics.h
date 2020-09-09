@@ -9,11 +9,19 @@
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción
  * y qué reacción es.
  */
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double La, double Lb, double LTa, double LTb, double Ia, double Ib, double ITa, double ITb, double Na, double Nb, double prev, Crandom &ran, double r);
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double La, double Lb, double LTa, double LTb, double Ia, double Ib, double ITa, double ITb, double Na, double Nb, double prev, Crandom &ran, double r, double *IT, double *FT, double t);
 
 
 /* Esta función es la función plantilla para hacer las reacciones */
 void mother_reaction(grupo &Out, grupo &In, Crandom &ran);
+
+
+/* Esta función implementa el método de la bisección para hallar el tau de la reacción debido a la prevalencia externa.*/
+double biseccion(double A, double prom, double sigma, double T, double S, double t, double B);
+
+
+/* Esta función es la que se usa para la bisección y la evolución temporal*/
+double function(double A, double prom, double sigma, double t, double tau);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */
