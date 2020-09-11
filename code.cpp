@@ -33,12 +33,8 @@ int main(void)
   //Defino la prevalencia externa
   double prev = 0.22;
 
-  //Defino las variables externas para el cálculo de la prevalencia mediante el método MNRM (Tasas dependientes del tiempo)
-  double IT[26]; //Internal Time (Notación T_j en el artículo)
-  double FT[26]; //Firing Time (Notación S_j en el artículo)
-
   //Creo el generador de semillas
-  Crandom gseed(685678);
+  Crandom gseed(6858);
 
   //Defino la cantidad de tiempo de la corrida
   int T = 420;
@@ -79,7 +75,7 @@ int main(void)
 
     //Inicio el tiempo
     t = 0.0;
-    fout << 0.0 << '\t' << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
+    fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
     fout << expal.size() << '\t' << expba.size() << '\t';
     fout << preal.size() << '\t' << preba.size() << '\t';
     fout << preTAal.size() << '\t' << preTAba.size() << '\t';
@@ -89,16 +85,12 @@ int main(void)
     fout << infAal.size() << '\t' << infAba.size() << '\t';
     fout << recal.size() << '\t' << recba.size() << std::endl;
 
-    //Inicio las variables de MRNM
-    for(unsigned int j=0; j<26; j++){IT[j] = 0;      FT[j] = -std::log(gseed.r());}
-    //for(unsigned int j=0; j<27; j++){std::cout << FT[j] << std::endl;}
-
     for(unsigned int j=0; j<loops; j++){
       aux = 0.0;
       r = 1.0;
       while(aux < nu){	
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, r, IT, FT, t);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, r, t);
 
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -110,7 +102,7 @@ int main(void)
 	t += ti_in[0];
 	aux += ti_in[0];
 
-	fout << ti_in[0] << '\t' << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
+	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
 	fout << preTAal.size() << '\t' << preTAba.size() << '\t';
@@ -128,7 +120,7 @@ int main(void)
       r = 0.0;
       while(aux < delta){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, r, IT, FT, t);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, r, t);
 
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -140,7 +132,7 @@ int main(void)
 	t += ti_in[0];
 	aux += ti_in[0];
 
-	fout << ti_in[0] << '\t' << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
+	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
 	fout << preTAal.size() << '\t' << preTAba.size() << '\t';

@@ -3,7 +3,7 @@
 #include <iostream>
 #include "dynamics.h"
 
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTAa, double PTAb, double La, double Lb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double r, double *IT, double *FT, double t){
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTAa, double PTAb, double La, double Lb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double r, double t){
 
   //Número de proponsidades
   const int n = 26;
@@ -63,33 +63,29 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
   As[24] = USepsilon*IAa;
   As[25] = USepsilon*IAb;
 
-  //Arreglo de los tiempos
-  double ts[n];
+  //Hallo el tiempo en el que va a pasar la siguiente reacción con el método MDM
+  double prom = 230.0, sigma = 55.0, A = beta*Sa*eta*prev, B = 0;
+  double tau = 0, index = 0;
+  for(unsigned int i=0; i<n; i++){B += As[i];}
+  tau = biseccion(A, prom, sigma, t, B-A, -std::log(ran.r()));
 
-  //Hallo la propensidad variable en el tiempo
-  double prom = 230.0, sigma = 55.0, A = beta*Sa*eta*prev;
-  ts[0] = biseccion(A, prom, sigma, IT[0], FT[0], t, As[0]-A);
+  if(tau < 1e6){//Si el tiempo en el que pasa la reacción es menor al máximo (1e6), entonces es porque la reacción si sucede
+    //Hallo el vector que me guarda la propensidad acumulada en orden
+    double cumulative[n];
+    cumulative[0] = (As[0]-A) + A*std::exp(-(prom-t)*(prom-t)/(2*sigma*sigma));
+    for(unsigned int i=1; i<n; i++){cumulative[i] = cumulative[i-1] + As[i];}
 
-  //Hallo el tiempo de cada propensidad que son constantes en el tiempo
-  for(unsigned int i=1; i<n; i++){
-    if(As[i] != 0){ts[i] = (1/As[i])*(FT[i] - IT[i]);}
-    else{ts[i] = 1e6;}
+    //Escojo la reacción a escoger
+    double lim = ran.r()*cumulative[n-1];
+    for(index = 0; index<n; index++){
+      if(lim < cumulative[(int)index]){break;}
+    }
   }
 
-  //Hallo el tiempo mínimo y la propensidad mínima
-  double *pointer = std::min_element(ts, ts+n);
+  //Creo el vector resultados
   std::vector<double> result(2);
-  result[0] = *pointer; //Tiempo mínimo
-  result[1] = std::distance(ts, pointer); //Índice de la reacción
-
-  //Actualizo las variables del MNRM
-  double ranr = -std::log(ran.r());
-  FT[0] += ranr;
-  IT[0] += (As[0]-A)*result[0] + function(A, prom, sigma, t, result[0]);
-  for(unsigned int i=1; i<n; i++){
-    FT[i] += ranr;
-    IT[i] += As[i]*result[0];   
-  }
+  result[0] = tau; //Tiempo en el que sucede la reacción
+  result[1] = index; //Número de la reacción que sucede
 
   return result;
 }
@@ -102,14 +98,14 @@ void mother_reaction(grupo &Out, grupo &In, Crandom &ran){
 }
 
 
-double biseccion(double A, double prom, double sigma, double T, double S, double t, double B){
+double biseccion(double A, double prom, double sigma, double t, double B, double ranr){
   double m,fa,fm;
   double a = 0, b = 1e3, eps = 1e-7, nmax = 100, n=0;
-  fa = B*a + function(A, prom, sigma, t, a) - S + T;
+  fa = B*a + function(A, prom, sigma, t, a) - ranr;
   
   while(b-a>eps && n<nmax){
     m = (a+b)/2;
-    fm = B*m + function(A, prom, sigma, t, m) - S + T;
+    fm = B*m + function(A, prom, sigma, t, m) - ranr;
     if(fa*fm<0){b = m;}
     else{a = m; fa = fm;}
     n++;
