@@ -30,7 +30,7 @@ int main(void)
   grupo recal, recba;
 
   //Defino la prevalencia externa
-  double prev = 0.03;
+  double prev = 0.22;
 
   //Creo el generador de semillas
   Crandom gseed(1717171);
@@ -96,7 +96,7 @@ int main(void)
       n1 = 0;
       while(aux < nu){     
 	//Obtengo el tiempo e índice de la reacción       
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -134,7 +134,7 @@ int main(void)
       aux = 0.0;
       while(aux < delta){     
 	//Obtengo el tiempo e índice de la reacción       
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}

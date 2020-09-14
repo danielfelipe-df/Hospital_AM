@@ -10,7 +10,7 @@
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción
  * y qué reacción es.
  */
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double La, double Lb, double LTa, double LTb, double Ia, double Ib, double ITa, double ITb, double Na, double Nb, double prev, Crandom &ran);
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double La, double Lb, double LTa, double LTb, double Ia, double Ib, double ITa, double ITb, double Na, double Nb, double prev, Crandom &ran, double t);
 
 
 /* Esta función es la función plantilla para hacer las reacciones */
@@ -19,6 +19,14 @@ void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, 
 
 /* Esta función es la que genera la reacción en el testeo masivo */
 void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo &LTA, grupo &R, Crandom &ran, trabajadores *family);
+
+
+/* Esta función implementa el método de bisección para hallar el tiempo */
+double biseccion(double A, double prom, double sigma, double t, double B, double ranr);
+
+
+/* Es la función integrada de la prevalencia externa */
+double function(double A, double prom, double sigma, double t, double tau);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */
