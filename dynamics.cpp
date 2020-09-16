@@ -70,19 +70,30 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
 void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, int typeout, int typein){
   int index = (int)(ran.r()*Out.size());
   int agent = Out[index];
-  In.push_back(agent);
   Out.erase(Out.begin() + index);
+  In.push_back(agent);
   family[agent].change(typein, typeout);
 }
 
 
-void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo &LTA, grupo &R, Crandom &ran, trabajadores *family){
-  int N = S.size() + E.size() + P.size() + L.size() + R.size();
+void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &R, Crandom &ran, trabajadores *family){
+  int N = S.size() + E.size() + P.size() + PT.size() + L.size() + LT.size() + R.size();
   int num = (int)(ran.r()*N);
 
+  int agent;
   if(ran.r() < xi){
-    if(num < P.size()){mother_reaction(P, PTA, ran, family, 2, 3);}
-    else if(num < P.size() + L.size()){mother_reaction(L, LTA, ran, family, 4, 5);}
+    if(num < P.size()){
+      mother_reaction(P, PT, ran, family, 2, 3);
+      agent = PT.back();
+      family[agent].time = 0.0;
+      family[agent].tmax = Tt;
+    }
+    else if(num < P.size() + L.size()){
+      mother_reaction(L, LT, ran, family, 5, 6);
+      agent = LT.back();
+      family[agent].time = 0.0;
+      family[agent].tmax = Tt;
+    }
   }
 }
 

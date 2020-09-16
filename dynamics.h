@@ -18,7 +18,7 @@ void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, 
 
 
 /* Esta función es la que genera la reacción en el testeo masivo */
-void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo &LTA, grupo &R, Crandom &ran, trabajadores *family);
+void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &R, Crandom &ran, trabajadores *family);
 
 
 /* Esta función es la que genera la reacción en el testeo continuo */
