@@ -5,10 +5,11 @@ class trabajadores{
 public:
 
   /* Defino qué tipo de persona es
-   * 0:sus, 1:exp, 2:pre, 3:preTA, 4:lev
-   * 5:levTA, 6:levA, 7:infA, 8:rec;
+   * 0:sus, 1:exp, 2:pre, 3:preT, 4:preTA,
+   * 5:lev, 6:levT, 7:levTA, 8:levA,
+   * 9:infA, 10:rec;
   */
-  bool kind[9];
+  bool kind[11];
 
   //Defino la variable que me contabiliza el tiempo en el estado
   double time;
