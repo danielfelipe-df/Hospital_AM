@@ -118,8 +118,8 @@ int main(void)
 	//Genero los tests masivos
 	n2 = (int)(aux/dt);
 	for(unsigned int k=n1; k<n2 && k<tests; k++){
-	  if(gseed.r()*N < Na){massive_reaction(susal, expal, preal, preTAal, leval, levTAal, recal, gseed, altos);}
-	  else{massive_reaction(susba, expba, preba, preTAba, levba, levTAba, recba, gseed, bajos);}	  
+	  if(gseed.r()*N < Na){massive_reaction(susal, expal, preal, preTal, leval, levTal, recal, gseed, altos);}
+	  else{massive_reaction(susba, expba, preba, preTba, levba, levTba, recba, gseed, bajos);}	  
 	}
 	n1 = n2;
       
