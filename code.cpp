@@ -106,10 +106,14 @@ int main(void)
       
 	//Genero la reacción según el índice que acabo de obtener	
 	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTAal, preTAba, leval, levba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+
+	//Genero lo tests continuos para los leves
+	if((int)ti_in[1] == 4){continue_reaction(leval, levTal, altos, gseed);}
+	else if((int)ti_in[1] == 5){continue_reaction(levba, levTba, bajos, gseed);}
       
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
-	aux += ti_in[0];
+	aux += ti_in[0];	
 
 	//Genero los tests masivos
 	n2 = (int)(aux/dt);
