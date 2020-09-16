@@ -10,7 +10,7 @@
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción
  * y qué reacción es.
  */
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double La, double Lb, double LTa, double LTb, double Ia, double Ib, double ITa, double ITb, double Na, double Nb, double prev, Crandom &ran, double t);
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t);
 
 
 /* Esta función es la función plantilla para hacer las reacciones */

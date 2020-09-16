@@ -2,17 +2,17 @@
 #include <algorithm>
 #include "dynamics.h"
 
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTAa, double PTAb, double La, double Lb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t){
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t){
 
   //Número de proponsidades
-  const int n = 22;
+  const int n = 16;
 
   //Creo el arreglo de las propensidades
   double As[n];
 
   //Propensidades de exponerse
-  As[0] = beta*Sa*((Pa+La)/Na + mu*(Pb+Lb)/Nb + (1-alpha)*(IAa+PTAa+LTAa+LAa)/Na + (1-alpha)*mu*(IAb+PTAb+LTAb+LAb)/Nb + eta*prev);
-  As[1] = beta*Sb*(mu*(Pa+La)/Na + chi*(Pb+Lb)/Nb + (1-alpha)*mu*(IAa+PTAa+LTAa+LAa)/Na + (1-alpha)*chi*(IAb+PTAb+LTAb+LAb)/Nb);
+  As[0] = beta*Sa*((Pa+PTa+La+LTa)/Na + mu*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*(IAa+PTAa+LTAa+LAa)/Na + (1-alpha)*mu*(IAb+PTAb+LTAb+LAb)/Nb + eta*prev);
+  As[1] = beta*Sb*(mu*(Pa+PTa+La+LTa)/Na + chi*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*mu*(IAa+PTAa+LTAa+LAa)/Na + (1-alpha)*chi*(IAb+PTAb+LTAb+LAb)/Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*Ea;
@@ -26,33 +26,17 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
   As[6] = USDpg*(1-kappa)*(1-psi)*Pa;
   As[7] = USDpg*(1-kappa)*(1-psi)*Pb;
 
-  //Propensidad de ser aislado siendo leve (continuo)
-  As[8] = (iota*xi/Tt)*La;
-  As[9] = (iota*xi/Tt)*Lb;
+  //Propensidad de recuperarse siendo pre-sintomático
+  As[10] = USDplil*kappa*(Pa+PTa+PTAa);
+  As[11] = USDplil*kappa*(Pb+PTb+PTAb);
   
-  //Propensidades de recuperarse siendo asintomático
-  As[10] = USDplil*kappa*Pa;
-  As[11] = USDplil*kappa*Pb;
-  
-  //Propensidades de recuperarse siendo leve
-  As[12] = USDil*(1-iota*xi)*La;
-  As[13] = USDil*(1-iota*xi)*Lb;
+  //Propensidad de recuperarse siendo leve
+  As[12] = USDil*(La+LTa+LTAa+LAa);
+  As[13] = USDil*(Lb+LTb+LTAb+LAb);
 
-  //Propensidades de recuperarse siendo asintomático aislado
-  As[14] = USrho*PTAa;
-  As[15] = USrho*PTAb;
-
-  //Propensidades de recuperarse siendo leve aislado
-  As[16] = USlambda*LAa;
-  As[17] = USlambda*LAb;
-
-  //Propensidades de recuperarse siendo leve testeado y aislado
-  As[18] = UStau*LTAa;
-  As[19] = UStau*LTAb;
-  
-  //Propensidades de recuperarse siendo infeccioso grave aislado
-  As[20] = USepsilon*IAa;
-  As[21] = USepsilon*IAb;
+  //Propensidad de recuperarse siendo infeccioso grave
+  As[14] = USDig*IAa;
+  As[15] = USDig*IAa;
   
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método MDM
