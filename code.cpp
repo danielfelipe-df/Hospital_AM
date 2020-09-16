@@ -22,8 +22,10 @@ int main(void)
   grupo susal, susba;
   grupo expal, expba;
   grupo preal, preba;
+  grupo preTal, preTba;
   grupo preTAal, preTAba;
   grupo leval, levba;
+  grupo levTal, levTba;
   grupo levTAal, levTAba;
   grupo levAal, levAba;
   grupo infAal, infAba;
@@ -82,8 +84,10 @@ int main(void)
     fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
     fout << expal.size() << '\t' << expba.size() << '\t';
     fout << preal.size() << '\t' << preba.size() << '\t';
+    fout << preTal.size() << '\t' << preTba.size() << '\t';
     fout << preTAal.size() << '\t' << preTAba.size() << '\t';
     fout << leval.size() << '\t' << levba.size() << '\t';
+    fout << levTal.size() << '\t' << levTba.size() << '\t';
     fout << levTAal.size() << '\t' << levTAba.size() << '\t';
     fout << levAal.size() << '\t' << levAba.size() << '\t';
     fout << infAal.size() << '\t' << infAba.size() << '\t';
@@ -95,8 +99,8 @@ int main(void)
       aux = 0.0;
       n1 = 0;
       while(aux < nu){     
-	//Obtengo el tiempo e índice de la reacción       
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
+	//Obtengo el tiempo e índice de la reacción	
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), pretba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -119,8 +123,10 @@ int main(void)
 	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
+	fout << preTal.size() << '\t' << preTba.size() << '\t';
 	fout << preTAal.size() << '\t' << preTAba.size() << '\t';
 	fout << leval.size() << '\t' << levba.size() << '\t';
+	fout << levTal.size() << '\t' << levTba.size() << '\t';
 	fout << levTAal.size() << '\t' << levTAba.size() << '\t';
 	fout << levAal.size() << '\t' << levAba.size() << '\t';
 	fout << infAal.size() << '\t' << infAba.size() << '\t';
@@ -134,7 +140,7 @@ int main(void)
       aux = 0.0;
       while(aux < delta){     
 	//Obtengo el tiempo e índice de la reacción       
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), pretba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -149,8 +155,10 @@ int main(void)
 	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
+	fout << preTal.size() << '\t' << preTba.size() << '\t';
 	fout << preTAal.size() << '\t' << preTAba.size() << '\t';
 	fout << leval.size() << '\t' << levba.size() << '\t';
+	fout << levTal.size() << '\t' << levTba.size() << '\t';
 	fout << levTAal.size() << '\t' << levTAba.size() << '\t';
 	fout << levAal.size() << '\t' << levAba.size() << '\t';
 	fout << infAal.size() << '\t' << infAba.size() << '\t';
@@ -166,8 +174,10 @@ int main(void)
     susal.clear();    susba.clear();
     expal.clear();    expba.clear();
     preal.clear();    preba.clear();
+    preTal.clear();    preTba.clear();
     preTAal.clear();    preTAba.clear();
     leval.clear();    levba.clear();
+    levTal.clear();    levTba.clear();
     levTAal.clear();    levTAba.clear();
     levAal.clear();    levAba.clear();
     infAal.clear();    infAba.clear();
