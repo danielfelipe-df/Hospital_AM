@@ -35,7 +35,7 @@ int main(void)
   double prev = 0.22;
 
   //Creo el generador de semillas
-  Crandom gseed(1717171);
+  Crandom gseed(6738);
 
   //Defino la cantidad de tiempo de la corrida
   int T = 140;
@@ -103,17 +103,23 @@ int main(void)
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
+	
+	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
+	tested_isolated(preTal, preTAal, altos, ti_in[0], 3, 4);
+	tested_isolated(preTba, preTAba, bajos, ti_in[0], 3, 4);
+	tested_isolated(levTal, levTAal, altos, ti_in[0], 5, 6);
+	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);       
       
 	//Genero la reacción según el índice que acabo de obtener	
-	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTAal, preTAba, leval, levba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+
+	//Sumo el tiempo de la reacción
+	t += ti_in[0];
+	aux += ti_in[0];
 
 	//Genero lo tests continuos para los leves
 	if((int)ti_in[1] == 4){continue_reaction(leval, levTal, altos, gseed);}
 	else if((int)ti_in[1] == 5){continue_reaction(levba, levTba, bajos, gseed);}
-      
-	//Sumo el tiempo de la reacción
-	t += ti_in[0];
-	aux += ti_in[0];	
 
 	//Genero los tests masivos
 	n2 = (int)(aux/dt);
@@ -147,9 +153,19 @@ int main(void)
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
+
+	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
+	tested_isolated(preTal, preTAal, altos, ti_in[0], 3, 4);
+	tested_isolated(preTba, preTAba, bajos, ti_in[0], 3, 4);
+	tested_isolated(levTal, levTAal, altos, ti_in[0], 5, 6);
+	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);
       
 	//Genero la reacción según el índice que acabo de obtener	
-	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTAal, preTAba, leval, levba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+
+	//Genero lo tests continuos para los leves
+	if((int)ti_in[1] == 4){continue_reaction(leval, levTal, altos, gseed);}
+	else if((int)ti_in[1] == 5){continue_reaction(levba, levTba, bajos, gseed);}
       
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
