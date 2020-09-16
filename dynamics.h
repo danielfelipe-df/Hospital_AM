@@ -21,6 +21,10 @@ void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, 
 void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo &LTA, grupo &R, Crandom &ran, trabajadores *family);
 
 
+/* Esta función es la que genera la reacción en el testeo continuo */
+void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
+
+
 /* Esta función implementa el método de bisección para hallar el tiempo */
 double biseccion(double A, double prom, double sigma, double t, double B, double ranr);
 

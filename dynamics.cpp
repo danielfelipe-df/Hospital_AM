@@ -87,6 +87,18 @@ void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PTA, grupo &L, grupo 
 }
 
 
+void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
+  if(ran.r() < iota*xi){
+    int agent = L.back();
+    L.erase( L.end() - 1);
+    LT.push_back(agent);
+    family[agent].change(7,6);
+    family[agent].time = 0.0;
+    family[agent].tmax = Tt;
+  }
+}
+
+
 double biseccion(double A, double prom, double sigma, double t, double B, double ranr){
   double m,fa,fm;
   double a = 0, b = 1e3, eps = 1e-7, nmax = 100, n=0;
