@@ -25,6 +25,10 @@ void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PT, grupo &L, grupo &
 void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
 
 
+/* Esta función me actualiza los tiempos de los testeados y los aisla si ya cumplieron el tiempo */
+void tested_isolated(grupo &T, grupo &TA, trabajadores *family, double time, int typeout, int typein);
+
+
 /* Esta función implementa el método de bisección para hallar el tiempo */
 double biseccion(double A, double prom, double sigma, double t, double B, double ranr);
 

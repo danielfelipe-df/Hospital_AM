@@ -110,6 +110,23 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
 }
 
 
+void tested_isolated(grupo &T, grupo &TA, trabajadores *family, double time, int typeout, int typein){
+  int index;
+  for(unsigned int i=0; i<T.size(); i++){
+    index = T[i];
+    family[index].time += time;
+    if(family[index].time > family[index].tmax){
+      family[index].change(typein, typeout);
+      family[index].time = 0.0;
+      family[index].tmax = 0.0;
+      T.erase( T.begin() + i);
+      TA.push_back(index);
+      i--;
+    }
+  }
+}
+
+
 double biseccion(double A, double prom, double sigma, double t, double B, double ranr){
   double m,fa,fm;
   double a = 0, b = 1e3, eps = 1e-7, nmax = 100, n=0;
