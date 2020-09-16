@@ -7,7 +7,7 @@
 #include "trabajadores.h"
 #include "dynamics.h"
 
-typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos);
+typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos);
 
 int main(void)
 {
@@ -55,9 +55,8 @@ int main(void)
   int ensemble = 1;
 
   //Creo el arreglo de las funciones de reacción
-  reactions react[22] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
-			 reaction10, reaction11, reaction12, reaction13, reaction14, reaction15, reaction16, reaction17, reaction18,
-			 reaction19, reaction20, reaction21};
+  reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
+			 reaction10, reaction11, reaction12, reaction13};
 
   //Variables auxiliares
   std::vector<double> ti_in;
