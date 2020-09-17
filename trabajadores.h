@@ -11,11 +11,14 @@ public:
   */
   bool kind[11];
 
-  //Defino la variable que me contabiliza el tiempo en el estado
+  //Defino la variable que me contabiliza el tiempo que dura testeado
   double time;
 
-  //Defino la variable que me dice el tiempo máximo que pasa en el estado
+  //Defino la variable que me dice el tiempo máximo que dura testeado antes de aislarse
   double tmax;
+
+  //Defino la variable que me dice el tiempo total que va a pasar siendo expuesto
+  double texp;
 
   //Función de iniciación
   void init();
