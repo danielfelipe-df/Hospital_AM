@@ -35,7 +35,7 @@ int main(void)
   double prev = 0.22;
 
   //Creo el generador de semillas
-  Crandom gseed(6738);
+  Crandom gseed(83554);
 
   //Defino la cantidad de tiempo de la corrida
   int T = 140;
@@ -75,7 +75,7 @@ int main(void)
     for(unsigned int j=0; j<Nb; j++){susba[j] = j;    bajos[j].init();}
 
     //name = "Data/datos_" + std::to_string(i) + ".csv";
-    name = "prueba.csv";
+    name = "prueba4.csv";
     fout.open(name);
 
     //Inicio el tiempo
@@ -97,9 +97,9 @@ int main(void)
       //Región de testeo masivo
       aux = 0.0;
       n1 = 0;
-      while(aux < nu){     
-	//Obtengo el tiempo e índice de la reacción	
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), pretba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
+      while(aux < nu){
+	//Obtengo el tiempo e índice de la reacción
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -108,9 +108,9 @@ int main(void)
 	tested_isolated(preTal, preTAal, altos, ti_in[0], 3, 4);
 	tested_isolated(preTba, preTAba, bajos, ti_in[0], 3, 4);
 	tested_isolated(levTal, levTAal, altos, ti_in[0], 5, 6);
-	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);       
+	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);
       
-	//Genero la reacción según el índice que acabo de obtener	
+	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
 
 	//Sumo el tiempo de la reacción
@@ -125,7 +125,7 @@ int main(void)
 	n2 = (int)(aux/dt);
 	for(unsigned int k=n1; k<n2 && k<tests; k++){
 	  if(gseed.r()*N < Na){massive_reaction(susal, expal, preal, preTal, leval, levTal, recal, gseed, altos);}
-	  else{massive_reaction(susba, expba, preba, preTba, levba, levTba, recba, gseed, bajos);}	  
+	  else{massive_reaction(susba, expba, preba, preTba, levba, levTba, recba, gseed, bajos);}
 	}
 	n1 = n2;
       
@@ -147,9 +147,9 @@ int main(void)
 
       //Región sin testeo masivo
       aux = 0.0;
-      while(aux < delta){     
-	//Obtengo el tiempo e índice de la reacción       
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), pretba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
+      while(aux < delta){
+	//Obtengo el tiempo e índice de la reacción
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -160,7 +160,7 @@ int main(void)
 	tested_isolated(levTal, levTAal, altos, ti_in[0], 5, 6);
 	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);
       
-	//Genero la reacción según el índice que acabo de obtener	
+	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
 
 	//Genero lo tests continuos para los leves
