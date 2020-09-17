@@ -84,21 +84,8 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
 
   //Creo el vector resultados
   std::vector<double> result(2);
-<<<<<<< HEAD
   result[0] = tau; //Tiempo en el que sucede la reacción
   result[1] = index; //Número de la reacción que sucede
-=======
-  result[0] = *pointer; //Tiempo mínimo
-  result[1] = std::distance(ts, pointer); //Índice de la reacción
-
-  //Actualizo las variables del MNRM
-  double ranr = -std::log(ran.r());
-  FT[(int)result[1]] += ranr;
-  IT[0] += (As[0]-A)*result[0] + function(A, prom, sigma, t, result[0]);
-  for(unsigned int i=1; i<n; i++){
-    IT[i] += As[i]*result[0];   
-  }
->>>>>>> 3e30df1... Fix the problem with the MNRM algorithm.
 
   return result;
 }
