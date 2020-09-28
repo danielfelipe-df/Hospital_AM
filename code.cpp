@@ -48,8 +48,9 @@ int main(void)
   //Defino las variables para el testeo masivo
   int tests = 500;
   double dt = nu/((double)tests);
-  //double timetest[tests];
-  //for(int i=0; i<tests; i++){timetest[i] = ((double)i)*dt;}
+
+  //Defino la variable de tiempo propio de cada reacción(tj)
+  double tj[14];
 
   //Defino el número de corridas
   int ensemble = 1;
@@ -75,7 +76,7 @@ int main(void)
     for(unsigned int j=0; j<Nb; j++){susba[j] = j;    bajos[j].init();}
 
     //name = "Data/datos_" + std::to_string(i) + ".csv";
-    name = "prueba4.csv";
+    name = "prueba.csv";
     fout.open(name);
 
     //Inicio el tiempo
@@ -92,6 +93,9 @@ int main(void)
     fout << infAal.size() << '\t' << infAba.size() << '\t';
     fout << recal.size() << '\t' << recba.size() << std::endl;
 
+    //Inicio los tiempos propios de cada reacción
+    for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
+
     for(unsigned int j=0; j<loops; j++){
       
       //Región de testeo masivo
@@ -99,7 +103,7 @@ int main(void)
       n1 = 0;
       while(aux < nu){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -145,11 +149,14 @@ int main(void)
 	ti_in.clear();
       }
 
+      //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
+      if(ti_in.size() != 0){break;}
+
       //Región sin testeo masivo
       aux = 0.0;
       while(aux < delta){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t);
+	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -186,6 +193,9 @@ int main(void)
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
       }
+      
+      //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
+      if(ti_in.size() != 0){break;}
     }
     fout.close();
 
