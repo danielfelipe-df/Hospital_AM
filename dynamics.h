@@ -2,15 +2,20 @@
 #define DYNAMICS_H
 
 #include <vector>
+#include <boost/math/distributions/weibull.hpp>
+#include <boost/math/distributions/gamma.hpp>
 #include "Random64.h"
 #include "bases.h"
 #include "trabajadores.h"
+
+typedef boost::math::weibull_distribution<> weib_d;
+typedef boost::math::gamma_distribution<> gamma_d;
 
 
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción
  * y qué reacción es.
  */
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t);
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t, double* tj);
 
 
 /* Esta función es la función plantilla para hacer las reacciones */
@@ -30,11 +35,15 @@ void tested_isolated(grupo &T, grupo &TA, trabajadores *family, double time, int
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */
-double biseccion(double A, double prom, double sigma, double t, double B, double ranr);
+double biseccion(double* A, double prom, double sigma, double t, double B, double ranr, double* tj, int n,  std::vector<weib_d> &dist);
 
 
 /* Es la función integrada de la prevalencia externa */
 double function(double A, double prom, double sigma, double t, double tau);
+
+
+/* Es la función phi */
+double phi(double* A, double* tj, unsigned int n, double prom, double sigma, double B, double deltat, double t,  std::vector<weib_d> &dist);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */

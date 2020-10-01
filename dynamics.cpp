@@ -1,11 +1,12 @@
+#include <iostream>
 #include <math.h>
 #include <algorithm>
 #include "dynamics.h"
 
-std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t){
+std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double LAa, double LAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t, double* tj){
 
   //Número de proponsidades
-  const int n = 14;
+  const unsigned int n = 14;
 
   //Creo el arreglo de las propensidades
   double As[n];
@@ -16,7 +17,7 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
 
   //Propensidades de ser presintomático
   As[2] = USDe*Ea;
-  As[3] = USDe*Eb;
+  As[3] = USDe*Eb;  
 
   //Propensidades de ser leve
   As[4] = USDpl*(1-kappa)*psi*Pa;
@@ -38,18 +39,24 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
   As[12] = USDig*IAa;
   As[13] = USDig*IAb;
 
+  //Las propensidades que sean cero las pongo con un mínimo
+  for(unsigned int i=2; i<n; i++){if(As[i] <= 0.0){As[i] = 1e-6;}}
 
-  //Hallo el tiempo en el que va a pasar la siguiente reacción con el método MDM
-  double prom = 230.0, sigma = 55.0, A = beta*Sa*eta*prev, B = 0;
+  //Creo las distribuciones de cada propensidad
+  std::vector<weib_d> dist;
+  for(unsigned int i=2; i<n; i++){weib_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
+
+  //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
+  double prom = 230.0, sigma = 55.0, B = beta*Sa*eta*prev;
   double tau = 0, index = 0;
-  for(unsigned int i=0; i<n; i++){B += As[i];}
-  tau = biseccion(A, prom, sigma, t, B-A, -std::log(ran.r()));
+  tau = biseccion(As, prom, sigma, t, B, std::log(ran.r()), tj, n, dist);
 
   if(tau < 1e6){//Si el tiempo en el que pasa la reacción es menor al máximo (1e6), entonces es porque la reacción si sucede
     //Hallo el vector que me guarda la propensidad acumulada en orden
     double cumulative[n];
-    cumulative[0] = (As[0]-A) + A*std::exp(-(prom-t)*(prom-t)/(2*sigma*sigma));
-    for(unsigned int i=1; i<n; i++){cumulative[i] = cumulative[i-1] + As[i];}
+    cumulative[0] = (As[0]-B) + B*std::exp(-(prom-t)*(prom-t)/(2*sigma*sigma));
+    cumulative[1] = cumulative[0] + As[1];    
+    for(unsigned int i=2; i<n; i++){cumulative[i] = cumulative[i-1] + (pdf(dist[i-2], tj[i]+tau)/cdf(complement(dist[i-2], tj[i]+tau)));}
 
     //Escojo la reacción a escoger
     double lim = ran.r()*cumulative[n-1];
@@ -57,6 +64,12 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
       if(lim < cumulative[(int)index]){break;}
     }
   }
+
+  //Le sumo el tau a todos los tiempos tj
+  for(unsigned int i=0; i<n; i++){tj[i] += tau;}
+
+  //Reinicio el tiempo tj de la reacción que se escogió
+  tj[(int)index] = 0;
 
   //Creo el vector resultados
   std::vector<double> result(2);
@@ -68,7 +81,7 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
 
 
 void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, int typeout, int typein){
-  int index = (int)(ran.r()*Out.size());
+  int index = 0;//(int)(ran.r()*Out.size());
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -77,10 +90,10 @@ void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, 
 
 
 void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &R, Crandom &ran, trabajadores *family){
-  int N = S.size() + E.size() + P.size() + PT.size() + L.size() + LT.size() + R.size();
-  int num = (int)(ran.r()*N);
+  unsigned int N = S.size() + E.size() + P.size() + PT.size() + L.size() + LT.size() + R.size();
+  unsigned int num = (int)(ran.r()*N);
 
-  int agent;
+  unsigned int agent;
   if(ran.r() < xi){
     if(num < P.size()){
       mother_reaction(P, PT, ran, family, 2, 3);
@@ -127,20 +140,21 @@ void tested_isolated(grupo &T, grupo &TA, trabajadores *family, double time, int
 }
 
 
-double biseccion(double A, double prom, double sigma, double t, double B, double ranr){
+double biseccion(double* A, double prom, double sigma, double t, double B, double ranr, double* tj, int n, std::vector<weib_d> &dist){
   double m,fa,fm;
-  double a = 0, b = 1e3, eps = 1e-7, nmax = 100, n=0;
-  fa = B*a + function(A, prom, sigma, t, a) - ranr;
+  double lim = 1e3, min = 0.0;
+  double a = min, b = lim, eps = 1e-7, pmax = 100, p=0;
+  fa = phi(A, tj, n, prom, sigma, B, a, t, dist) - ranr;
   
-  while(b-a>eps && n<nmax){
+  while(b-a>eps && p<pmax){
     m = (a+b)/2;
-    fm = B*m + function(A, prom, sigma, t, m) - ranr;
+    fm = phi(A, tj, n, prom, sigma, B, m, t, dist) - ranr;
     if(fa*fm<0){b = m;}
     else{a = m; fa = fm;}
-    n++;
+    p++;
   }
 
-  if(n==nmax || m > (1e3)-(1e-4)){return 1e6;}
+  if(p==pmax || m > lim-(1e-4)){return 1e6;}
   else{return (a+b)/2;}
 }
 
@@ -148,6 +162,24 @@ double biseccion(double A, double prom, double sigma, double t, double B, double
 double function(double A, double prom, double sigma, double t, double tau){
   double A2 = std::sqrt(M_PI/2)*A*sigma, USsigma2 = 1.0/(std::sqrt(2)*sigma);
   return A2*(erf((prom-t)*USsigma2) - erf((prom-t-tau)*USsigma2));
+}
+
+
+double phi(double* A, double* tj, unsigned int n, double prom, double sigma, double B, double deltat, double t, std::vector<weib_d> &dist){
+  double psi_num, psi_den;
+
+  psi_num = -(A[0]-B)*(tj[0]+deltat) - function(B, prom, sigma, t, tj[0]+deltat);
+  psi_den = -(A[0]-B)*tj[0] - function(B, prom, sigma, t, tj[0]);
+
+  psi_num += -A[1]*(tj[1]+deltat);
+  psi_den += -A[1]*tj[1];  
+
+  for(unsigned int i=2; i<n; i++){
+    psi_num += std::log(cdf(complement(dist[i-2], tj[i]+deltat)));
+    psi_den += std::log(cdf(complement(dist[i-2], tj[i])));
+  }
+  
+  return psi_num-psi_den;
 }
 
 
