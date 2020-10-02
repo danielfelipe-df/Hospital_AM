@@ -7,7 +7,7 @@
 #include "trabajadores.h"
 #include "dynamics.h"
 
-typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos);
+typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist);
 
 int main(void)
 {
@@ -38,7 +38,7 @@ int main(void)
   Crandom gseed(83554);
 
   //Defino la cantidad de tiempo de la corrida
-  int T = 140;
+  int T = 420;
   double t;
 
   //Defino las variables del acordeón
@@ -53,15 +53,26 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1000;
+  unsigned int ensemble = 10;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
 			 reaction10, reaction11, reaction12, reaction13};
 
+  //Creo los arreglos para los argumentos de forma y orden de las distribuciones
+  double d_order[12] = {De, De, Dpl, Dpl, Dpg, Dpg, Dpl+Dil, Dpl+Dil, Dil, Dil, Dig, Dig};
+  double d_shape = 2.0;
+  std::vector<weib_d> dist;
+  for(unsigned int i=0; i<12; i++){
+    weib_d my_dist(d_shape, d_order[i]);
+    dist.push_back(my_dist);
+  }
+  
+  
   //Variables auxiliares
   std::vector<double> ti_in;
-  unsigned int n1, n2, index;
+  unsigned int n1, n2;
+  //unsigned int index;
   double aux;
   
   std::ofstream fout;
@@ -76,12 +87,12 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){susal[j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){susba[j] = j;    bajos[j].init();}
 
-    //name = "Data/datos_" + std::to_string(i) + ".csv";
-    name = "prueba.csv";
+    name = "Data/datos_" + std::to_string(i) + ".csv";
+    //name = "prueba.csv";
     fout.open(name);
 
     //Inicio el tiempo
-    t = 0.0;
+    t = 0.0;    
     fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
     fout << expal.size() << '\t' << expba.size() << '\t';
     fout << preal.size() << '\t' << preba.size() << '\t';
@@ -107,7 +118,18 @@ int main(void)
 	ti_in = contagio(susal.size(), susba.size(), expal.size(), expba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), levAal.size(), levAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
-	if(ti_in[0] == 1e6){break;}	
+	if(ti_in[0] == 1e6){break;}
+
+	//Actualizo los tiempos de los estados que pueden transitar
+	update_times(expal, altos, ti_in[0]);	update_times(expba, bajos, ti_in[0]);
+	update_times(preal, altos, ti_in[0]);	update_times(preba, bajos, ti_in[0]);
+	update_times(preTal, altos, ti_in[0]);	update_times(preTba, bajos, ti_in[0]);
+	update_times(preTAal, altos, ti_in[0]);	update_times(preTAba, bajos, ti_in[0]);
+	update_times(leval, altos, ti_in[0]);	update_times(levba, bajos, ti_in[0]);
+	update_times(levTal, altos, ti_in[0]);	update_times(levTba, bajos, ti_in[0]);
+	update_times(levTAal, altos, ti_in[0]);	update_times(levTAba, bajos, ti_in[0]);
+	update_times(levAal, altos, ti_in[0]);	update_times(levAba, bajos, ti_in[0]);
+	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
 	tested_isolated(preTal, preTAal, altos, ti_in[0], 3, 4);
@@ -116,11 +138,11 @@ int main(void)
 	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);
       
 	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);
+	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos, dist);
 
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
-	aux += ti_in[0];	
+	aux += ti_in[0];
 
 	//Genero lo tests continuos para los leves
 	if((int)ti_in[1] == 4){continue_reaction(leval, levTal, altos, gseed);}
@@ -162,6 +184,17 @@ int main(void)
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}	
 
+	//Actualizo los tiempos de los estados que pueden transitar
+	update_times(expal, altos, ti_in[0]);	update_times(expba, bajos, ti_in[0]);
+	update_times(preal, altos, ti_in[0]);	update_times(preba, bajos, ti_in[0]);
+	update_times(preTal, altos, ti_in[0]);	update_times(preTba, bajos, ti_in[0]);
+	update_times(preTAal, altos, ti_in[0]);	update_times(preTAba, bajos, ti_in[0]);
+	update_times(leval, altos, ti_in[0]);	update_times(levba, bajos, ti_in[0]);
+	update_times(levTal, altos, ti_in[0]);	update_times(levTba, bajos, ti_in[0]);
+	update_times(levTAal, altos, ti_in[0]);	update_times(levTAba, bajos, ti_in[0]);
+	update_times(levAal, altos, ti_in[0]);	update_times(levAba, bajos, ti_in[0]);
+	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
+
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
 	tested_isolated(preTal, preTAal, altos, ti_in[0], 3, 4);
 	tested_isolated(preTba, preTAba, bajos, ti_in[0], 3, 4);
@@ -169,7 +202,7 @@ int main(void)
 	tested_isolated(levTba, levTAba, bajos, ti_in[0], 5, 6);
       
 	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos);	
+	react[(int)ti_in[1]](susal, susba, expal, expba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, levAal, levAba, infAal, infAba, recal, recba, gseed, altos, bajos, dist);
 
 	//Genero lo tests continuos para los leves
 	if((int)ti_in[1] == 4){continue_reaction(leval, levTal, altos, gseed);}
