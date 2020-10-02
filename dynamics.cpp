@@ -60,9 +60,10 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
 
     //Escojo la reacción a escoger
     double lim = ran.r()*cumulative[n-1];
-    for(index = 0; index<n; index++){
+    for(index = 0; index<(n-1); index++){
       if(lim < cumulative[(int)index]){break;}
     }
+    if(lim >= cumulative[n-2]){index = n-1;}
   }
 
   //Le sumo el tau a todos los tiempos tj
@@ -92,17 +93,21 @@ void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PT, grupo &L, grupo &
   unsigned int N = S.size() + E.size() + P.size() + PT.size() + L.size() + LT.size() + R.size();
   unsigned int num = (int)(ran.r()*N);
 
-  unsigned int agent;
+  unsigned int agent, index;
   if(ran.r() < xi){
     if(num < P.size()){
-      mother_reaction(P, PT, (int)(ran.r()*P.size()), family, 2, 3);
-      agent = PT.back();
+      //mother_reaction(P, PT, (int)(ran.r()*P.size()), family, 2, 3);
+      index = (int)(ran.r()*P.size());      agent = P[index];
+      P.erase(P.begin() + index);      PT.push_back(agent);
+      family[agent].change(3, 2);
       family[agent].time = 0.0;
       family[agent].tmax = Tt;
     }
     else if(num < P.size() + L.size()){
-      mother_reaction(L, LT, (int)(ran.r()*L.size()), family, 5, 6);
-      agent = LT.back();
+      //mother_reaction(L, LT, (int)(ran.r()*L.size()), family, 5, 6);
+      index = (int)(ran.r()*L.size());      agent = L[index];
+      L.erase(L.begin() + index);      LT.push_back(agent);
+      family[agent].change(6, 5);
       family[agent].time = 0.0;
       family[agent].tmax = Tt;
     }
