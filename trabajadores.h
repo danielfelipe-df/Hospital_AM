@@ -17,8 +17,8 @@ public:
   //Defino la variable que me dice el tiempo máximo que dura testeado antes de aislarse
   double tmax;
 
-  //Defino la variable que me dice el tiempo total que va a pasar siendo expuesto
-  double texp;
+  //Defino la variable que me dice el tiempo que permaence en el estado actual
+  double tstate;
 
   //Función de iniciación
   void init();

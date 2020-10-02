@@ -5,7 +5,7 @@ void trabajadores::init(){
   for(unsigned int i=1; i<11; i++){kind[i] = false;}
   time = 0;
   tmax = 0;
-  texp = 0;
+  tstate = 0;
 }
 
 
