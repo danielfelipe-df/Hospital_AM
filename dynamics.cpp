@@ -79,13 +79,12 @@ std::vector<double> contagio(double Sa, double Sb, double Ea, double Eb, double 
   return result;
 }
 
-
-void mother_reaction(grupo &Out, grupo &In, Crandom &ran, trabajadores *family, int typeout, int typein){
-  int index = 0;//(int)(ran.r()*Out.size());
+void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
   family[agent].change(typein, typeout);
+  family[agent].tstate = 0.0;
 }
 
 
@@ -96,13 +95,13 @@ void massive_reaction(grupo &S, grupo &E, grupo &P, grupo &PT, grupo &L, grupo &
   unsigned int agent;
   if(ran.r() < xi){
     if(num < P.size()){
-      mother_reaction(P, PT, ran, family, 2, 3);
+      mother_reaction(P, PT, (int)(ran.r()*P.size()), family, 2, 3);
       agent = PT.back();
       family[agent].time = 0.0;
       family[agent].tmax = Tt;
     }
     else if(num < P.size() + L.size()){
-      mother_reaction(L, LT, ran, family, 5, 6);
+      mother_reaction(L, LT, (int)(ran.r()*L.size()), family, 5, 6);
       agent = LT.back();
       family[agent].time = 0.0;
       family[agent].tmax = Tt;
@@ -183,89 +182,197 @@ double phi(double* A, double* tj, unsigned int n, double prom, double sigma, dou
 }
 
 
-void reaction0(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Sa, Ea, ran, altos, 0, 1);
+int index_time(grupo &Out, trabajadores *family, double value){
+  //Jose
+  unsigned int n = Out.size(), agent;
+  double times[n];
+  
+  //Hallo la diferencia del tiempo con el tiempo que lleve en el estado
+  for(unsigned int i=0; i<n; i++){agent = Out[i];    times[i] = std::abs(family[agent].tstate - value);}
+
+  //Retorno el índice donde está el tiempo mínimo
+  return std::distance(times, std::min_element(times, times+n));
 }
 
 
-void reaction1(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Sb, Eb, ran, bajos, 0, 1);
+void update_times(grupo &G, trabajadores *family, double time){
+  for(unsigned int i=0; i<G.size(); i++){family[G[i]].tstate += time;}
 }
 
 
-void reaction2(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Ea, Pa, ran, altos, 1, 2);
+void reaction0(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  mother_reaction(Sa, Ea, (int)(ran.r()*Sa.size()), altos, 0, 1);
 }
 
 
-void reaction3(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Eb, Pb, ran, bajos, 1, 2);
+void reaction1(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  mother_reaction(Sb, Eb, (int)(ran.r()*Sb.size()), bajos, 0, 1);
 }
 
 
-void reaction4(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Pa, La, ran, altos, 2, 5);
+void reaction2(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(Ea, altos, quantile(dist[0], (double)ran.r()));
+  mother_reaction(Ea, Pa, index, altos, 1, 2);
 }
 
 
-void reaction5(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Pb, Lb, ran, bajos, 2, 5);
+void reaction3(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(Eb, bajos, quantile(dist[1], (double)ran.r()));
+  mother_reaction(Eb, Pb, index, bajos, 1, 2);
 }
 
 
-void reaction6(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Pa, IAa, ran, altos, 2, 9);
+void reaction4(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(Pa, altos, quantile(dist[2], (double)ran.r()));
+  mother_reaction(Pa, La, index, altos, 2, 5);
 }
 
 
-void reaction7(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(Pb, IAb, ran, bajos, 2, 9);
+void reaction5(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(Pb, bajos, quantile(dist[3], (double)ran.r()));
+  mother_reaction(Pb, Lb, index, bajos, 2, 5);
 }
 
 
-void reaction8(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  double N = Pa.size() + PTa.size() + PTAa.size();
-  double num = ran.r()*N;
-  if(num < Pa.size()){mother_reaction(Pa, Ra, ran, altos, 2, 10);}
-  else if(num < Pa.size() + PTa.size()){mother_reaction(PTa, Ra, ran, altos, 3, 10);}
-  else{mother_reaction(PTAa, Ra, ran, altos, 4, 10);}
+void reaction6(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(Pa, altos, quantile(dist[4], (double)ran.r()));
+  mother_reaction(Pa, IAa, index, altos, 2, 9);
 }
 
 
-void reaction9(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  double N = Pb.size() + PTb.size() + PTAb.size();
-  double num = ran.r()*N;
-  if(num < Pb.size()){mother_reaction(Pb, Rb, ran, bajos, 2, 10);}
-  else if(num < Pb.size() + PTb.size()){mother_reaction(PTb, Rb, ran, bajos, 3, 10);}
-  else{mother_reaction(PTAb, Rb, ran, bajos, 4, 10);}
+void reaction7(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(Pb, bajos, quantile(dist[5], (double)ran.r()));
+  mother_reaction(Pb, IAb, index, bajos, 2, 9);
 }
 
 
-void reaction10(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  double N = La.size() + LTa.size() + LTAa.size() + LAa.size();
-  double num = ran.r()*N;
-  if(num < La.size()){mother_reaction(La, Ra, ran, altos, 5, 10);}
-  else if(num < La.size() + LTa.size()){mother_reaction(LTa, Ra, ran, altos, 6, 10);}
-  else if(num < La.size() + LTa.size() + LTAa.size()){mother_reaction(LTAa, Ra, ran, altos, 7, 10);}
-  else{mother_reaction(LAa, Ra, ran, altos, 8, 10);}
+void reaction8(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index[3] = {-10, -10, -10};
+  double time[3] = {1e6, 1e6, 1e6};
+  double value = quantile(dist[6], (double)ran.r());
+  double min = 1e6;
+  if(Pa.size() != 0){
+    index[0] = index_time(Pa, altos, value);
+    time[0] = altos[Pa[index[0]]].tstate;
+    min = ((min > time[0]) ? time[0] : min);
+  }
+  if(PTa.size() != 0){
+    index[1] = index_time(PTa, altos, value);
+    time[1] = altos[PTa[index[1]]].tstate;
+    min = ((min > time[1]) ? time[1] : min);
+  }
+  if(PTAa.size() != 0){
+    index[2] = index_time(PTAa, altos, value);
+    time[2] = altos[PTAa[index[2]]].tstate;
+    min = ((min > time[2]) ? time[2] : min);
+  }
+  
+  if(min == time[0]){mother_reaction(Pa, Ra, index[0], altos, 2, 10);}
+  else if(min == time[1]){mother_reaction(PTa, Ra, index[1], altos, 3, 10);}
+  else{mother_reaction(PTAa, Ra, index[2], altos, 4, 10);}
 }
 
 
-void reaction11(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  double N = Lb.size() + LTb.size() + LTAb.size() + LAb.size();
-  double num = ran.r()*N;
-  if(num < Lb.size()){mother_reaction(Lb, Rb, ran, bajos, 5, 10);}
-  else if(num < Lb.size() + LTb.size()){mother_reaction(LTb, Rb, ran, bajos, 6, 10);}
-  else if(num < Lb.size() + LTb.size() + LTAb.size()){mother_reaction(LTAb, Rb, ran, bajos, 7, 10);}
-  else{mother_reaction(LAb, Rb, ran, bajos, 8, 10);}
+void reaction9(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index[3] = {-10, -10, -10};
+  double time[3] = {1e6, 1e6, 1e6};
+  double value = quantile(dist[7], (double)ran.r());
+  double min = 1e6;
+  if(Pb.size() != 0){
+    index[0] = index_time(Pb, bajos, value);
+    time[0] = bajos[Pb[index[0]]].tstate;
+    min = ((min > time[0]) ? time[0] : min);
+  }
+  if(PTb.size() != 0){
+    index[1] = index_time(PTb, bajos, value);
+    time[1] = bajos[PTb[index[1]]].tstate;
+    min = ((min > time[1]) ? time[1] : min);
+  }
+  if(PTAb.size() != 0){
+    index[2] = index_time(PTAb, bajos, value);
+    time[2] = bajos[PTAb[index[2]]].tstate;
+    min = ((min > time[2]) ? time[2] : min);
+  }
+  
+  if(min == time[0]){mother_reaction(Pb, Rb, index[0], bajos, 2, 10);}
+  else if(min == time[1]){mother_reaction(PTb, Rb, index[1], bajos, 3, 10);}
+  else{mother_reaction(PTAb, Rb, index[2], bajos, 4, 10);}
 }
 
 
-void reaction12(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(IAa, Ra, ran, altos, 9, 10);
+void reaction10(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index[4] = {-10, -10, -10, -10};
+  double time[4] = {1e6, 1e6, 1e6, 1e6};
+  double value = quantile(dist[8], (double)ran.r());
+  double min = 1e6;
+  if(La.size() != 0){
+    index[0] = index_time(La, altos, value);
+    time[0] = altos[La[index[0]]].tstate;
+    min = ((min > time[0]) ? time[0] : min);
+  }
+  if(LTa.size() != 0){
+    index[1] = index_time(LTa, altos, value);
+    time[1] = altos[LTa[index[1]]].tstate;
+    min = ((min > time[1]) ? time[1] : min);
+  }
+  if(LTAa.size() != 0){
+    index[2] = index_time(LTAa, altos, value);
+    time[2] = altos[LTAa[index[2]]].tstate;
+    min = ((min > time[2]) ? time[2] : min);
+  }
+  if(LAa.size() != 0){
+    index[3] = index_time(LAa, altos, value);
+    time[3] = altos[LAa[index[3]]].tstate;
+    min = ((min > time[3]) ? time[3] : min);
+  }
+ 
+  if(min == time[0]){mother_reaction(La, Ra, index[0], altos, 5, 10);}
+  else if(min == time[1]){mother_reaction(LTa, Ra, index[1], altos, 6, 10);}
+  else if(min == time[2]){mother_reaction(LTAa, Ra, index[2], altos, 7, 10);}
+  else{mother_reaction(LAa, Ra, index[3], altos, 8, 10);}
 }
 
 
-void reaction13(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  mother_reaction(IAb, Rb, ran, bajos, 9, 10);
+void reaction11(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index[4] = {-10, -10, -10, -10};
+  double time[4] = {1e6, 1e6, 1e6, 1e6};
+  double value = quantile(dist[9], (double)ran.r());
+  double min = 1e6;
+  if(Lb.size() != 0){
+    index[0] = index_time(Lb, bajos, value);
+    time[0] = bajos[Lb[index[0]]].tstate;
+    min = ((min > time[0]) ? time[0] : min);
+  }
+  if(LTb.size() != 0){
+    index[1] = index_time(LTb, bajos, value);
+    time[1] = bajos[LTb[index[1]]].tstate;
+    min = ((min > time[1]) ? time[1] : min);
+  }
+  if(LTAb.size() != 0){
+    index[2] = index_time(LTAb, bajos, value);
+    time[2] = bajos[LTAb[index[2]]].tstate;
+    min = ((min > time[2]) ? time[2] : min);
+  }
+  if(LAb.size() != 0){
+    index[3] = index_time(LAb, bajos, value);
+    time[3] = bajos[LAb[index[3]]].tstate;
+    min = ((min > time[3]) ? time[3] : min);
+  }
+ 
+  if(min == time[0]){mother_reaction(Lb, Rb, index[0], bajos, 5, 10);}
+  else if(min == time[1]){mother_reaction(LTb, Rb, index[1], bajos, 6, 10);}
+  else if(min == time[2]){mother_reaction(LTAb, Rb, index[2], bajos, 7, 10);}
+  else{mother_reaction(LAb, Rb, index[3], bajos, 8, 10);}
+}
+
+
+void reaction12(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(IAa, altos, quantile(dist[10], (double)ran.r()));
+  mother_reaction(IAa, Ra, index, altos, 9, 10);
+}
+
+
+void reaction13(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  int index = index_time(IAb, bajos, quantile(dist[11], (double)ran.r()));
+  mother_reaction(IAb, Rb, index, bajos, 9, 10);
 }
