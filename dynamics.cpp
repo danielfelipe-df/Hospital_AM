@@ -193,10 +193,10 @@ int index_time(grupo &Out, trabajadores *family, weib_d &dist, double value){
   //Jose
   unsigned int n = Out.size(), agent;
   double times[n];
-  double param = quantile(dist, value);
+  double param = value;
 
   //Hallo la diferencia del tiempo con el tiempo que lleve en el estado
-  for(unsigned int i=0; i<n; i++){agent = Out[i];    times[i] = std::abs(family[agent].tstate - param);}
+  for(unsigned int i=0; i<n; i++){agent = Out[i];    times[i] = std::abs(cdf(dist, family[agent].tstate) - param);}
 
   //Retorno el índice donde está el tiempo mínimo
   return std::distance(times, std::min_element(times, times+n));
@@ -220,14 +220,12 @@ void reaction1(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb,
 
 void reaction2(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
   int index = index_time(Ea, altos, dist[0], (double)ran.r());
-  std::cout << altos[Ea[index]].tstate << std::endl;
   mother_reaction(Ea, Pa, index, altos, 1, 2);
 }
 
 
 void reaction3(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &LAa, grupo &LAb, grupo &IAa, grupo &IAb, grupo &Ra, grupo &Rb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
   int index = index_time(Eb, bajos, dist[1], (double)ran.r());
-  std::cout << bajos[Eb[index]].tstate << std::endl;
   mother_reaction(Eb, Pb, index, bajos, 1, 2);
 }
 
