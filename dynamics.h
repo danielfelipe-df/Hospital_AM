@@ -47,7 +47,7 @@ double phi(double* A, double* tj, unsigned int n, double prom, double sigma, dou
 
 
 /* Con esta función hallo el índice de la persona que voy a hacer reaccionar */
-int index_time(grupo &Out, trabajadores *family, double value);
+int index_time(grupo &Out, trabajadores *family, weib_d &dist, double value);
 
 
 /* Con esta función actualizo los tiempos de estado de ese grupo */
