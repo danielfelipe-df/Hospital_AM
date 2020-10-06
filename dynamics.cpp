@@ -251,7 +251,7 @@ void reaction4(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb,
     min = ((min > time[2]) ? time[2] : min);
   }
 
-  if(min == time[0]){mother_reaction(Pa, La, index[0], altos, 2, 5);}
+  if(min == time[0]){mother_reaction(Pa, La, index[0], altos, 2, 5);    continue_reaction(La, LTa, altos, ran);}
   else if(min == time[1]){mother_reaction(PTa, LTa, index[1], altos, 3, 6);}
   else{mother_reaction(PTAa, LTAa, index[2], altos, 4, 7);}
 }
@@ -278,7 +278,7 @@ void reaction5(grupo &Sa, grupo &Sb, grupo &Ea, grupo &Eb, grupo &Pa, grupo &Pb,
     min = ((min > time[2]) ? time[2] : min);
   }
 
-  if(min == time[0]){mother_reaction(Pb, Lb, index[0], bajos, 2, 5);}
+  if(min == time[0]){mother_reaction(Pb, Lb, index[0], bajos, 2, 5);    continue_reaction(Lb, LTb, bajos, ran);}
   else if(min == time[1]){mother_reaction(PTb, LTb, index[1], bajos, 3, 6);}
   else{mother_reaction(PTAb, LTAb, index[2], bajos, 4, 7);}
 }
