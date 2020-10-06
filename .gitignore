@@ -5,3 +5,6 @@ Data/
 *.pdf
 *~
 coso.cpp
+*.gnu
+*.png
+Zips/
