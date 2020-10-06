@@ -7,7 +7,7 @@ typedef std::vector<int> grupo; //Redefino el vector de índices de personas com
 
 const int N = 1000; //Número de personas en el sistema
 
-const double beta = 0.53; //Beta de infección
+const double beta = 0.3; //Beta de infección
 const double De = 2.9; //Periodo latente
 const double Dpl = 1.3; //Periodo infeccioso pre-sintomático para leves
 const double Dpg = 2.3; //Periodo infecciosos pre-sintomático para graves
@@ -28,7 +28,7 @@ const double iota = 0.6; //Proporción de sintomáticos leves testeados continua
 const double Tt = 0.5; //Tiempo de reporte de la prueba
 
 const double alpha = 0.9; //Adherencia al aislamiento
-const double mu = 0.5; //Tasa de contacto cruzada
+const double mu = 0.3; //Tasa de contacto cruzada
 const double chi = 0.5; //Tasa de contacto de tipo bajo
 const double eta = 1.2; //Tasa de contacto con externos
 
