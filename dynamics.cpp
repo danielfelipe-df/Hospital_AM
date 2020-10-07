@@ -94,25 +94,21 @@ void massive_reaction(grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo 
   unsigned int num = (int)(ran.r()*M);  
 
   unsigned int agent, index;  
-  if(num < P.size()){
-    if(ran.r() < xi){
-      //mother_reaction(P, PT, (int)(ran.r()*P.size()), family, 2, 3);
-      index = (int)(ran.r()*P.size());      agent = P[index];
-      P.erase(P.begin() + index);      PT.push_back(agent);
-      family[agent].change(3, 2);
-      family[agent].time = 0.0;
-      family[agent].tmax = Tt;
-    }
+  if(num < P.size()){    
+    //mother_reaction(P, PT, (int)(ran.r()*P.size()), family, 2, 3);
+    index = (int)(ran.r()*P.size());      agent = P[index];
+    P.erase(P.begin() + index);      PT.push_back(agent);
+    family[agent].change(3, 2);
+    family[agent].time = 0.0;
+    family[agent].tmax = Tt;
   }
-  else if(num < P.size() + L.size()){
-    if(ran.r() < xi){
-      //mother_reaction(L, LT, (int)(ran.r()*L.size()), family, 5, 6);
-      index = (int)(ran.r()*L.size());      agent = L[index];
-      L.erase(L.begin() + index);      LT.push_back(agent);
-      family[agent].change(6, 5);
-      family[agent].time = 0.0;
-      family[agent].tmax = Tt;
-    }
+  else if(num < P.size() + L.size()){    
+    //mother_reaction(L, LT, (int)(ran.r()*L.size()), family, 5, 6);
+    index = (int)(ran.r()*L.size());      agent = L[index];
+    L.erase(L.begin() + index);      LT.push_back(agent);
+    family[agent].change(6, 5);
+    family[agent].time = 0.0;
+    family[agent].tmax = Tt;
   }
   else if(num < P.size() + L.size() + S.size()){
     index = (int)(ran.r()*S.size());      agent = S[index];
@@ -139,7 +135,7 @@ void massive_reaction(grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo 
 
 
 void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
-  if(ran.r() < iota*xi){
+  if(ran.r() < iota){
     int agent = L.back();
     L.erase( L.end() - 1);
     LT.push_back(agent);
@@ -150,18 +146,32 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
 }
 
 
-void tested_isolated(grupo &T, grupo &TA, trabajadores *family, double time, int typeout, int typein){
+void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran){
   int index;
-  for(unsigned int i=0; i<T.size(); i++){
-    index = T[i];
-    family[index].time += time;
-    if(family[index].time > family[index].tmax){
-      family[index].change(typein, typeout);
-      family[index].time = 0.0;
-      family[index].tmax = 0.0;
-      T.erase( T.begin() + i);
-      TA.push_back(index);
-      i--;
+  if(infected){
+    for(unsigned int i=0; i<T.size(); i++){
+      index = T[i];      family[index].time += time;
+      if(family[index].time > family[index].tmax){
+	if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);}
+	else{family[index].change(typein2, typeout);	  G.push_back(index);}
+	T.erase( T.begin() + i);
+	family[index].time = 0.0;
+	family[index].tmax = 0.0;
+	i--;
+      }
+    }
+  }
+  else{
+    for(unsigned int i=0; i<T.size(); i++){
+      index = T[i];      family[index].time += time;
+      if(family[index].time > family[index].tmax){
+	family[index].change(typein1, typeout);
+	family[index].time = 0.0;
+	family[index].tmax = 0.0;
+	T.erase( T.begin() + i);
+	TA.push_back(index);
+	i--;
+      }
     }
   }
 }

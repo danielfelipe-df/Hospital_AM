@@ -31,7 +31,7 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
 
 
 /* Esta función me actualiza los tiempos de los testeados y los aisla si ya cumplieron el tiempo */
-void tested_isolated(grupo &T, grupo &TA, trabajadores *family, double time, int typeout, int typein);
+void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */
