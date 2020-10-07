@@ -41,8 +41,9 @@ int main(void)
   unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
-  unsigned int tests = 500;
+  unsigned int tests = (int)(N*theta);
   double dt = nu/((double)tests);
+  unsigned int value_tests;
 
   //Defino la variable de tiempo propio de cada reacción(tj)
   double tj[14];
@@ -68,6 +69,7 @@ int main(void)
   unsigned int n1, n2;
   //unsigned int index;
   double aux;
+  unsigned int aux2;
   
   std::ofstream fout;
   std::string name;
@@ -149,10 +151,14 @@ int main(void)
 	aux += ti_in[0];
 
 	//Genero los tests masivos
+	aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size() + recIal.size() + recIba.size();
+	value_tests = ((tests < aux2) ? tests : aux2);
 	n2 = (int)(aux/dt);
-	for(unsigned int k=n1; k<n2 && k<tests; k++){
-	  if(gseed.r()*N < Na){massive_reaction(susal, susTal, expal, expTal, preal, preTal, leval, levTal, recIal, recTal, gseed, altos);}
+	for(unsigned int k=n1; k<n2 && k<tests && 0<value_tests; k++){
+	  if(gseed.r()*aux2 < (susal.size() + expal.size() + preal.size() + recIal.size())){massive_reaction(susal, susTal, expal, expTal, preal, preTal, leval, levTal, recIal, recTal, gseed, altos);}
 	  else{massive_reaction(susba, susTba, expba, expTba, preba, preTba, levba, levTba, recIba, recTba, gseed, bajos);}
+	  aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size() + recIal.size() + recIba.size();
+	  value_tests = ((tests < aux2) ? tests : aux2);
 	}
 	n1 = n2;
 	

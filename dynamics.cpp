@@ -90,8 +90,8 @@ void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 
 
 void massive_reaction(grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &RI, grupo &RT, Crandom &ran, trabajadores *family){
-  unsigned int N = S.size() + E.size() + P.size() + L.size() + RI.size();
-  unsigned int num = (int)(ran.r()*N);
+  unsigned int M = S.size() + E.size() + P.size() + L.size() + RI.size();
+  unsigned int num = (int)(ran.r()*M);  
 
   unsigned int agent, index;  
   if(num < P.size()){
