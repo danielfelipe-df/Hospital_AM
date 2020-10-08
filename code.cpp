@@ -129,19 +129,19 @@ int main(void)
 	update_times(levTAal, altos, ti_in[0]);	update_times(levTAba, bajos, ti_in[0]);
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 	
-	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo	
-	tested_isolated(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, true, gseed);
-	tested_isolated(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, true, gseed);
+	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
+	tested_isolated(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, true, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, true, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, true, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, true, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
 
 	//Actualizo el tiempo de los testeados que van a dar negativo, y si ya cumplieron el tiempo los devuelvo al estado sin testear
-	tested_isolated(susTal, susal, susal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(susTba, susba, susba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTal, expal, expal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTba, expba, expba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTal, recIal, recIal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTba, recIba, recIba, bajos, ti_in[0], 1, 1, 1, false, gseed);
+	tested_isolated(susTal, susal, susal, altos, ti_in[0], 1, 1, 1, false, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(susTba, susba, susba, bajos, ti_in[0], 1, 1, 1, false, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(expTal, expal, expal, altos, ti_in[0], 1, 1, 1, false, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(expTba, expba, expba, bajos, ti_in[0], 1, 1, 1, false, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(recTal, recIal, recIal, altos, ti_in[0], 1, 1, 1, false, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(recTba, recIba, recIba, bajos, ti_in[0], 1, 1, 1, false, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
       
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -204,19 +204,19 @@ int main(void)
 	update_times(levTAal, altos, ti_in[0]);	update_times(levTAba, bajos, ti_in[0]);
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 
-	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo	
-	tested_isolated(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, true, gseed);
-	tested_isolated(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, true, gseed);
+	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
+	tested_isolated(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, true, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, true, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, true, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, true, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
 
 	//Actualizo el tiempo de los testeados que van a dar negativo, y si ya cumplieron el tiempo los devuelvo al estado sin testear
-	tested_isolated(susTal, susal, susal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(susTba, susba, susba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTal, expal, expal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTba, expba, expba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTal, recIal, recIal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTba, recIba, recIba, bajos, ti_in[0], 1, 1, 1, false, gseed);
+	tested_isolated(susTal, susal, susal, altos, ti_in[0], 1, 1, 1, false, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(susTba, susba, susba, bajos, ti_in[0], 1, 1, 1, false, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(expTal, expal, expal, altos, ti_in[0], 1, 1, 1, false, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(expTba, expba, expba, bajos, ti_in[0], 1, 1, 1, false, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(recTal, recIal, recIal, altos, ti_in[0], 1, 1, 1, false, gseed, true, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
+	tested_isolated(recTba, recIba, recIba, bajos, ti_in[0], 1, 1, 1, false, gseed, false, susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, altos, bajos);
       
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);

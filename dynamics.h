@@ -31,7 +31,11 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
 
 
 /* Esta función me actualiza los tiempos de los testeados y los aisla si ya cumplieron el tiempo */
-void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran);
+void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran, bool is_alto, grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, trabajadores *altos, trabajadores *bajos);
+
+
+/* Esta función me genera el rastreo */
+void trace_function(grupo &S1, grupo &ST1, grupo &E1, grupo &ET1, grupo &P1, grupo &PT1, grupo &L1, grupo &LT1, grupo &RI1, grupo &RT1, trabajadores *family1, grupo &S2, grupo &ST2, grupo &E2, grupo &ET2, grupo &P2, grupo &PT2, grupo &L2, grupo &LT2, grupo &RI2, grupo &RT2, trabajadores *family2, Crandom &ran);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */

@@ -146,18 +146,22 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
 }
 
 
-void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran){
+void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran, bool is_alto, grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, trabajadores *altos, trabajadores *bajos){
   int index;
   if(infected){
     for(unsigned int i=0; i<T.size(); i++){
       index = T[i];      family[index].time += time;
       if(family[index].time > family[index].tmax){
-	if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);}
+	if(ran.r() < xi){
+	  family[index].change(typein1, typeout);	  TA.push_back(index);	  
+	  if(is_alto){trace_function(Sa,STa,Ea,ETa,Pa,PTa,La,LTa,RIa,RTa,altos, Sb,STb,Eb,ETb,Pb,PTb,Lb,LTb,RIb,RTb,bajos, ran);}
+	  else{trace_function(Sb,STb,Eb,ETb,Pb,PTb,Lb,LTb,RIb,RTb,bajos, Sa,STa,Ea,ETa,Pa,PTa,La,LTa,RIa,RTa,altos, ran);}
+	}
 	else{family[index].change(typein2, typeout);	  G.push_back(index);}
 	T.erase( T.begin() + i);
 	family[index].time = 0.0;
 	family[index].tmax = 0.0;
-	i--;
+	i--;	 
       }
     }
   }
@@ -172,6 +176,61 @@ void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double
 	TA.push_back(index);
 	i--;
       }
+    }
+  }
+}
+
+
+void trace_function(grupo &S1, grupo &ST1, grupo &E1, grupo &ET1, grupo &P1, grupo &PT1, grupo &L1, grupo &LT1, grupo &RI1, grupo &RT1, trabajadores *family1, grupo &S2, grupo &ST2, grupo &E2, grupo &ET2, grupo &P2, grupo &PT2, grupo &L2, grupo &LT2, grupo &RI2, grupo &RT2, trabajadores *family2, Crandom &ran){
+  double prob;
+  unsigned int value, index, agent;
+  for(unsigned int i=0; i<trace; i++){
+    prob = ran.r()*(1 + mu);
+    if(prob < 1.0){
+      value = (int)(ran.r()*(S1.size() + E1.size() + P1.size() + L1.size() + RI1.size()));
+      if(value < S1.size()){
+	index = value;	agent = S1[index];	S1.erase(S1.begin() + index);	ST1.push_back(agent);
+	family1[agent].change(1,2);	family1[agent].time = 0.0;	family1[agent].tmax = Tt;
+      }
+      else if(value < S1.size() + E1.size()){
+	index = value - S1.size();	agent = E1[index];	E1.erase(E1.begin() + index);	ET1.push_back(agent);
+	family1[agent].change(1,2);	family1[agent].time = 0.0;	family1[agent].tmax = Tt;
+      }
+      else if(value < S1.size() + E1.size() + P1.size()){
+	index = value - S1.size() - E1.size();	agent = P1[index];	P1.erase(P1.begin() + index);	PT1.push_back(agent);
+	family1[agent].change(1,2);	family1[agent].time = 0.0;	family1[agent].tmax = Tt;
+      }
+      else if(value < S1.size() + E1.size() + P1.size() + L1.size()){
+	index = value - S1.size() - E1.size() - P1.size();	agent = L1[index];	L1.erase(L1.begin() + index);	LT1.push_back(agent);
+	family1[agent].change(1,2);	family1[agent].time = 0.0;	family1[agent].tmax = Tt;
+      }
+      else{index = value - S1.size() - E1.size() - P1.size() - L1.size();
+	agent = RI1[index];	RI1.erase(RI1.begin() + index);	RT1.push_back(agent);
+	family1[agent].change(1,2);	family1[agent].time = 0.0;	family1[agent].tmax = Tt;
+      }
+    }
+    else{
+      value = (int)(ran.r()*(S2.size() + E2.size() + P2.size() + L2.size() + RI2.size()));
+      if(value < S2.size()){
+	index = value;	agent = S2[index];	S2.erase(S2.begin() + index);	ST2.push_back(agent);
+	family2[agent].change(1,2);	family2[agent].time = 0.0;	family2[agent].tmax = Tt;
+      }
+      else if(value < S2.size() + E2.size()){
+	index = value - S2.size();	agent = E2[index];	E2.erase(E2.begin() + index);	ET2.push_back(agent);
+	family2[agent].change(1,2);	family2[agent].time = 0.0;	family2[agent].tmax = Tt;
+      }
+      else if(value < S2.size() + E2.size() + P2.size()){
+	index = value - S2.size() - E2.size();	agent = P2[index];	P2.erase(P2.begin() + index);	PT2.push_back(agent);
+	family2[agent].change(1,2);	family2[agent].time = 0.0;	family2[agent].tmax = Tt;
+      }
+      else if(value < S2.size() + E2.size() + P2.size() + L2.size()){
+	index = value - S2.size() - E2.size() - P2.size();	agent = L2[index];	L2.erase(L2.begin() + index);	LT2.push_back(agent);
+	family2[agent].change(1,2);	family2[agent].time = 0.0;	family2[agent].tmax = Tt;
+      }
+      else{index = value - S2.size() - E2.size() - P2.size() - L2.size();
+	agent = RI2[index];	RI2.erase(RI2.begin() + index);	RT2.push_back(agent);
+	family2[agent].change(1,2);	family2[agent].time = 0.0;	family2[agent].tmax = Tt;
+      }      
     }
   }
 }
