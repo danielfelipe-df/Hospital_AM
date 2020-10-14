@@ -1,6 +1,7 @@
 #ifndef TRABAJADORES_H
 #define TRABAJADORES_H
 
+
 class trabajadores{
 public:
 

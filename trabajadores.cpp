@@ -1,5 +1,6 @@
 #include "trabajadores.h"
 
+
 void trabajadores::init(){
   kind[0] = true;
   for(unsigned int i=1; i<11; i++){kind[i] = false;}
