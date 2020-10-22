@@ -37,7 +37,7 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 5;
+  double nu = 2, delta = 0;
   unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
@@ -130,18 +130,18 @@ int main(void)
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
-	tested_isolated(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, true, gseed);
-	tested_isolated(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, true, gseed);
+	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
+	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, gseed);
+	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, gseed);
+	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);
 
-	//Actualizo el tiempo de los testeados que van a dar negativo, y si ya cumplieron el tiempo los devuelvo al estado sin testear
-	tested_isolated(susTal, susal, susal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(susTba, susba, susba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTal, expal, expal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTba, expba, expba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTal, recIal, recIal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTba, recIba, recIba, bajos, ti_in[0], 1, 1, 1, false, gseed);
+	//Actualizo el tiempo de los testeados que van a dar negativo, y si ya cumplieron el tiempo los devuelvo al estado sin testear	
+	tested_isolated(susTal, susal, altos, ti_in[0], 1, 1, gseed);
+	tested_isolated(susTba, susba, bajos, ti_in[0], 1, 1, gseed);
+	tested_isolated(expTal, expal, altos, ti_in[0], 1, 1, gseed);
+	tested_isolated(expTba, expba, bajos, ti_in[0], 1, 1, gseed);
+	tested_isolated(recTal, recIal, altos, ti_in[0], 1, 1, gseed);
+	tested_isolated(recTba, recIba, bajos, ti_in[0], 1, 1, gseed);
       
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -151,14 +151,13 @@ int main(void)
 	aux += ti_in[0];
 
 	//Genero los tests masivos
-	aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size() + recIal.size() + recIba.size();
-	value_tests = ((tests < aux2) ? tests : aux2);
+	aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size();
+	aux2 += leval.size() + levba.size() + recIal.size() + recIba.size();
 	n2 = (int)(aux/dt);
-	for(unsigned int k=n1; k<n2 && k<tests && 0<value_tests; k++){
-	  if(gseed.r()*aux2 < (susal.size() + expal.size() + preal.size() + recIal.size())){massive_reaction(susal, susTal, expal, expTal, preal, preTal, leval, levTal, recIal, recTal, gseed, altos);}
-	  else{massive_reaction(susba, susTba, expba, expTba, preba, preTba, levba, levTba, recIba, recTba, gseed, bajos);}
-	  aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size() + recIal.size() + recIba.size();
-	  value_tests = ((tests < aux2) ? tests : aux2);
+	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
+	  massive_reaction(susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, gseed, altos, bajos);
+	  aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size();
+	  aux2 += leval.size() + levba.size() + recIal.size() + recIba.size();
 	}
 	n1 = n2;
 	
@@ -179,7 +178,7 @@ int main(void)
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
-      }
+      }      
 
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
@@ -205,18 +204,18 @@ int main(void)
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
-	tested_isolated(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, true, gseed);
-	tested_isolated(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, true, gseed);
-	tested_isolated(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, true, gseed);
+	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
+	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, gseed);
+	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, gseed);
+	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);
 
-	//Actualizo el tiempo de los testeados que van a dar negativo, y si ya cumplieron el tiempo los devuelvo al estado sin testear
-	tested_isolated(susTal, susal, susal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(susTba, susba, susba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTal, expal, expal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(expTba, expba, expba, bajos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTal, recIal, recIal, altos, ti_in[0], 1, 1, 1, false, gseed);
-	tested_isolated(recTba, recIba, recIba, bajos, ti_in[0], 1, 1, 1, false, gseed);
+	//Actualizo el tiempo de los testeados que van a dar negativo, y si ya cumplieron el tiempo los devuelvo al estado sin testear	
+	tested_isolated(susTal, susal, altos, ti_in[0], 1, 1, gseed);
+	tested_isolated(susTba, susba, bajos, ti_in[0], 1, 1, gseed);
+	tested_isolated(expTal, expal, altos, ti_in[0], 1, 1, gseed);
+	tested_isolated(expTba, expba, bajos, ti_in[0], 1, 1, gseed);
+	tested_isolated(recTal, recIal, altos, ti_in[0], 1, 1, gseed);
+	tested_isolated(recTba, recIba, bajos, ti_in[0], 1, 1, gseed);
       
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -247,7 +246,7 @@ int main(void)
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
     }
-    fout.close();
+    fout.close();    
 
     //Borro los vectores
     susal.clear();    susba.clear();    susTal.clear();    susTba.clear();

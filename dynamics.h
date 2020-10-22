@@ -23,16 +23,24 @@ std::vector<double> contagio(double Sa, double Sb, double STa, double STb, doubl
 void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein);
 
 
+/* Esta función es la función plantilla para hacer los cambios de estado normal a testeado */
+void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double delta);
+
+
 /* Esta función es la que genera la reacción en el testeo masivo */
-void massive_reaction(grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &RI, grupo &RT, Crandom &ran, trabajadores *family);
+void massive_reaction(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, Crandom &ran, trabajadores *altos, trabajadores *bajos);
 
 
 /* Esta función es la que genera la reacción en el testeo continuo */
 void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
 
 
-/* Esta función me actualiza los tiempos de los testeados y los aisla si ya cumplieron el tiempo */
-void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran);
+/* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los aisla o los devuelvo al estado normal.*/
+void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran);
+
+
+/* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los devuelve al estado normal. */
+void tested_isolated(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein, Crandom &ran);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */

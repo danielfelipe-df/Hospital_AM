@@ -81,6 +81,7 @@ std::vector<double> contagio(double Sa, double Sb, double STa, double STb, doubl
   return result;
 }
 
+
 void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
@@ -90,89 +91,85 @@ void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 }
 
 
-void massive_reaction(grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &RI, grupo &RT, Crandom &ran, trabajadores *family){
-  unsigned int M = S.size() + E.size() + P.size() + L.size() + RI.size();
-  unsigned int num = (int)(ran.r()*M);  
+void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double delta){
+  int agent = Out[index];
+  Out.erase(Out.begin() + index);
+  In.push_back(agent);
+  family[agent].change(typein, typeout);
+  family[agent].time = 0.0;
+  family[agent].tmax = delta;
+}
 
-  unsigned int agent, index;  
-  if(num < P.size()){    
-    //mother_reaction(P, PT, (int)(ran.r()*P.size()), family, 2, 3);
-    index = (int)(ran.r()*P.size());      agent = P[index];
-    P.erase(P.begin() + index);      PT.push_back(agent);
-    family[agent].change(3, 2);
-    family[agent].time = 0.0;
-    family[agent].tmax = Tt;
+void massive_reaction(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, Crandom &ran, trabajadores *altos, trabajadores *bajos){
+  unsigned int M = Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size() + Lb.size() + RIa.size() + RIb.size();
+  unsigned int num = (int)(ran.r()*M);
+
+  unsigned int agent, index;
+  if(num < Sa.size()){
+    tested_reaction(Sa, STa, (int)(ran.r()*Sa.size()), altos, 5, 6, Tt);
   }
-  else if(num < P.size() + L.size()){    
-    //mother_reaction(L, LT, (int)(ran.r()*L.size()), family, 5, 6);
-    index = (int)(ran.r()*L.size());      agent = L[index];
-    L.erase(L.begin() + index);      LT.push_back(agent);
-    family[agent].change(6, 5);
-    family[agent].time = 0.0;
-    family[agent].tmax = Tt;
+  else if(num < Sa.size() + Sb.size()){
+    tested_reaction(Sb, STb, (int)(ran.r()*Sb.size()), bajos, 5, 6, Tt);
   }
-  else if(num < P.size() + L.size() + S.size()){
-    index = (int)(ran.r()*S.size());      agent = S[index];
-    S.erase(S.begin() + index);      ST.push_back(agent);
-    family[agent].change(6, 5);
-    family[agent].time = 0.0;
-    family[agent].tmax = Tt;
+  else if(num < Sa.size() + Sb.size() + Ea.size()){
+    tested_reaction(Ea, ETa, (int)(ran.r()*Ea.size()), altos, 5, 6, Tt);
   }
-  else if(num < P.size() + L.size() + S.size() + E.size()){
-    index = (int)(ran.r()*E.size());      agent = E[index];
-    E.erase(E.begin() + index);      ET.push_back(agent);
-    family[agent].change(6, 5);
-    family[agent].time = 0.0;
-    family[agent].tmax = Tt;
+  else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size()){
+    tested_reaction(Eb, ETb, (int)(ran.r()*Eb.size()), bajos, 5, 6, Tt);
+  }
+  else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size()){
+    tested_reaction(Pa, PTa, (int)(ran.r()*Pa.size()), altos, 5, 6, Tt);
+  }
+  else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size()){
+    tested_reaction(Pb, PTb, (int)(ran.r()*Pb.size()), bajos, 5, 6, Tt);
+  }
+  else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size()){
+    tested_reaction(La, LTa, (int)(ran.r()*La.size()), altos, 5, 6, Tt);
+  }
+  else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size() + Lb.size()){
+    tested_reaction(Lb, LTb, (int)(ran.r()*Lb.size()), bajos, 5, 6, Tt);
+  }
+  else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size() + Lb.size() + RIa.size()){
+    tested_reaction(RIa, RTa, (int)(ran.r()*RIa.size()), altos, 5, 6, Tt);
   }
   else{
-    index = (int)(ran.r()*RI.size());      agent = RI[index];
-    RI.erase(RI.begin() + index);      RT.push_back(agent);
-    family[agent].change(6, 5);
-    family[agent].time = 0.0;
-    family[agent].tmax = Tt;
+    tested_reaction(RIb, RTb, (int)(ran.r()*RIb.size()), bajos, 5, 6, Tt);
   }
 }
 
 
 void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
-  if(ran.r() < iota){
-    int agent = L.back();
-    L.erase( L.end() - 1);
-    LT.push_back(agent);
-    family[agent].change(6,5);
-    family[agent].time = 0.0;
-    family[agent].tmax = Tt;
+  if(ran.r() < iota){tested_reaction(L, LT, L.size()-1, family, 5, 6, Tt);}
+}
+
+
+void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran){
+  int index;
+  for(unsigned int i=0; i<T.size(); i++){
+    index = T[i];      family[index].time += time;
+    if(family[index].time > family[index].tmax){
+      if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);}
+      else{family[index].change(typein2, typeout);	  G.push_back(index);}
+      T.erase( T.begin() + i);
+      family[index].time = 0.0;
+      family[index].tmax = 0.0;
+      i--;
+    }
   }
 }
 
 
-void tested_isolated(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, bool infected, Crandom &ran){
+void tested_isolated(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein, Crandom &ran){
   int index;
-  if(infected){
-    for(unsigned int i=0; i<T.size(); i++){
-      index = T[i];      family[index].time += time;
-      if(family[index].time > family[index].tmax){
-	if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);}
-	else{family[index].change(typein2, typeout);	  G.push_back(index);}
-	T.erase( T.begin() + i);
-	family[index].time = 0.0;
-	family[index].tmax = 0.0;
-	i--;
-      }
-    }
-  }
-  else{
-    for(unsigned int i=0; i<T.size(); i++){
-      index = T[i];      family[index].time += time;
-      if(family[index].time > family[index].tmax){
-	family[index].change(typein1, typeout);
-	family[index].time = 0.0;
-	family[index].tmax = 0.0;
-	T.erase( T.begin() + i);
-	TA.push_back(index);
-	i--;
-      }
+  for(unsigned int i=0; i<T.size(); i++){
+    index = T[i];      family[index].time += time;
+    if(family[index].time > family[index].tmax){
+      family[index].change(typein, typeout);
+      family[index].time = 0.0;
+      family[index].tmax = 0.0;
+      T.erase( T.begin() + i);
+      G.push_back(index);
+      i--;
     }
   }
 }
