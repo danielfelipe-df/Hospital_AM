@@ -8,7 +8,7 @@ typedef std::vector<int> grupo; //Redefino el vector de índices de personas com
 
 const int N = 1000; //Número de personas en el sistema
 
-const double beta = 0.3; //Beta de infección
+const double beta = 1.3; //Beta de infección
 const double De = 2.9; //Periodo latente
 const double Dpl = 1.3; //Periodo infeccioso pre-sintomático para leves
 const double Dpg = 2.3; //Periodo infecciosos pre-sintomático para graves
@@ -27,11 +27,13 @@ const double xi = 0.64; //Sensibilidad de la prueba
 const double theta = 0.5; //Cobertura
 const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
 const double Tt = 0.5; //Tiempo de reporte de la prueba
+const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
 
-const double alpha = 0.9; //Adherencia al aislamiento
-const double mu = 0.3; //Tasa de contacto cruzada
-const double chi = 0.5; //Tasa de contacto de tipo bajo
-const double eta = 1.2; //Tasa de contacto con externos
+const double alpha = 0.95; //Adherencia al aislamiento
+const double mu = 0.1; //Tasa de contacto cruzada
+const double chi = 0.7; //Tasa de contacto de tipo bajo
+const double eta = 0.7; //Tasa de contacto con externos
+const double phi1 = 0.6; //Tasa de contacto de tipo alto
 
 const double rho = Dpl + Dil - Tt; //Tiempo de aislamiento de asintomáticos
 const double epsilon = Dig - Tt; //Tiempo de aislamiento de infecciosos graves
@@ -41,5 +43,6 @@ const double USrho = 1.0/rho; //Inverso del tiempo de aislamiento de asintomáti
 const double USepsilon = 1.0/epsilon; //Inverso del tiempo de aislamiento de infecciosos graves
 const double USlambda = 1.0/lambda; //Inverso del tiempo de aislamiento de infecciosos leves (continuo)
 const double UStau = 1.0/tau; //Inverso del tiempo de aislamiento de infecciosos leves (masivo)
+
 
 #endif

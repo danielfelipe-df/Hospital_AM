@@ -3,8 +3,6 @@
 #include <algorithm>
 #include "dynamics.h"
 
-const double TM = 0.5;
-
 std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double SMa, double SMb, double Ea, double Eb, double ETa, double ETb, double EMa, double EMb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t, double* tj){
 
   //Número de proponsidades
@@ -14,7 +12,7 @@ std::vector<double> contagio(double Sa, double Sb, double STa, double STb, doubl
   double As[n];
 
   //Propensidades de exponerse
-  As[0] = beta*(Sa+STa+SMa)*((Pa+PTa+La+LTa)/Na + mu*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*(IAa+PTAa+LTAa)/Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/Nb + eta*prev);
+  As[0] = beta*(Sa+STa+SMa)*(phi1*(Pa+PTa+La+LTa)/Na + mu*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/Nb + eta*prev);
   As[1] = beta*(Sb+STb+SMb)*(mu*(Pa+PTa+La+LTa)/Na + chi*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*mu*(IAa+PTAa+LTAa)/Na + (1-alpha)*chi*(IAb+PTAb+LTAb)/Nb);
 
   //Propensidades de ser presintomático
@@ -50,7 +48,8 @@ std::vector<double> contagio(double Sa, double Sb, double STa, double STb, doubl
   //for(unsigned int i=2; i<n; i++){weib_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double prom = 230.0, sigma = 55.0, B = beta*Sa*eta*prev;
+  //double prom = 230.0, sigma = 55.0, B = beta*Sa*eta*prev;
+  double prom = 165.47, sigma = 29.24, B = beta*Sa*eta*prev;
   double tau = 0, index = 0;
   tau = biseccion(As, prom, sigma, t, B, std::log(ran.r()), tj, n, dist);
 
