@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "dynamics.h"
 
+const double TM = 0.5;
 
 std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double SMa, double SMb, double Ea, double Eb, double ETa, double ETb, double EMa, double EMb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t, double* tj){
 
@@ -22,6 +23,7 @@ std::vector<double> contagio(double Sa, double Sb, double STa, double STb, doubl
 
   //Propensidades de ser leve
   As[4] = USDpl*(1-kappa)*psi*(Pa+PTa+PTAa);
+
   As[5] = USDpl*(1-kappa)*psi*(Pb+PTb+PTAb);
 
   //Propensidad de ser infeccioso grave y aislarse inmediatamente
@@ -269,282 +271,320 @@ void reaction1(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &
 
 
 void reaction2(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Ea.size() != 0){
-    index[0] = index_time(Ea, altos, dist[0], value);
-    time[0] = altos[Ea[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(ETa.size() != 0){
-    index[1] = index_time(ETa, altos, dist[0], value);
-    time[1] = altos[ETa[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(EMa.size() != 0){
-    index[2] = index_time(EMa, altos, dist[0], value);
-    time[2] = altos[EMa[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Ea, Pa, index[0], altos, 1, 2);}
-  else if(min == time[1]){mother_reaction(ETa, Pa, index[1], altos, 1, 2);}
-  else{mother_reaction(EMa, Pa, index[2], altos, 1, 2);}
+  for(unsigned int i=0; i<Ea.size(); i++){if(altos[Ea[i]].tstate > TM){aux.push_back(Ea[i]);}}
+  for(unsigned int i=0; i<ETa.size(); i++){if(altos[ETa[i]].tstate > TM){aux.push_back(ETa[i]);}}
+  for(unsigned int i=0; i<EMa.size(); i++){if(altos[EMa[i]].tstate > TM){aux.push_back(EMa[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, altos, dist[0], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Ea.size() != 0){
+      it = std::find(Ea.begin(), Ea.end(), agent);      ind = std::distance(Ea.begin(), it);
+      if(ind < Ea.size()){mother_reaction(Ea, Pa, ind, altos, 1, 2);}
+    }
+    if(ETa.size() != 0){
+      it = std::find(ETa.begin(), ETa.end(), agent);      ind = std::distance(ETa.begin(), it);
+      if(ind < ETa.size()){mother_reaction(ETa, Pa, ind, altos, 1, 2);}
+    }
+    if(EMa.size() != 0){
+      it = std::find(EMa.begin(), EMa.end(), agent);      ind = std::distance(EMa.begin(), it);
+      if(ind < EMa.size()){mother_reaction(EMa, Pa, ind, altos, 1, 2);}
+    }   
+  }
 }
 
 
 void reaction3(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Eb.size() != 0){
-    index[0] = index_time(Eb, bajos, dist[1], value);
-    time[0] = bajos[Eb[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(ETb.size() != 0){
-    index[1] = index_time(ETb, bajos, dist[1], value);
-    time[1] = bajos[ETb[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(EMb.size() != 0){
-    index[2] = index_time(EMb, bajos, dist[1], value);
-    time[2] = bajos[EMb[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Eb, Pb, index[0], bajos, 1, 2);}
-  else if(min == time[1]){mother_reaction(ETb, Pb, index[1], bajos, 1, 2);}
-  else{mother_reaction(EMb, Pb, index[2], bajos, 1, 2);}
+  for(unsigned int i=0; i<Eb.size(); i++){if(bajos[Eb[i]].tstate > TM){aux.push_back(Eb[i]);}}
+  for(unsigned int i=0; i<ETb.size(); i++){if(bajos[ETb[i]].tstate > TM){aux.push_back(ETb[i]);}}
+  for(unsigned int i=0; i<EMb.size(); i++){if(bajos[EMb[i]].tstate > TM){aux.push_back(EMb[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, bajos, dist[1], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Eb.size() != 0){
+      it = std::find(Eb.begin(), Eb.end(), agent);      ind = std::distance(Eb.begin(), it);
+      if(ind < Eb.size()){mother_reaction(Eb, Pb, ind, bajos, 1, 2);}
+    }
+    if(ETb.size() != 0){
+      it = std::find(ETb.begin(), ETb.end(), agent);      ind = std::distance(ETb.begin(), it);
+      if(ind < ETb.size()){mother_reaction(ETb, Pb, ind, bajos, 1, 2);}
+    }
+    if(EMb.size() != 0){
+      it = std::find(EMb.begin(), EMb.end(), agent);      ind = std::distance(EMb.begin(), it);
+      if(ind < EMb.size()){mother_reaction(EMb, Pb, ind, bajos, 1, 2);}
+    }
+  }  
 }
 
 
 void reaction4(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Pa.size() != 0){
-    index[0] = index_time(Pa, altos, dist[2], value);
-    time[0] = altos[Pa[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(PTa.size() != 0){
-    index[1] = index_time(PTa, altos, dist[2], value);
-    time[1] = altos[PTa[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(PTAa.size() != 0){
-    index[2] = index_time(PTAa, altos, dist[2], value);
-    time[2] = altos[PTAa[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Pa, La, index[0], altos, 2, 5);    continue_reaction(La, LTa, altos, ran);}
-  else if(min == time[1]){mother_reaction(PTa, LTa, index[1], altos, 3, 6);}
-  else{mother_reaction(PTAa, LTAa, index[2], altos, 4, 7);}
+  for(unsigned int i=0; i<Pa.size(); i++){if(altos[Pa[i]].tstate > TM){aux.push_back(Pa[i]);}}
+  for(unsigned int i=0; i<PTa.size(); i++){if(altos[PTa[i]].tstate > TM){aux.push_back(PTa[i]);}}
+  for(unsigned int i=0; i<PTAa.size(); i++){if(altos[PTAa[i]].tstate > TM){aux.push_back(PTAa[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, altos, dist[2], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Pa.size() != 0){
+      it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
+      if(ind < Pa.size()){mother_reaction(Pa, La, ind, altos, 2, 5);    continue_reaction(La, LTa, altos, ran);}
+    }
+    if(PTa.size() != 0){
+      it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
+      if(ind < PTa.size()){mother_reaction(PTa, LTa, ind, altos, 3, 6);}
+    }
+    if(PTAa.size() != 0){
+      it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
+      if(ind < PTAa.size()){mother_reaction(PTAa, LTAa, ind, altos, 4, 7);}
+    }
+  }
 }
 
 
 void reaction5(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Pb.size() != 0){
-    index[0] = index_time(Pb, bajos, dist[3], value);
-    time[0] = bajos[Pb[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(PTb.size() != 0){
-    index[1] = index_time(PTb, bajos, dist[3], value);
-    time[1] = bajos[PTb[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(PTAb.size() != 0){
-    index[2] = index_time(PTAb, bajos, dist[3], value);
-    time[2] = bajos[PTAb[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Pb, Lb, index[0], bajos, 2, 5);    continue_reaction(Lb, LTb, bajos, ran);}
-  else if(min == time[1]){mother_reaction(PTb, LTb, index[1], bajos, 3, 6);}
-  else{mother_reaction(PTAb, LTAb, index[2], bajos, 4, 7);}
+  for(unsigned int i=0; i<Pb.size(); i++){if(bajos[Pb[i]].tstate > TM){aux.push_back(Pb[i]);}}
+  for(unsigned int i=0; i<PTb.size(); i++){if(bajos[PTb[i]].tstate > TM){aux.push_back(PTb[i]);}}
+  for(unsigned int i=0; i<PTAb.size(); i++){if(bajos[PTAb[i]].tstate > TM){aux.push_back(PTAb[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, bajos, dist[3], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Pb.size() != 0){
+      it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
+      if(ind < Pb.size()){mother_reaction(Pb, Lb, ind, bajos, 2, 5);    continue_reaction(Lb, LTb, bajos, ran);}
+    }
+    if(PTb.size() != 0){
+      it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
+      if(ind < PTb.size()){mother_reaction(PTb, LTb, ind, bajos, 3, 6);}
+    }
+    if(PTAb.size() != 0){
+      it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
+      if(ind < PTAb.size()){mother_reaction(PTAb, LTAb, ind, bajos, 4, 7);}
+    }
+  }
 }
 
 
-void reaction6(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){  
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Pa.size() != 0){
-    index[0] = index_time(Pa, altos, dist[4], value);
-    time[0] = altos[Pa[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(PTa.size() != 0){
-    index[1] = index_time(PTa, altos, dist[4], value);
-    time[1] = altos[PTa[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(PTAa.size() != 0){
-    index[2] = index_time(PTAa, altos, dist[4], value);
-    time[2] = altos[PTAa[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+void reaction6(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Pa, IAa, index[0], altos, 2, 9);}
-  else if(min == time[1]){mother_reaction(PTa, IAa, index[1], altos, 3, 9);}
-  else{mother_reaction(PTAa, IAa, index[2], altos, 4, 9);}
+  for(unsigned int i=0; i<Pa.size(); i++){if(altos[Pa[i]].tstate > TM){aux.push_back(Pa[i]);}}
+  for(unsigned int i=0; i<PTa.size(); i++){if(altos[PTa[i]].tstate > TM){aux.push_back(PTa[i]);}}
+  for(unsigned int i=0; i<PTAa.size(); i++){if(altos[PTAa[i]].tstate > TM){aux.push_back(PTAa[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, altos, dist[4], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Pa.size() != 0){
+      it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
+      if(ind < Pa.size()){mother_reaction(Pa, IAa, ind, altos, 2, 9);}
+    }
+    if(PTa.size() != 0){
+      it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
+      if(ind < PTa.size()){mother_reaction(PTa, IAa, ind, altos, 3, 9);}
+    }
+    if(PTAa.size() != 0){
+      it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
+      if(ind < PTAa.size()){mother_reaction(PTAa, IAa, ind, altos, 4, 9);}
+    }
+  }
 }
 
 
 void reaction7(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Pb.size() != 0){
-    index[0] = index_time(Pb, bajos, dist[5], value);
-    time[0] = bajos[Pb[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(PTb.size() != 0){
-    index[1] = index_time(PTb, bajos, dist[5], value);
-    time[1] = bajos[PTb[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(PTAb.size() != 0){
-    index[2] = index_time(PTAb, bajos, dist[5], value);
-    time[2] = bajos[PTAb[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Pb, IAb, index[0], bajos, 2, 9);}
-  else if(min == time[1]){mother_reaction(PTb, IAb, index[1], bajos, 3, 9);}
-  else{mother_reaction(PTAb, IAb, index[2], bajos, 4, 9);}
+  for(unsigned int i=0; i<Pb.size(); i++){if(bajos[Pb[i]].tstate > TM){aux.push_back(Pb[i]);}}
+  for(unsigned int i=0; i<PTb.size(); i++){if(bajos[PTb[i]].tstate > TM){aux.push_back(PTb[i]);}}
+  for(unsigned int i=0; i<PTAb.size(); i++){if(bajos[PTAb[i]].tstate > TM){aux.push_back(PTAb[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, bajos, dist[5], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Pb.size() != 0){
+      it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
+      if(ind < Pb.size()){mother_reaction(Pb, IAb, ind, bajos, 2, 9);}
+    }
+    if(PTb.size() != 0){
+      it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
+      if(ind < PTb.size()){mother_reaction(PTb, IAb, ind, bajos, 3, 9);}
+    }
+    if(PTAb.size() != 0){
+      it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
+      if(ind < PTAb.size()){mother_reaction(PTAb, IAb, ind, bajos, 4, 9);}
+    }
+  }
 }
 
 
 void reaction8(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Pa.size() != 0){
-    index[0] = index_time(Pa, altos, dist[6], value);
-    time[0] = altos[Pa[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(PTa.size() != 0){
-    index[1] = index_time(PTa, altos, dist[6], value);
-    time[1] = altos[PTa[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(PTAa.size() != 0){
-    index[2] = index_time(PTAa, altos, dist[6], value);
-    time[2] = altos[PTAa[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Pa, RIa, index[0], altos, 2, 10);}
-  else if(min == time[1]){mother_reaction(PTa, RAa, index[1], altos, 3, 10);}
-  else{mother_reaction(PTAa, RAa, index[2], altos, 4, 10);}
+  for(unsigned int i=0; i<Pa.size(); i++){if(altos[Pa[i]].tstate > TM){aux.push_back(Pa[i]);}}
+  for(unsigned int i=0; i<PTa.size(); i++){if(altos[PTa[i]].tstate > TM){aux.push_back(PTa[i]);}}
+  for(unsigned int i=0; i<PTAa.size(); i++){if(altos[PTAa[i]].tstate > TM){aux.push_back(PTAa[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, altos, dist[6], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Pa.size() != 0){
+      it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
+      if(ind < Pa.size()){mother_reaction(Pa, RIa, ind, altos, 2, 10);}
+    }
+    if(PTa.size() != 0){
+      it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
+      if(ind < PTa.size()){mother_reaction(PTa, RAa, ind, altos, 3, 10);}
+    }
+    if(PTAa.size() != 0){
+      it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
+      if(ind < PTAa.size()){mother_reaction(PTAa, RAa, ind, altos, 4, 10);}
+    }
+  }
 }
 
 
 void reaction9(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Pb.size() != 0){
-    index[0] = index_time(Pb, bajos, dist[7], value);
-    time[0] = bajos[Pb[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(PTb.size() != 0){
-    index[1] = index_time(PTb, bajos, dist[7], value);
-    time[1] = bajos[PTb[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(PTAb.size() != 0){
-    index[2] = index_time(PTAb, bajos, dist[7], value);
-    time[2] = bajos[PTAb[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Pb, RIb, index[0], bajos, 2, 10);}
-  else if(min == time[1]){mother_reaction(PTb, RAb, index[1], bajos, 3, 10);}
-  else{mother_reaction(PTAb, RAb, index[2], bajos, 4, 10);}
+  for(unsigned int i=0; i<Pb.size(); i++){if(bajos[Pb[i]].tstate > TM){aux.push_back(Pb[i]);}}
+  for(unsigned int i=0; i<PTb.size(); i++){if(bajos[PTb[i]].tstate > TM){aux.push_back(PTb[i]);}}
+  for(unsigned int i=0; i<PTAb.size(); i++){if(bajos[PTAb[i]].tstate > TM){aux.push_back(PTAb[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, bajos, dist[7], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Pb.size() != 0){
+      it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
+      if(ind < Pb.size()){mother_reaction(Pb, RIb, ind, bajos, 2, 10);}
+    }
+    if(PTb.size() != 0){
+      it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
+      if(ind < PTb.size()){mother_reaction(PTb, RAb, ind, bajos, 3, 10);}
+    }
+    if(PTAb.size() != 0){
+      it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
+      if(ind < PTAb.size()){mother_reaction(PTAb, RAb, ind, bajos, 4, 10);}
+    }
+  }
 }
 
 
 void reaction10(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(La.size() != 0){
-    index[0] = index_time(La, altos, dist[8], value);
-    time[0] = altos[La[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(LTa.size() != 0){
-    index[1] = index_time(LTa, altos, dist[8], value);
-    time[1] = altos[LTa[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(LTAa.size() != 0){
-    index[2] = index_time(LTAa, altos, dist[8], value);
-    time[2] = altos[LTAa[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(La, RIa, index[0], altos, 5, 10);}
-  else if(min == time[1]){mother_reaction(LTa, RAa, index[1], altos, 6, 10);}
-  else{mother_reaction(LTAa, RAa, index[2], altos, 7, 10);}
+  for(unsigned int i=0; i<La.size(); i++){if(altos[La[i]].tstate > TM){aux.push_back(La[i]);}}
+  for(unsigned int i=0; i<LTa.size(); i++){if(altos[LTa[i]].tstate > TM){aux.push_back(LTa[i]);}}
+  for(unsigned int i=0; i<LTAa.size(); i++){if(altos[LTAa[i]].tstate > TM){aux.push_back(LTAa[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, altos, dist[8], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(La.size() != 0){
+      it = std::find(La.begin(), La.end(), agent);      ind = std::distance(La.begin(), it);
+      if(ind < La.size()){mother_reaction(La, RIa, ind, altos, 5, 10);}
+    }
+    if(LTa.size() != 0){
+      it = std::find(LTa.begin(), LTa.end(), agent);      ind = std::distance(LTa.begin(), it);
+      if(ind < LTa.size()){mother_reaction(LTa, RAa, ind, altos, 6, 10);}
+    }
+    if(LTAa.size() != 0){
+      it = std::find(LTAa.begin(), LTAa.end(), agent);      ind = std::distance(LTAa.begin(), it);
+      if(ind < LTAa.size()){mother_reaction(LTAa, RAa, ind, altos, 7, 10);}
+    }
+  }
 }
 
 
 void reaction11(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index[3] = {-10, -10, -10};
-  double time[3] = {1e6, 1e6, 1e6};
-  double value = (double)ran.r();
-  double min = 1e6;
-  if(Lb.size() != 0){
-    index[0] = index_time(Lb, bajos, dist[9], value);
-    time[0] = bajos[Lb[index[0]]].tstate;
-    min = ((min > time[0]) ? time[0] : min);
-  }
-  if(LTb.size() != 0){
-    index[1] = index_time(LTb, bajos, dist[9], value);
-    time[1] = bajos[LTb[index[1]]].tstate;
-    min = ((min > time[1]) ? time[1] : min);
-  }
-  if(LTAb.size() != 0){
-    index[2] = index_time(LTAb, bajos, dist[9], value);
-    time[2] = bajos[LTAb[index[2]]].tstate;
-    min = ((min > time[2]) ? time[2] : min);
-  }
+  std::vector<int> aux;
 
-  if(min == time[0]){mother_reaction(Lb, RIb, index[0], bajos, 5, 10);}
-  else if(min == time[1]){mother_reaction(LTb, RAb, index[1], bajos, 6, 10);}
-  else{mother_reaction(LTAb, RAb, index[2], bajos, 7, 10);}
+  for(unsigned int i=0; i<Lb.size(); i++){if(bajos[Lb[i]].tstate > TM){aux.push_back(Lb[i]);}}
+  for(unsigned int i=0; i<LTb.size(); i++){if(bajos[LTb[i]].tstate > TM){aux.push_back(LTb[i]);}}
+  for(unsigned int i=0; i<LTAb.size(); i++){if(bajos[LTAb[i]].tstate > TM){aux.push_back(LTAb[i]);}}
+
+  if(aux.size() != 0){
+    double value = (double)ran.r();
+    unsigned int index = index_time(aux, bajos, dist[9], value);
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it;
+    unsigned int ind;
+    if(Lb.size() != 0){
+      it = std::find(Lb.begin(), Lb.end(), agent);      ind = std::distance(Lb.begin(), it);
+      if(ind < Lb.size()){mother_reaction(Lb, RIb, ind, bajos, 5, 10);}
+    }
+    if(LTb.size() != 0){
+      it = std::find(LTb.begin(), LTb.end(), agent);      ind = std::distance(LTb.begin(), it);
+      if(ind < LTb.size()){mother_reaction(LTb, RAb, ind, bajos, 6, 10);}
+    }
+    if(LTAb.size() != 0){
+      it = std::find(LTAb.begin(), LTAb.end(), agent);      ind = std::distance(LTAb.begin(), it);
+      if(ind < LTAb.size()){mother_reaction(LTAb, RAb, ind, bajos, 7, 10);}
+    }
+  }
 }
 
 
 void reaction12(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index = index_time(IAa, altos, dist[10], (double)ran.r());  
-  mother_reaction(IAa, RAa, index, altos, 9, 10);
+  std::vector<int> aux;
+  
+  for(unsigned int i=0; i<IAa.size(); i++){if(altos[IAa[i]].tstate > TM){aux.push_back(IAa[i]);}}
+
+  if(aux.size() != 0){    
+    unsigned int index = index_time(aux, altos, dist[10], (double)ran.r());
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it = std::find(IAa.begin(), IAa.end(), agent);
+    unsigned int ind = std::distance(IAa.begin(), it);
+    if(ind < IAa.size()){mother_reaction(IAa, RAa, ind, altos, 9, 10);}
+  }
 }
 
 
 void reaction13(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
-  int index = index_time(IAb, bajos, dist[11], (double)ran.r());
-  mother_reaction(IAb, RAb, index, bajos, 9, 10);
+  std::vector<int> aux;
+  
+  for(unsigned int i=0; i<IAb.size(); i++){if(bajos[IAb[i]].tstate > TM){aux.push_back(IAb[i]);}}
+
+  if(aux.size() != 0){
+    unsigned int index = index_time(aux, bajos, dist[11], (double)ran.r());
+    unsigned int agent = aux[index];
+    std::vector<int>::iterator it = std::find(IAb.begin(), IAb.end(), agent);
+    unsigned int ind = std::distance(IAb.begin(), it);
+    if(ind < IAb.size()){mother_reaction(IAb, RAb, ind, bajos, 9, 10);}
+  }  
 }
