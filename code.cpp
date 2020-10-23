@@ -7,7 +7,7 @@
 #include "trabajadores.h"
 #include "dynamics.h"
 
-typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &STa, grupo &Stb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &Etb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo &RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist);
+typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist);
 
 int main(void)
 {
@@ -19,12 +19,12 @@ int main(void)
   trabajadores altos[Na], bajos[Nb];
 
   //Creo los vectores en donde están las personas de cada estadío
-  grupo susal, susba;  grupo susTal, susTba;
-  grupo expal, expba;  grupo expTal, expTba;
+  grupo susal, susba;  grupo susTal, susTba;  grupo susMal, susMba;
+  grupo expal, expba;  grupo expTal, expTba;  grupo expMal, expMba;
   grupo preal, preba;  grupo preTal, preTba;  grupo preTAal, preTAba;
   grupo leval, levba;  grupo levTal, levTba;  grupo levTAal, levTAba;
   grupo infAal, infAba;
-  grupo recTal, recTba;  grupo recIal, recIba;  grupo recAal, recAba;
+  grupo recTal, recTba;  grupo recIal, recIba;  grupo recAal, recAba;  grupo recMal, recMba;
 
   //Defino la prevalencia externa
   double prev = 0.22;
@@ -37,19 +37,18 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 0;
+  double nu = 1, delta = 0;
   unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
   unsigned int tests = (int)(N*theta);
   double dt = nu/((double)tests);
-  unsigned int value_tests;
 
   //Defino la variable de tiempo propio de cada reacción(tj)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1;
+  unsigned int ensemble = 10;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -90,8 +89,10 @@ int main(void)
     t = 0.0;
     fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
     fout << susTal.size() << '\t' << susTba.size() << '\t';
+    fout << susMal.size() << '\t' << susMba.size() << '\t';
     fout << expal.size() << '\t' << expba.size() << '\t';
     fout << expTal.size() << '\t' << expTba.size() << '\t';
+    fout << expMal.size() << '\t' << expMba.size() << '\t';
     fout << preal.size() << '\t' << preba.size() << '\t';
     fout << preTal.size() << '\t' << preTba.size() << '\t';
     fout << preTAal.size() << '\t' << preTAba.size() << '\t';
@@ -101,6 +102,7 @@ int main(void)
     fout << infAal.size() << '\t' << infAba.size() << '\t';
     fout << recTal.size() << '\t' << recTba.size() << '\t';
     fout << recIal.size() << '\t' << recIba.size() << '\t';
+    fout << recMal.size() << '\t' << recMba.size() << '\t';
     fout << recAal.size() << '\t' << recAba.size() << std::endl;
     
     //Inicio los tiempos propios de cada reacción
@@ -112,8 +114,8 @@ int main(void)
       aux = 0.0;
       n1 = 0;
       while(aux < nu){
-	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
+	//Obtengo el tiempo e índice de la reacción	
+	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), susMal.size(), susMba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), expMal.size(), expMba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -121,6 +123,7 @@ int main(void)
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times(expal, altos, ti_in[0]);	update_times(expba, bajos, ti_in[0]);
 	update_times(expTal, altos, ti_in[0]);	update_times(expTba, bajos, ti_in[0]);
+	update_times(expMal, altos, ti_in[0]);	update_times(expMba, bajos, ti_in[0]);
 	update_times(preal, altos, ti_in[0]);	update_times(preba, bajos, ti_in[0]);
 	update_times(preTal, altos, ti_in[0]);	update_times(preTba, bajos, ti_in[0]);
 	update_times(preTAal, altos, ti_in[0]);	update_times(preTAba, bajos, ti_in[0]);
@@ -128,6 +131,11 @@ int main(void)
 	update_times(levTal, altos, ti_in[0]);	update_times(levTba, bajos, ti_in[0]);
 	update_times(levTAal, altos, ti_in[0]);	update_times(levTAba, bajos, ti_in[0]);
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
+
+	//Actualizo los tiempos de los testeados masivamente que dan negativo
+	update_massive(susMal, altos, ti_in[0]);	update_massive(susMba, bajos, ti_in[0]);
+	update_massive(expMal, altos, ti_in[0]);	update_massive(expMba, bajos, ti_in[0]);
+	update_massive(recMal, altos, ti_in[0]);	update_massive(recMba, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
 	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
@@ -143,8 +151,8 @@ int main(void)
 	tested_isolated(recTal, recIal, altos, ti_in[0], 1, 1, gseed);
 	tested_isolated(recTba, recIba, bajos, ti_in[0], 1, 1, gseed);
       
-	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
+	//Genero la reacción según el índice que acabo de obtener	
+	react[(int)ti_in[1]](susal, susba, susTal, susTba, susMal, susMba, expal, expba, expTal, expTba, expMal, expMba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recMal, recMba, recAal, recAba, gseed, altos, bajos, dist);
 
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
@@ -155,7 +163,7 @@ int main(void)
 	aux2 += leval.size() + levba.size() + recIal.size() + recIba.size();
 	n2 = (int)(aux/dt);
 	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
-	  massive_reaction(susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recTal, recTba, gseed, altos, bajos);
+	  massive_reaction(susal, susba, susMal, susMba, expal, expba, expMal, expMba, preal, preba, preTal, preTba, leval, levba, levTal, levTba, recIal, recIba, recMal, recMba, gseed, altos, bajos);
 	  aux2 = susal.size() + susba.size() + expal.size() + expba.size() + preal.size() + preba.size();
 	  aux2 += leval.size() + levba.size() + recIal.size() + recIba.size();
 	}
@@ -163,8 +171,10 @@ int main(void)
 	
 	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << susTal.size() << '\t' << susTba.size() << '\t';
+	fout << susMal.size() << '\t' << susMba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << expTal.size() << '\t' << expTba.size() << '\t';
+	fout << expMal.size() << '\t' << expMba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
 	fout << preTal.size() << '\t' << preTba.size() << '\t';
 	fout << preTAal.size() << '\t' << preTAba.size() << '\t';
@@ -174,12 +184,18 @@ int main(void)
 	fout << infAal.size() << '\t' << infAba.size() << '\t';
 	fout << recTal.size() << '\t' << recTba.size() << '\t';
 	fout << recIal.size() << '\t' << recIba.size() << '\t';
+	fout << recMal.size() << '\t' << recMba.size() << '\t';
 	fout << recAal.size() << '\t' << recAba.size() << std::endl;
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
-      }      
+      }
 
+      //Muevo los testeados masivos a su respectivo lugar      
+      move_massive(susMal, susTal, susal, altos);      move_massive(susMba, susTba, susba, bajos);
+      move_massive(expMal, expTal, expal, altos);      move_massive(expMba, expTba, expba, bajos);
+      move_massive(recMal, recTal, recIal, altos);      move_massive(recMba, recTba, recIba, bajos);
+      
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
 
@@ -187,7 +203,7 @@ int main(void)
       aux = 0.0;
       while(aux < delta){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
+	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), susMal.size(), susMba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), expMal.size(), expMba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -218,7 +234,7 @@ int main(void)
 	tested_isolated(recTba, recIba, bajos, ti_in[0], 1, 1, gseed);
       
 	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
+	react[(int)ti_in[1]](susal, susba, susTal, susTba, susMal, susMba, expal, expba, expTal, expTba, expMal, expMba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recMal, recMba, recAal, recAba, gseed, altos, bajos, dist);
       
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
@@ -226,8 +242,10 @@ int main(void)
 	
 	fout << t << '\t' << susal.size() << '\t' << susba.size() << '\t';
 	fout << susTal.size() << '\t' << susTba.size() << '\t';
+	fout << susMal.size() << '\t' << susMba.size() << '\t';
 	fout << expal.size() << '\t' << expba.size() << '\t';
 	fout << expTal.size() << '\t' << expTba.size() << '\t';
+	fout << expMal.size() << '\t' << expMba.size() << '\t';
 	fout << preal.size() << '\t' << preba.size() << '\t';
 	fout << preTal.size() << '\t' << preTba.size() << '\t';
 	fout << preTAal.size() << '\t' << preTAba.size() << '\t';
@@ -237,6 +255,7 @@ int main(void)
 	fout << infAal.size() << '\t' << infAba.size() << '\t';
 	fout << recTal.size() << '\t' << recTba.size() << '\t';
 	fout << recIal.size() << '\t' << recIba.size() << '\t';
+	fout << recMal.size() << '\t' << recMba.size() << '\t';
 	fout << recAal.size() << '\t' << recAba.size() << std::endl;
 	
 	//Borro el vector de tiempo e índice
@@ -249,12 +268,13 @@ int main(void)
     fout.close();    
 
     //Borro los vectores
-    susal.clear();    susba.clear();    susTal.clear();    susTba.clear();
-    expal.clear();    expba.clear();    expTal.clear();    expTba.clear();
+    susal.clear();    susba.clear();    susTal.clear();    susTba.clear();    susMal.clear();    susMba.clear();
+    expal.clear();    expba.clear();    expTal.clear();    expTba.clear();    expMal.clear();    expMba.clear();
     preal.clear();    preba.clear();    preTal.clear();    preTba.clear();    preTAal.clear();    preTAba.clear();
     leval.clear();    levba.clear();    levTal.clear();    levTba.clear();    levTAal.clear();    levTAba.clear();
     infAal.clear();    infAba.clear();
     recTal.clear();    recTba.clear();    recIal.clear();    recIba.clear();    recAal.clear();    recAba.clear();
+    recMal.clear();    recMba.clear();
   }
 
   return 0;
