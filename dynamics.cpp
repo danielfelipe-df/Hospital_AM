@@ -140,7 +140,7 @@ void massive_reaction(grupo &Sa, grupo &Sb, grupo &SMa, grupo &SMb, grupo &Ea, g
 
 
 void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
-  if(ran.r() < iota){tested_reaction(L, LT, L.size()-1, family, 5, 6, Tt);}
+  if(ran.r() < iota){tested_reaction(L, LT, L.size()-1, family, 5, 7, 0.0);}
 }
 
 
@@ -294,7 +294,7 @@ void reaction2(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &
     if(EMa.size() != 0){
       it = std::find(EMa.begin(), EMa.end(), agent);      ind = std::distance(EMa.begin(), it);
       if(ind < EMa.size()){mother_reaction(EMa, Pa, ind, altos, 1, 2);}
-    }   
+    }
   }
 }
 
@@ -324,7 +324,7 @@ void reaction3(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &
       it = std::find(EMb.begin(), EMb.end(), agent);      ind = std::distance(EMb.begin(), it);
       if(ind < EMb.size()){mother_reaction(EMb, Pb, ind, bajos, 1, 2);}
     }
-  }  
+  }
 }
 
 
@@ -343,7 +343,7 @@ void reaction4(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &
     unsigned int ind;
     if(Pa.size() != 0){
       it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
-      if(ind < Pa.size()){mother_reaction(Pa, La, ind, altos, 2, 5);    continue_reaction(La, LTa, altos, ran);}
+      if(ind < Pa.size()){mother_reaction(Pa, La, ind, altos, 2, 5);    continue_reaction(La, LTAa, altos, ran);}
     }
     if(PTa.size() != 0){
       it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
@@ -372,7 +372,7 @@ void reaction5(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &SMa, grupo &
     unsigned int ind;
     if(Pb.size() != 0){
       it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
-      if(ind < Pb.size()){mother_reaction(Pb, Lb, ind, bajos, 2, 5);    continue_reaction(Lb, LTb, bajos, ran);}
+      if(ind < Pb.size()){mother_reaction(Pb, Lb, ind, bajos, 2, 5);    continue_reaction(Lb, LTAb, bajos, ran);}
     }
     if(PTb.size() != 0){
       it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
