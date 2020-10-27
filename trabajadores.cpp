@@ -7,6 +7,8 @@ void trabajadores::init(){
   time = 0;
   tmax = 0;
   tstate = 0;
+  my_inf.clear();
+  DF = -2;
 }
 
 

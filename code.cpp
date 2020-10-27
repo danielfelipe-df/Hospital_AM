@@ -11,10 +11,6 @@ typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &E
 
 int main(void)
 {
-  //Defino las proporciones de tipo bajo y tipo alto
-  double pa = 0.18, pb = 0.82;
-  const unsigned int Na = pa*N, Nb = pb*N;
-
   //Creo los arreglos de cada tipo
   trabajadores altos[Na], bajos[Nb];
 
@@ -48,7 +44,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1000;
+  unsigned int ensemble = 100;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -110,7 +106,7 @@ int main(void)
     prev = 0.005;
 
     //Obtengo el tiempo e índice de la reacción
-    ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);    
+    ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), prev, gseed, t, tj);    
     
     //Actualizo los tiempos de los estados que pueden transitar
     update_times(expal, altos, ti_in[0]);	update_times(expba, bajos, ti_in[0]);
@@ -167,7 +163,7 @@ int main(void)
       n1 = 0;
       while(aux < nu){
 	//Obtengo el tiempo e índice de la reacción	
-	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
+	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -243,7 +239,7 @@ int main(void)
       aux = 0.0;
       while(aux < delta){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), Na, Nb, prev, gseed, t, tj);
+	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}

@@ -16,7 +16,7 @@ typedef boost::math::gamma_distribution<> gamma_d;
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción
  * y qué reacción es.
  */
-std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double Ea, double Eb, double ETa, double ETb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t, double* tj);
+std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double Ea, double Eb, double ETa, double ETb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double prev, Crandom &ran, double t, double* tj);
 
 
 /* Esta función es la función plantilla para hacer las reacciones */
@@ -37,10 +37,6 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
 
 /* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los aisla o los devuelvo al estado normal.*/
 void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran);
-
-
-/* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los devuelve al estado normal. */
-void tested_isolated(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein, Crandom &ran);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */
@@ -69,6 +65,14 @@ void update_massive(grupo &G, trabajadores *family, double time);
 
 /* Con esta función muevo los testeados masivos a su respecttivo grupo después de pasar los días de testeo */
 void move_massive(grupo &T, grupo &G);
+
+
+/* Con esta función identifico a la persona que hico la infección */
+int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int index, trabajadores *altos, trabajadores *bajos);
+
+
+/* Esta es la función madre para la selección del que infectó */
+int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran, int index, trabajadores *family);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */

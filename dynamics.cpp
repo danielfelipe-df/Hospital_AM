@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "dynamics.h"
 
-std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double Ea, double Eb, double ETa, double ETb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double Na, double Nb, double prev, Crandom &ran, double t, double* tj){
+std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double Ea, double Eb, double ETa, double ETb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double prev, Crandom &ran, double t, double* tj){
 
   //Número de proponsidades
   const unsigned int n = 14;
@@ -12,8 +12,8 @@ std::vector<double> contagio(double Sa, double Sb, double STa, double STb, doubl
   double As[n];
 
   //Propensidades de exponerse
-  As[0] = beta*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/Na + mu*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/Nb + eta*prev);
-  As[1] = beta*(Sb+STb)*(mu*(Pa+PTa+La+LTa)/Na + chi*(Pb+PTb+Lb+LTb)/Nb + (1-alpha)*mu*(IAa+PTAa+LTAa)/Na + (1-alpha)*chi*(IAb+PTAb+LTAb)/Nb);
+  As[0] = beta*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb + eta*prev);
+  As[1] = beta*(Sb+STb)*(mu*(Pa+PTa+La+LTa)/(double)Na + chi*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*(IAb+PTAb+LTAb)/(double)Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*(Ea+ETa);
@@ -159,22 +159,6 @@ void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, do
 }
 
 
-void tested_isolated(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein, Crandom &ran){
-  int index;
-  for(unsigned int i=0; i<T.size(); i++){
-    index = T[i];      family[index].time += time;
-    if(family[index].time > family[index].tmax){
-      family[index].change(typein, typeout);
-      family[index].time = 0.0;
-      family[index].tmax = 0.0;
-      T.erase( T.begin() + i);
-      G.push_back(index);
-      i--;
-    }
-  }
-}
-
-
 double biseccion(double* A, double prom, double sigma, double t, double B, double ranr, double* tj, int n, std::vector<weib_d> &dist){
   double m,fa,fm;
   double lim = 1e3, min = 0.0;
@@ -250,17 +234,74 @@ void move_massive(grupo &T, grupo &G){
 }
 
 
+int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int index, trabajadores *altos, trabajadores *bajos){
+  double num[4];
+  num[0] = cons1*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
+  num[1] = cons2*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
+  num[2] = (1-alpha)*cons1*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
+  num[3] = (1-alpha)*cons2*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
+  grupo aux;
+  if(num[0]+num[1]+num[2]+num[3] > 0.0){
+    double num2 = ran.r()*(num[0] + num[1] + num[2] + num[3]);
+    if(num2 < num[0]){
+      return selection_infectious(Pa, PTa, La, LTa, ran, index, altos);
+    }
+    else if(num2 < num[0] + num[1]){
+      return selection_infectious(Pb, PTb, Lb, LTb, ran, index, bajos) + Na;
+    }
+    else if(num2 < num[0] + num[1] + num[2]){
+      return selection_infectious(IAa, PTAa, LTAa, aux, ran, index, altos);
+    }
+    else{
+      return selection_infectious(IAb, PTAb, LTAb, aux, ran, index, bajos) + Na;
+    }
+  }
+  else{return -1;}
+}
+
+
+int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran, int index, trabajadores *family){
+  double num = ran.r()*(Ga.size() + Gb.size() + Gc.size() + Gd.size());
+  int ind, agent;
+  if(num < Ga.size()){
+    ind = (int)(ran.r()*Ga.size());    agent = Ga[ind];    family[agent].my_inf.push_back(index);
+  }
+  else if(num < Ga.size() + Gb.size()){
+    ind = (int)(ran.r()*Gb.size());    agent = Gb[ind];    family[agent].my_inf.push_back(index);
+  }
+  else if(num < Ga.size() + Gb.size() + Gc.size()){
+    ind = (int)(ran.r()*Gc.size());    agent = Gc[ind];    family[agent].my_inf.push_back(index);
+  }
+  else{
+    ind = (int)(ran.r()*Gd.size());    agent = Gd[ind];    family[agent].my_inf.push_back(index);
+  }
+  return agent;
+}
+  
+
 void reaction0(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
   unsigned int index = (int)(ran.r()*(Sa.size() + STa.size()));
-  if(index < Sa.size()){mother_reaction(Sa, Ea, index, altos, 0, 1);}
-  else{mother_reaction(STa, ETa, index-Sa.size(), altos, 0, 1);}
+  int agentS, value1 = Ea.size(), value2;
+  if(index < Sa.size()){agentS = Sa[index];    mother_reaction(Sa, Ea, index, altos, 0, 1);}
+  else{agentS = STa[index-Sa.size()];    mother_reaction(STa, ETa, index-Sa.size(), altos, 0, 1);}
+  value2 = Ea.size();
+
+  int agentI = who_infected(Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb, phi1, mu, ran, agentS, altos, bajos);
+  if(value2 > value1){altos[Ea.back()].DF = agentI;}
+  else{altos[ETa.back()].DF = agentI;}
 }
 
 
 void reaction1(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist){
   unsigned int index = (int)(ran.r()*(Sb.size() + STb.size()));
-  if(index < Sb.size()){mother_reaction(Sb, Eb, index, bajos, 0, 1);}
-  else{mother_reaction(STb, ETb, index-Sb.size(), bajos, 0, 1);}
+  int agentS, value1 = Eb.size(), value2;
+  if(index < Sb.size()){agentS = Sb[index];    mother_reaction(Sb, Eb, index, bajos, 0, 1);}
+  else{agentS = STb[index-Sb.size()];    mother_reaction(STb, ETb, index-Sb.size(), bajos, 0, 1);}
+  value2 = Eb.size();
+
+  int agentI = who_infected(Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb, mu, chi, ran, agentS + Na, altos, bajos);  
+  if(value2 > value1){bajos[Eb.back()].DF = agentI;}
+  else{bajos[ETb.back()].DF = agentI;}
 }
 
 

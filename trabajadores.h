@@ -1,6 +1,7 @@
 #ifndef TRABAJADORES_H
 #define TRABAJADORES_H
 
+#include <vector>
 
 class trabajadores{
 public:
@@ -20,6 +21,12 @@ public:
 
   //Defino la variable que me dice el tiempo que permaence en el estado actual
   double tstate;
+
+  //Guardo a las personas que infecto si soy infeccioso
+  std::vector<int> my_inf;
+
+  //Guardo la identidad de la persona que me infectó
+  int DF;
 
   //Función de iniciación
   void init();
