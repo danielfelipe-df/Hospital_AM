@@ -7,6 +7,8 @@ typedef std::vector<int> grupo; //Redefino el vector de índices de personas com
 
 
 const int N = 1000; //Número de personas en el sistema
+const int Na = N*0.18; //Número de personas de riesgo alto
+const int Nb = N*0.82; //Número de personas de riesgo bajo
 
 const double beta = 1.3; //Beta de infección
 const double De = 2.9; //Periodo latente
@@ -23,7 +25,7 @@ const double USDplil = 1.0/(Dpl+Dil); //Inverso del periodo infeccioso total
 
 const double kappa = 0.8; //Proporción de contagiados que son asintomáticos
 const double psi = 0.95; //Proporción de sintomáticos que son leves
-const double xi = 0.64; //Sensibilidad de la prueba
+const double xi = 0.65; //Sensibilidad de la prueba
 const double theta = 0.5; //Cobertura
 const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
 const double Tt = 0.5; //Tiempo de reporte de la prueba
