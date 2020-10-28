@@ -106,40 +106,40 @@ void massive_reaction(grupo &Sa, grupo &Sb, grupo &SMa, grupo &SMb, grupo &Ea, g
   unsigned int num = (int)(ran.r()*M);
   
   if(num < Sa.size()){
-    tested_reaction(Sa, SMa, (int)(ran.r()*Sa.size()), altos, 5, 6, Tt);
+    tested_reaction(Sa, SMa, (int)(ran.r()*Sa.size()), altos, 0, 1, Tt);
   }
   else if(num < Sa.size() + Sb.size()){
-    tested_reaction(Sb, SMb, (int)(ran.r()*Sb.size()), bajos, 5, 6, Tt);
+    tested_reaction(Sb, SMb, (int)(ran.r()*Sb.size()), bajos, 0, 1, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size()){
-    tested_reaction(Ea, EMa, (int)(ran.r()*Ea.size()), altos, 5, 6, Tt);
+    tested_reaction(Ea, EMa, (int)(ran.r()*Ea.size()), altos, 2, 3, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size()){
-    tested_reaction(Eb, EMb, (int)(ran.r()*Eb.size()), bajos, 5, 6, Tt);
+    tested_reaction(Eb, EMb, (int)(ran.r()*Eb.size()), bajos, 2, 3, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size()){
-    tested_reaction(Pa, PTa, (int)(ran.r()*Pa.size()), altos, 5, 6, Tt);
+    tested_reaction(Pa, PTa, (int)(ran.r()*Pa.size()), altos, 4, 5, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size()){
-    tested_reaction(Pb, PTb, (int)(ran.r()*Pb.size()), bajos, 5, 6, Tt);
+    tested_reaction(Pb, PTb, (int)(ran.r()*Pb.size()), bajos, 4, 5, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size()){
-    tested_reaction(La, LTa, (int)(ran.r()*La.size()), altos, 5, 6, Tt);
+    tested_reaction(La, LTa, (int)(ran.r()*La.size()), altos, 7, 8, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size() + Lb.size()){
-    tested_reaction(Lb, LTb, (int)(ran.r()*Lb.size()), bajos, 5, 6, Tt);
+    tested_reaction(Lb, LTb, (int)(ran.r()*Lb.size()), bajos, 7, 8, Tt);
   }
   else if(num < Sa.size() + Sb.size() + Ea.size() + Eb.size() + Pa.size() + Pb.size() + La.size() + Lb.size() + RIa.size()){
-    tested_reaction(RIa, RMa, (int)(ran.r()*RIa.size()), altos, 5, 6, Tt);
+    tested_reaction(RIa, RMa, (int)(ran.r()*RIa.size()), altos, 11, 12, Tt);
   }
   else{
-    tested_reaction(RIb, RMb, (int)(ran.r()*RIb.size()), bajos, 5, 6, Tt);
+    tested_reaction(RIb, RMb, (int)(ran.r()*RIb.size()), bajos, 11, 12, Tt);
   }
 }
 
 
 void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
-  if(ran.r() < iota){tested_reaction(L, LT, L.size()-1, family, 5, 7, 0.0);}
+  if(ran.r() < iota){tested_reaction(L, LT, L.size()-1, family, 7, 9, 0.0);}
 }
 
 
@@ -162,14 +162,7 @@ void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, do
 void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein){
   for(unsigned int i=0; i<T.size(); i++){
     family[T[i]].time += time;
-    if(family[T[i]].time > family[T[i]].tmax){
-      family[T[i]].time = 0.0;
-      family[T[i]].tmax = 0.0;
-      family[T[i]].change(typein, typeout);
-      G.push_back(T[i]);
-      T.erase(T.begin() + i);
-      i--;
-    }
+    if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0);      i--;}
   }
 }
 
@@ -243,13 +236,9 @@ void update_massive(grupo &G, trabajadores *family, double time){
 }
 
 
-void move_massive(grupo &T, grupo &G, trabajadores *family){
+void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout, unsigned int typein){
   for(unsigned int i=0; i<T.size(); i++){
-    if(family[T[i]].time > family[T[i]].tmax){
-      G.push_back(T[i]);
-      T.erase(T.begin() + i);
-      i--;
-    }
+    if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0);      i--;}
   }
 }
 
@@ -302,8 +291,8 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
 void reaction0(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist){
   unsigned int index = (int)(ran.r()*(Sa.size() + STa.size()));
   int agentS, value1 = Ea.size(), value2;
-  if(index < Sa.size()){agentS = Sa[index];    mother_reaction(Sa, Ea, index, altos, 0, 1);}
-  else{agentS = STa[index-Sa.size()];    mother_reaction(STa, ETa, index-Sa.size(), altos, 0, 1);}
+  if(index < Sa.size()){agentS = Sa[index];    mother_reaction(Sa, Ea, index, altos, 0, 2);}
+  else{agentS = STa[index-Sa.size()];    mother_reaction(STa, ETa, index-Sa.size(), altos, 1, 3);}
   value2 = Ea.size();
 
   int agentI = who_infected(Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb, phi1, mu, ran, agentS, altos, bajos);
@@ -315,8 +304,8 @@ void reaction0(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
 void reaction1(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist){
   unsigned int index = (int)(ran.r()*(Sb.size() + STb.size()));
   int agentS, value1 = Eb.size(), value2;
-  if(index < Sb.size()){agentS = Sb[index];    mother_reaction(Sb, Eb, index, bajos, 0, 1);}
-  else{agentS = STb[index-Sb.size()];    mother_reaction(STb, ETb, index-Sb.size(), bajos, 0, 1);}
+  if(index < Sb.size()){agentS = Sb[index];    mother_reaction(Sb, Eb, index, bajos, 0, 2);}
+  else{agentS = STb[index-Sb.size()];    mother_reaction(STb, ETb, index-Sb.size(), bajos, 1, 3);}
   value2 = Eb.size();
 
   int agentI = who_infected(Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb, mu, chi, ran, agentS + Na, altos, bajos);  
@@ -339,11 +328,11 @@ void reaction2(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Ea.size() != 0){
       it = std::find(Ea.begin(), Ea.end(), agent);      ind = std::distance(Ea.begin(), it);
-      if(ind < Ea.size()){mother_reaction(Ea, Pa, ind, altos, 1, 2);}
+      if(ind < Ea.size()){mother_reaction(Ea, Pa, ind, altos, 2, 4);}
     }
     if(ETa.size() != 0){
       it = std::find(ETa.begin(), ETa.end(), agent);      ind = std::distance(ETa.begin(), it);
-      if(ind < ETa.size()){mother_reaction(ETa, Pa, ind, altos, 1, 2);}
+      if(ind < ETa.size()){mother_reaction(ETa, Pa, ind, altos, 3, 4);}
     }
   }
 }
@@ -363,11 +352,11 @@ void reaction3(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Eb.size() != 0){
       it = std::find(Eb.begin(), Eb.end(), agent);      ind = std::distance(Eb.begin(), it);
-      if(ind < Eb.size()){mother_reaction(Eb, Pb, ind, bajos, 1, 2);}
+      if(ind < Eb.size()){mother_reaction(Eb, Pb, ind, bajos, 2, 4);}
     }
     if(ETb.size() != 0){
       it = std::find(ETb.begin(), ETb.end(), agent);      ind = std::distance(ETb.begin(), it);
-      if(ind < ETb.size()){mother_reaction(ETb, Pb, ind, bajos, 1, 2);}
+      if(ind < ETb.size()){mother_reaction(ETb, Pb, ind, bajos, 3, 4);}
     }    
   }
 }
@@ -388,15 +377,15 @@ void reaction4(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pa.size() != 0){
       it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
-      if(ind < Pa.size()){mother_reaction(Pa, La, ind, altos, 2, 5);    continue_reaction(La, LTAa, altos, ran);}
+      if(ind < Pa.size()){mother_reaction(Pa, La, ind, altos, 4, 7);    continue_reaction(La, LTAa, altos, ran);}
     }
     if(PTa.size() != 0){
       it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
-      if(ind < PTa.size()){mother_reaction(PTa, LTa, ind, altos, 3, 6);}
+      if(ind < PTa.size()){mother_reaction(PTa, LTa, ind, altos, 5, 8);}
     }
     if(PTAa.size() != 0){
       it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
-      if(ind < PTAa.size()){mother_reaction(PTAa, LTAa, ind, altos, 4, 7);}
+      if(ind < PTAa.size()){mother_reaction(PTAa, LTAa, ind, altos, 6, 9);}
     }
   }
 }
@@ -417,15 +406,15 @@ void reaction5(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pb.size() != 0){
       it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
-      if(ind < Pb.size()){mother_reaction(Pb, Lb, ind, bajos, 2, 5);    continue_reaction(Lb, LTAb, bajos, ran);}
+      if(ind < Pb.size()){mother_reaction(Pb, Lb, ind, bajos, 4, 7);    continue_reaction(Lb, LTAb, bajos, ran);}
     }
     if(PTb.size() != 0){
       it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
-      if(ind < PTb.size()){mother_reaction(PTb, LTb, ind, bajos, 3, 6);}
+      if(ind < PTb.size()){mother_reaction(PTb, LTb, ind, bajos, 5, 8);}
     }
     if(PTAb.size() != 0){
       it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
-      if(ind < PTAb.size()){mother_reaction(PTAb, LTAb, ind, bajos, 4, 7);}
+      if(ind < PTAb.size()){mother_reaction(PTAb, LTAb, ind, bajos, 6, 9);}
     }
   }
 }
@@ -446,15 +435,15 @@ void reaction6(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pa.size() != 0){
       it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
-      if(ind < Pa.size()){mother_reaction(Pa, IAa, ind, altos, 2, 9);}
+      if(ind < Pa.size()){mother_reaction(Pa, IAa, ind, altos, 4, 10);}
     }
     if(PTa.size() != 0){
       it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
-      if(ind < PTa.size()){mother_reaction(PTa, IAa, ind, altos, 3, 9);}
+      if(ind < PTa.size()){mother_reaction(PTa, IAa, ind, altos, 5, 10);}
     }
     if(PTAa.size() != 0){
       it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
-      if(ind < PTAa.size()){mother_reaction(PTAa, IAa, ind, altos, 4, 9);}
+      if(ind < PTAa.size()){mother_reaction(PTAa, IAa, ind, altos, 6, 10);}
     }
   }
 }
@@ -475,15 +464,15 @@ void reaction7(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pb.size() != 0){
       it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
-      if(ind < Pb.size()){mother_reaction(Pb, IAb, ind, bajos, 2, 9);}
+      if(ind < Pb.size()){mother_reaction(Pb, IAb, ind, bajos, 4, 10);}
     }
     if(PTb.size() != 0){
       it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
-      if(ind < PTb.size()){mother_reaction(PTb, IAb, ind, bajos, 3, 9);}
+      if(ind < PTb.size()){mother_reaction(PTb, IAb, ind, bajos, 5, 10);}
     }
     if(PTAb.size() != 0){
       it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
-      if(ind < PTAb.size()){mother_reaction(PTAb, IAb, ind, bajos, 4, 9);}
+      if(ind < PTAb.size()){mother_reaction(PTAb, IAb, ind, bajos, 6, 10);}
     }
   }
 }
@@ -504,15 +493,15 @@ void reaction8(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pa.size() != 0){
       it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
-      if(ind < Pa.size()){mother_reaction(Pa, RIa, ind, altos, 2, 10);}
+      if(ind < Pa.size()){mother_reaction(Pa, RIa, ind, altos, 4, 11);}
     }
     if(PTa.size() != 0){
       it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
-      if(ind < PTa.size()){mother_reaction(PTa, RAa, ind, altos, 3, 10);}
+      if(ind < PTa.size()){mother_reaction(PTa, RAa, ind, altos, 5, 13);}
     }
     if(PTAa.size() != 0){
       it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
-      if(ind < PTAa.size()){mother_reaction(PTAa, RAa, ind, altos, 4, 10);}
+      if(ind < PTAa.size()){mother_reaction(PTAa, RAa, ind, altos, 6, 13);}
     }
   }
 }
@@ -533,15 +522,15 @@ void reaction9(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pb.size() != 0){
       it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
-      if(ind < Pb.size()){mother_reaction(Pb, RIb, ind, bajos, 2, 10);}
+      if(ind < Pb.size()){mother_reaction(Pb, RIb, ind, bajos, 4, 11);}
     }
     if(PTb.size() != 0){
       it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
-      if(ind < PTb.size()){mother_reaction(PTb, RAb, ind, bajos, 3, 10);}
+      if(ind < PTb.size()){mother_reaction(PTb, RAb, ind, bajos, 5, 13);}
     }
     if(PTAb.size() != 0){
       it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
-      if(ind < PTAb.size()){mother_reaction(PTAb, RAb, ind, bajos, 4, 10);}
+      if(ind < PTAb.size()){mother_reaction(PTAb, RAb, ind, bajos, 6, 13);}
     }
   }
 }
@@ -562,15 +551,15 @@ void reaction10(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &
     unsigned int ind;
     if(La.size() != 0){
       it = std::find(La.begin(), La.end(), agent);      ind = std::distance(La.begin(), it);
-      if(ind < La.size()){mother_reaction(La, RIa, ind, altos, 5, 10);}
+      if(ind < La.size()){mother_reaction(La, RIa, ind, altos, 7, 11);}
     }
     if(LTa.size() != 0){
       it = std::find(LTa.begin(), LTa.end(), agent);      ind = std::distance(LTa.begin(), it);
-      if(ind < LTa.size()){mother_reaction(LTa, RAa, ind, altos, 6, 10);}
+      if(ind < LTa.size()){mother_reaction(LTa, RAa, ind, altos, 8, 13);}
     }
     if(LTAa.size() != 0){
       it = std::find(LTAa.begin(), LTAa.end(), agent);      ind = std::distance(LTAa.begin(), it);
-      if(ind < LTAa.size()){mother_reaction(LTAa, RAa, ind, altos, 7, 10);}
+      if(ind < LTAa.size()){mother_reaction(LTAa, RAa, ind, altos, 9, 13);}
     }
   }
 }
@@ -591,15 +580,15 @@ void reaction11(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &
     unsigned int ind;
     if(Lb.size() != 0){
       it = std::find(Lb.begin(), Lb.end(), agent);      ind = std::distance(Lb.begin(), it);
-      if(ind < Lb.size()){mother_reaction(Lb, RIb, ind, bajos, 5, 10);}
+      if(ind < Lb.size()){mother_reaction(Lb, RIb, ind, bajos, 7, 11);}
     }
     if(LTb.size() != 0){
       it = std::find(LTb.begin(), LTb.end(), agent);      ind = std::distance(LTb.begin(), it);
-      if(ind < LTb.size()){mother_reaction(LTb, RAb, ind, bajos, 6, 10);}
+      if(ind < LTb.size()){mother_reaction(LTb, RAb, ind, bajos, 8, 13);}
     }
     if(LTAb.size() != 0){
       it = std::find(LTAb.begin(), LTAb.end(), agent);      ind = std::distance(LTAb.begin(), it);
-      if(ind < LTAb.size()){mother_reaction(LTAb, RAb, ind, bajos, 7, 10);}
+      if(ind < LTAb.size()){mother_reaction(LTAb, RAb, ind, bajos, 9, 13);}
     }
   }
 }
@@ -615,7 +604,7 @@ void reaction12(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &
     unsigned int agent = aux[index];
     std::vector<int>::iterator it = std::find(IAa.begin(), IAa.end(), agent);
     unsigned int ind = std::distance(IAa.begin(), it);
-    if(ind < IAa.size()){mother_reaction(IAa, RAa, ind, altos, 9, 10);}
+    if(ind < IAa.size()){mother_reaction(IAa, RAa, ind, altos, 10, 13);}
   }
 }
 
@@ -630,6 +619,6 @@ void reaction13(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &
     unsigned int agent = aux[index];
     std::vector<int>::iterator it = std::find(IAb.begin(), IAb.end(), agent);
     unsigned int ind = std::distance(IAb.begin(), it);
-    if(ind < IAb.size()){mother_reaction(IAb, RAb, ind, bajos, 9, 10);}
+    if(ind < IAb.size()){mother_reaction(IAb, RAb, ind, bajos, 10, 13);}
   }  
 }

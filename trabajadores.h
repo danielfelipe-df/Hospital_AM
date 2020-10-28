@@ -7,11 +7,14 @@ class trabajadores{
 public:
 
   /* Defino qué tipo de persona es
-   * 0:sus, 1:exp, 2:pre, 3:preT, 4:preTA,
-   * 5:lev, 6:levT, 7:levTA, 8:levA,
-   * 9:infA, 10:rec;
+   * 0:sus, 1:susT,
+   * 2:exp, 3:expT,
+   * 4:pre, 5:preT, 6:preTA
+   * 7:lev, 8:levT, 9:levTA,
+   * 10:infA,
+   * 11:recI, 12:recT, 13:recA
   */
-  bool kind[11];
+  unsigned int kind;
 
   //Defino la variable que me contabiliza el tiempo que dura testeado
   double time;
@@ -32,7 +35,7 @@ public:
   void init();
 
   //Función de campio de estado
-  void change(int now, int past);
+  void change(unsigned int now, unsigned int past);
 };
 
 #endif

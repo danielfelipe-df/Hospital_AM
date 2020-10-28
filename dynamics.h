@@ -70,7 +70,7 @@ void update_massive(grupo &G, trabajadores *family, double time);
 
 
 /* Con esta función muevo los testeados masivos a su respecttivo grupo después de pasar los días de testeo */
-void move_massive(grupo &T, grupo &G, trabajadores *family);
+void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout, unsigned int typein);
 
 
 /* Con esta función identifico a la persona que hico la infección */

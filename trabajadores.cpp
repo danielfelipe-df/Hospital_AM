@@ -1,9 +1,9 @@
+#include <iostream>
+#include <stdlib.h>
 #include "trabajadores.h"
 
-
 void trabajadores::init(){
-  kind[0] = true;
-  for(unsigned int i=1; i<11; i++){kind[i] = false;}
+  kind = 0;
   time = 0;
   tmax = 0;
   tstate = 0;
@@ -12,6 +12,7 @@ void trabajadores::init(){
 }
 
 
-void trabajadores::change(int now, int past){
-  kind[past] = false;  kind[now] = true;
+void trabajadores::change(unsigned int now, unsigned int past){
+  if(kind == past){kind = now;}
+  else{std::cerr << "Error: Tipo de trabajador no coincide.\nSe debio ingresar " << kind << " pero se ingresa " << past << std::endl;    std::exit(EXIT_FAILURE);}
 }

@@ -125,10 +125,10 @@ int main(void)
     update_massive(recTal, altos, ti_in[0]);	update_massive(recTba, bajos, ti_in[0]);
     
     //Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
-    tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
-    tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, gseed);
-    tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, gseed);
-    tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);
+    tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 5, 6, 4, gseed);
+    tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 5, 6, 4, gseed);
+    tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 8, 9, 7, gseed);
+    tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 8, 9, 7, gseed);
 
     //Genero la reacción según el índice que acabo de obtener
     react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -150,14 +150,14 @@ int main(void)
     fout << recTal.size() << '\t' << recTba.size() << '\t';
     fout << recIal.size() << '\t' << recIba.size() << '\t';
     fout << recAal.size() << '\t' << recAba.size() << std::endl;
-    
+
     //Borro el vector de tiempo e índice
     ti_in.clear();
 
     prev = 0.0;
 
     for(unsigned int j=0; j<loops; j++){
-      
+
       //Región de testeo masivo
       aux = 0.0;
       n1 = 0;
@@ -185,10 +185,10 @@ int main(void)
 	update_massive(recTal, altos, ti_in[0]);	update_massive(recTba, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
-	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
-	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, gseed);
-	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, gseed);
-	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);
+	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 5, 6, 4, gseed);
+	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 5, 6, 4, gseed);
+	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 8, 9, 7, gseed);
+	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 8, 9, 7, gseed);
 	
 	//Genero la reacción según el índice que acabo de obtener	
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -228,9 +228,9 @@ int main(void)
       }
 
       //Muevo los testeados masivos a su respectivo lugar      
-      move_massive(susTal, susal, altos);      move_massive(susTba, susba, bajos);
-      move_massive(expTal, expal, altos);      move_massive(expTba, expba, bajos);
-      move_massive(recTal, recIal, altos);      move_massive(recTba, recIba, bajos);
+      move_massive(susTal, susal, altos, 1, 0);      move_massive(susTba, susba, bajos, 1, 0);
+      move_massive(expTal, expal, altos, 3, 2);      move_massive(expTba, expba, bajos, 3, 2);
+      move_massive(recTal, recIal, altos, 12, 11);      move_massive(recTba, recIba, bajos, 12, 11);
       
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
@@ -256,18 +256,18 @@ int main(void)
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
-	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
-	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, gseed);
-	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, gseed);
-	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);
+	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 5, 6, 4, gseed);
+	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 5, 6, 4, gseed);
+	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 8, 9, 7, gseed);
+	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 8, 9, 7, gseed);
 
 	//Actualizo los tiempos de los testeados masivamente, y si ya cumplieron tiempo, los devuelvo
-	tested_massive(susTal, susal, altos, ti_in[0], 1, 1);
-	tested_massive(susTba, susba, bajos, ti_in[0], 1, 1);
-	tested_massive(expTal, expal, altos, ti_in[0], 1, 1);
-	tested_massive(expTba, expba, bajos, ti_in[0], 1, 1);
-	tested_massive(recTal, recIal, altos, ti_in[0], 1, 1);
-	tested_massive(recTba, recIba, bajos, ti_in[0], 1, 1);
+	tested_massive(susTal, susal, altos, ti_in[0], 1, 0);
+	tested_massive(susTba, susba, bajos, ti_in[0], 1, 0);
+	tested_massive(expTal, expal, altos, ti_in[0], 3, 2);
+	tested_massive(expTba, expba, bajos, ti_in[0], 3, 2);
+	tested_massive(recTal, recIal, altos, ti_in[0], 12, 11);
+	tested_massive(recTba, recIba, bajos, ti_in[0], 12, 11);
 	
 
 	//Genero la reacción según el índice que acabo de obtener
