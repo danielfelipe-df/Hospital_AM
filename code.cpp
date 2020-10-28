@@ -7,7 +7,7 @@
 #include "trabajadores.h"
 #include "dynamics.h"
 
-typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<weib_d> &dist);
+typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist);
 
 int main(void)
 {
@@ -33,7 +33,7 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 0;
+  double nu = 2, delta = 5;
   unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
@@ -44,7 +44,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 100;
+  unsigned int ensemble = 10000;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -52,10 +52,10 @@ int main(void)
 
   //Creo los arreglos para los argumentos de forma y orden de las distribuciones
   double d_order[12] = {De, De, Dpl, Dpl, Dpg, Dpg, Dpl+Dil, Dpl+Dil, Dil, Dil, Dig, Dig};
-  double d_shape = 2.0;
-  std::vector<weib_d> dist;
+  double d_shape = 0.5;
+  std::vector<lognormal_d> dist;
   for(unsigned int i=0; i<12; i++){
-    weib_d my_dist(d_shape, d_order[i]);
+    lognormal_d my_dist(d_order[i], d_shape);
     dist.push_back(my_dist);
   }
   
