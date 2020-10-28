@@ -44,7 +44,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 10000;
+  unsigned int ensemble = 100;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -228,9 +228,9 @@ int main(void)
       }
 
       //Muevo los testeados masivos a su respectivo lugar      
-      move_massive(susTal, susal);      move_massive(susTba, susba);
-      move_massive(expTal, expal);      move_massive(expTba, expba);
-      move_massive(recTal, recIal);      move_massive(recTba, recIba);
+      move_massive(susTal, susal, altos);      move_massive(susTba, susba, bajos);
+      move_massive(expTal, expal, altos);      move_massive(expTba, expba, bajos);
+      move_massive(recTal, recIal, altos);      move_massive(recTba, recIba, bajos);
       
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
@@ -259,7 +259,16 @@ int main(void)
 	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 3, 4, 4, gseed);
 	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 3, 4, 4, gseed);
 	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 5, 6, 6, gseed);
-	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);	
+	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 5, 6, 6, gseed);
+
+	//Actualizo los tiempos de los testeados masivamente, y si ya cumplieron tiempo, los devuelvo
+	tested_massive(susTal, susal, altos, ti_in[0], 1, 1);
+	tested_massive(susTba, susba, bajos, ti_in[0], 1, 1);
+	tested_massive(expTal, expal, altos, ti_in[0], 1, 1);
+	tested_massive(expTba, expba, bajos, ti_in[0], 1, 1);
+	tested_massive(recTal, recIal, altos, ti_in[0], 1, 1);
+	tested_massive(recTba, recIba, bajos, ti_in[0], 1, 1);
+	
 
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);

@@ -41,6 +41,10 @@ void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
 void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran);
 
 
+/* Esta función me actualiza el tiempo de los testeados masivamente, pero fuera de la zona de testeo masivo. Si ya cumplieron, los muevo. */
+void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein);
+
+
 /* Esta función implementa el método de bisección para hallar el tiempo */
 double biseccion(double* A, double prom, double sigma, double t, double B, double ranr, double* tj, int n,  std::vector<lognormal_d> &dist);
 
@@ -66,7 +70,7 @@ void update_massive(grupo &G, trabajadores *family, double time);
 
 
 /* Con esta función muevo los testeados masivos a su respecttivo grupo después de pasar los días de testeo */
-void move_massive(grupo &T, grupo &G);
+void move_massive(grupo &T, grupo &G, trabajadores *family);
 
 
 /* Con esta función identifico a la persona que hico la infección */

@@ -159,6 +159,21 @@ void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, do
 }
 
 
+void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein){
+  for(unsigned int i=0; i<T.size(); i++){
+    family[T[i]].time += time;
+    if(family[T[i]].time > family[T[i]].tmax){
+      family[T[i]].time = 0.0;
+      family[T[i]].tmax = 0.0;
+      family[T[i]].change(typein, typeout);
+      G.push_back(T[i]);
+      T.erase(T.begin() + i);
+      i--;
+    }
+  }
+}
+
+
 double biseccion(double* A, double prom, double sigma, double t, double B, double ranr, double* tj, int n, std::vector<lognormal_d> &dist){
   double m,fa,fm;
   double lim = 1e3, min = 0.0;
@@ -228,9 +243,14 @@ void update_massive(grupo &G, trabajadores *family, double time){
 }
 
 
-void move_massive(grupo &T, grupo &G){
-  for(unsigned int i=0; i<T.size(); i++){G.push_back(T[i]);}
-  T.clear();
+void move_massive(grupo &T, grupo &G, trabajadores *family){
+  for(unsigned int i=0; i<T.size(); i++){
+    if(family[T[i]].time > family[T[i]].tmax){
+      G.push_back(T[i]);
+      T.erase(T.begin() + i);
+      i--;
+    }
+  }
 }
 
 
