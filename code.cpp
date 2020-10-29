@@ -6,6 +6,10 @@
 #include "bases.h"
 #include "trabajadores.h"
 #include "dynamics.h"
+#include "test.h"
+#include "trace.h"
+#include "reaction.h"
+#include "other_functions.h"
 
 typedef void(*reactions) (grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist);
 
@@ -167,7 +171,7 @@ int main(void)
       aux = 0.0;
       n1 = 0;
       while(aux < nu){
-	//Obtengo el tiempo e índice de la reacción	
+	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(susal.size(), susba.size(), susTal.size(), susTba.size(), expal.size(), expba.size(), expTal.size(), expTba.size(), preal.size(), preba.size(), preTal.size(), preTba.size(), preTAal.size(), preTAba.size(), leval.size(), levba.size(), levTal.size(), levTba.size(), levTAal.size(), levTAba.size(), infAal.size(), infAba.size(), prev, gseed, t, tj);
       
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
@@ -200,7 +204,7 @@ int main(void)
 	// Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, altos, bajos, ti_in[0], gseed);
 	
-	//Genero la reacción según el índice que acabo de obtener	
+	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
 
 	//Sumo el tiempo de la reacción
@@ -237,7 +241,7 @@ int main(void)
 	ti_in.clear();
       }
 
-      //Muevo los testeados masivos a su respectivo lugar      
+      //Muevo los testeados masivos a su respectivo lugar
       move_massive(susTal, susal, altos, 1, 0);      move_massive(susTba, susba, bajos, 1, 0);
       move_massive(expTal, expal, altos, 3, 2);      move_massive(expTba, expba, bajos, 3, 2);
       move_massive(recTal, recIal, altos, 12, 11);      move_massive(recTba, recIba, bajos, 12, 11);
@@ -282,7 +286,7 @@ int main(void)
 	tested_massive(expTal, expal, altos, ti_in[0], 3, 2);
 	tested_massive(expTba, expba, bajos, ti_in[0], 3, 2);
 	tested_massive(recTal, recIal, altos, ti_in[0], 12, 11);
-	tested_massive(recTba, recIba, bajos, ti_in[0], 12, 11);	
+	tested_massive(recTba, recIba, bajos, ti_in[0], 12, 11);
 
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);

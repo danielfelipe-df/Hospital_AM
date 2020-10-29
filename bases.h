@@ -1,9 +1,27 @@
 #ifndef BASES_H
 #define BASES_H
 
+/**************************************************************************/
+
+
 #include <vector>
 
 typedef std::vector<int> grupo; //Redefino el vector de índices de personas como grupo
+
+
+/**************************************************************************/
+
+
+#include <boost/math/distributions/weibull.hpp>
+#include <boost/math/distributions/gamma.hpp>
+#include <boost/math/distributions/lognormal.hpp>
+
+typedef boost::math::weibull_distribution<> weib_d;
+typedef boost::math::gamma_distribution<> gamma_d;
+typedef boost::math::lognormal_distribution<> lognormal_d;
+
+
+/**************************************************************************/
 
 
 const int N = 1000; //Número de personas en el sistema
