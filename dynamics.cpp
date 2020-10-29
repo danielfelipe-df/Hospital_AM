@@ -138,17 +138,12 @@ void massive_reaction(grupo &Sa, grupo &Sb, grupo &SMa, grupo &SMb, grupo &Ea, g
 }
 
 
-void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran){
-  if(ran.r() < iota){tested_reaction(L, LT, L.size()-1, family, 7, 9, 0.0);}
-}
-
-
-void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran){
-  int index;
+int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran){
+  int index, contador = 0;
   for(unsigned int i=0; i<T.size(); i++){
     index = T[i];      family[index].time += time;
     if(family[index].time > family[index].tmax){
-      if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);}
+      if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);	contador++;}
       else{family[index].change(typein2, typeout);	  G.push_back(index);}
       T.erase( T.begin() + i);
       family[index].time = 0.0;
@@ -156,6 +151,7 @@ void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, do
       i--;
     }
   }
+  return contador;
 }
 
 
@@ -245,7 +241,7 @@ void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout
 
 int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int index, trabajadores *altos, trabajadores *bajos){
   double num[4];
-  num[0] = cons1*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
+  num[0] = cons1*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;  
   num[1] = cons2*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
   num[2] = (1-alpha)*cons1*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
   num[3] = (1-alpha)*cons2*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
@@ -286,9 +282,88 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
   }
   return agent;
 }
-  
 
-void reaction0(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist){
+
+void main_trace(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
+  int num;
+  num = tested_isolated_inf(PTa, PTAa, Pa, altos, time, 5, 6, 4, ran);
+  aux_main(num, PTAa, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, phi1, mu, true);
+
+  num = tested_isolated_inf(PTb, PTAb, Pb, bajos, time, 5, 6, 4, ran);
+  aux_main(num, PTAb, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, mu, chi, false);
+
+  num = tested_isolated_inf(LTa, LTAa, La, altos, time, 8, 9, 7, ran);
+  aux_main(num, LTAa, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, phi1, mu, true);
+
+  num = tested_isolated_inf(LTb, LTAb, Lb, bajos, time, 8, 9, 7, ran);
+  aux_main(num, LTAb, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, mu, chi, false);
+}
+
+
+void aux_main(int num, grupo &G, grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type){
+  unsigned int contador, aux, ind, my_size;
+  for(unsigned int i=G.size()-num; i<G.size(); i++){
+    contador = 0;
+    if(type){my_size = altos[G[i]].my_inf.size();}
+    else{my_size = bajos[G[i]].my_inf.size();}
+    for(unsigned int j=0; j<my_size && contador<trace; j++){
+      if(type){ind = altos[G[i]].my_inf[j];}
+      else{ind = bajos[G[i]].my_inf[j];}
+      if(ind < Na){aux = reaction_trace(ind, Sa, STa, Ea, ETa, Pa, PTa, La, LTa, RIa, RTa, altos);}
+      else{aux = reaction_trace(ind-Na, Sb, STb, Eb, ETb, Pb, PTb, Lb, LTb, RIb, RTb, bajos);}
+      contador += aux;
+    }    
+    
+    while(contador<trace){
+      ind = (int)(ran.r()*(cons1*Na + cons2*Nb));
+      if(ind < cons1*Na){aux = reaction_trace(ind, Sa, STa, Ea, ETa, Pa, PTa, La, LTa, RIa, RTa, altos);}
+      else{aux = reaction_trace(ind-Na, Sb, STb, Eb, ETb, Pb, PTb, Lb, LTb, RIb, RTb, bajos);}
+      contador += aux;
+    }    
+  }
+}
+
+
+int reaction_trace(int index, grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &RI, grupo &RT, trabajadores *family){
+  int num;
+
+  num = aux_trace(S, ST, family, 0, 1, index);
+  if(num == 1){return num;}
+
+  num = aux_trace(E, ET, family, 2, 3, index);
+  if(num == 1){return num;}
+
+  num = aux_trace(P, PT, family, 4, 5, index);
+  if(num == 1){return num;}
+
+  num = aux_trace(L, LT, family, 7, 8, index);
+  if(num == 1){return num;}
+
+  num = aux_trace(RI, RT, family, 11, 12, index);
+  if(num == 1){return num;}
+
+  return 0;
+}
+
+
+int aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index){
+  std::vector<int>::iterator it;
+  unsigned int ind;
+  
+  if(G.size() != 0){
+    it = std::find(G.begin(), G.end(), index);  ind = std::distance(G.begin(), it);
+    if(ind < G.size()){tested_reaction(G, T, ind, family, typeout, typein, Tt);      return 1;}
+  }
+  if(T.size() != 0){
+    it = std::find(T.begin(), T.end(), index);  ind = std::distance(T.begin(), it);
+    if(ind < T.size()){family[T[ind]].time = 0.0;      return 1;}
+  }
+
+  return 0;
+}
+ 
+
+ void reaction0(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, grupo &RAa, grupo &RAb, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist){
   unsigned int index = (int)(ran.r()*(Sa.size() + STa.size()));
   int agentS, value1 = Ea.size(), value2;
   if(index < Sa.size()){agentS = Sa[index];    mother_reaction(Sa, Ea, index, altos, 0, 2);}
@@ -377,7 +452,13 @@ void reaction4(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pa.size() != 0){
       it = std::find(Pa.begin(), Pa.end(), agent);      ind = std::distance(Pa.begin(), it);
-      if(ind < Pa.size()){mother_reaction(Pa, La, ind, altos, 4, 7);    continue_reaction(La, LTAa, altos, ran);}
+      if(ind < Pa.size()){
+	mother_reaction(Pa, La, ind, altos, 4, 7);
+	if(ran.r() < iota){
+	  tested_reaction(La, LTAa, La.size()-1, altos, 7, 9, 0.0);
+	  aux_main(1, LTAa, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, phi1, mu, true);
+	}
+      }
     }
     if(PTa.size() != 0){
       it = std::find(PTa.begin(), PTa.end(), agent);      ind = std::distance(PTa.begin(), it);
@@ -406,7 +487,13 @@ void reaction5(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
     unsigned int ind;
     if(Pb.size() != 0){
       it = std::find(Pb.begin(), Pb.end(), agent);      ind = std::distance(Pb.begin(), it);
-      if(ind < Pb.size()){mother_reaction(Pb, Lb, ind, bajos, 4, 7);    continue_reaction(Lb, LTAb, bajos, ran);}
+      if(ind < Pb.size()){
+	mother_reaction(Pb, Lb, ind, bajos, 4, 7);
+	if(ran.r() < iota){
+	  tested_reaction(Lb, LTAb, Lb.size()-1, bajos, 7, 9, 0.0);
+	  aux_main(1, LTAb, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, mu, chi, false);
+	}
+      }
     }
     if(PTb.size() != 0){
       it = std::find(PTb.begin(), PTb.end(), agent);      ind = std::distance(PTb.begin(), it);
@@ -445,6 +532,7 @@ void reaction6(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
       it = std::find(PTAa.begin(), PTAa.end(), agent);      ind = std::distance(PTAa.begin(), it);
       if(ind < PTAa.size()){mother_reaction(PTAa, IAa, ind, altos, 6, 10);}
     }
+    aux_main(1, IAa, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, phi1, mu, true);
   }
 }
 
@@ -474,6 +562,7 @@ void reaction7(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &E
       it = std::find(PTAb.begin(), PTAb.end(), agent);      ind = std::distance(PTAb.begin(), it);
       if(ind < PTAb.size()){mother_reaction(PTAb, IAb, ind, bajos, 6, 10);}
     }
+    aux_main(1, IAb, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, mu, chi, false);
   }
 }
 

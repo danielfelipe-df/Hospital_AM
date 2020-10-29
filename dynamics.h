@@ -33,12 +33,8 @@ void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 void massive_reaction(grupo &Sa, grupo &Sb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, Crandom &ran, trabajadores *altos, trabajadores *bajos);
 
 
-/* Esta función es la que genera la reacción en el testeo continuo */
-void continue_reaction(grupo &L, grupo &LT, trabajadores *family, Crandom &ran);
-
-
 /* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los aisla o los devuelvo al estado normal.*/
-void tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran);
+int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran);
 
 
 /* Esta función me actualiza el tiempo de los testeados masivamente, pero fuera de la zona de testeo masivo. Si ya cumplieron, los muevo. */
@@ -79,6 +75,21 @@ int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grup
 
 /* Esta es la función madre para la selección del que infectó */
 int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran, int index, trabajadores *family);
+
+
+/* Esta es la función para hacer rastreo */
+void main_trace(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran);
+
+
+/* Esta es una función auxiliar para el 'main_trace' */
+void aux_main(int num, grupo &G, grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type);
+
+
+/* Esta es la función para hacer la reaccion de rastreo */
+int reaction_trace(int index, grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &RI, grupo &RT, trabajadores *family);
+
+/* Esta es una función auxiliar para hallar a la persona en 'reaction_trace' */
+int aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */

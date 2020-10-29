@@ -46,5 +46,6 @@ const double USepsilon = 1.0/epsilon; //Inverso del tiempo de aislamiento de inf
 const double USlambda = 1.0/lambda; //Inverso del tiempo de aislamiento de infecciosos leves (continuo)
 const double UStau = 1.0/tau; //Inverso del tiempo de aislamiento de infecciosos leves (masivo)
 
+const int trace = 3; //Número de personas rastreadas cada vez que haya contagio
 
 #endif

@@ -123,12 +123,17 @@ int main(void)
     update_massive(susTal, altos, ti_in[0]);	update_massive(susTba, bajos, ti_in[0]);
     update_massive(expTal, altos, ti_in[0]);	update_massive(expTba, bajos, ti_in[0]);
     update_massive(recTal, altos, ti_in[0]);	update_massive(recTba, bajos, ti_in[0]);
-    
+
+    /*
     //Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
     tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 5, 6, 4, gseed);
     tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 5, 6, 4, gseed);
     tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 8, 9, 7, gseed);
     tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 8, 9, 7, gseed);
+    */
+
+    // Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
+    main_trace(susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, altos, bajos, ti_in[0], gseed);
 
     //Genero la reacción según el índice que acabo de obtener
     react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -183,12 +188,17 @@ int main(void)
 	update_massive(susTal, altos, ti_in[0]);	update_massive(susTba, bajos, ti_in[0]);
 	update_massive(expTal, altos, ti_in[0]);	update_massive(expTba, bajos, ti_in[0]);
 	update_massive(recTal, altos, ti_in[0]);	update_massive(recTba, bajos, ti_in[0]);
-	
+
+	/*
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
 	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 5, 6, 4, gseed);
 	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 5, 6, 4, gseed);
 	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 8, 9, 7, gseed);
 	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 8, 9, 7, gseed);
+	*/
+
+	// Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
+	main_trace(susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, altos, bajos, ti_in[0], gseed);
 	
 	//Genero la reacción según el índice que acabo de obtener	
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
@@ -255,11 +265,16 @@ int main(void)
 	update_times(levTAal, altos, ti_in[0]);	update_times(levTAba, bajos, ti_in[0]);
 	update_times(infAal, altos, ti_in[0]);	update_times(infAba, bajos, ti_in[0]);
 
+	/*
 	//Actualizo los tiempos de los testeados, y si ya les dieron resultado los aislo
 	tested_isolated_inf(preTal, preTAal, preal, altos, ti_in[0], 5, 6, 4, gseed);
 	tested_isolated_inf(preTba, preTAba, preba, bajos, ti_in[0], 5, 6, 4, gseed);
 	tested_isolated_inf(levTal, levTAal, leval, altos, ti_in[0], 8, 9, 7, gseed);
 	tested_isolated_inf(levTba, levTAba, levba, bajos, ti_in[0], 8, 9, 7, gseed);
+	*/
+
+	// Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
+	main_trace(susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, altos, bajos, ti_in[0], gseed);
 
 	//Actualizo los tiempos de los testeados masivamente, y si ya cumplieron tiempo, los devuelvo
 	tested_massive(susTal, susal, altos, ti_in[0], 1, 0);
@@ -267,8 +282,7 @@ int main(void)
 	tested_massive(expTal, expal, altos, ti_in[0], 3, 2);
 	tested_massive(expTba, expba, bajos, ti_in[0], 3, 2);
 	tested_massive(recTal, recIal, altos, ti_in[0], 12, 11);
-	tested_massive(recTba, recIba, bajos, ti_in[0], 12, 11);
-	
+	tested_massive(recTba, recIba, bajos, ti_in[0], 12, 11);	
 
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](susal, susba, susTal, susTba, expal, expba, expTal, expTba, preal, preba, preTal, preTba, preTAal, preTAba, leval, levba, levTal, levTba, levTAal, levTAba, infAal, infAba, recTal, recTba, recIal, recIba, recAal, recAba, gseed, altos, bajos, dist);
