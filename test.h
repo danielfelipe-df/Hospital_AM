@@ -12,7 +12,7 @@ void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 
 
 /* Esta función es la que genera la reacción en el testeo masivo */
-void massive_reaction(grupo &Sa, grupo &Sb, grupo &SMa, grupo &SMb, grupo &Ea, grupo &Eb, grupo &EMa, grupo &EMb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RMa, grupo &RMb, Crandom &ran, trabajadores *altos, trabajadores *bajos);
+void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos);
 
 
 /* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los aisla o los devuelvo al estado normal.*/
@@ -23,8 +23,15 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, dou
 void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein);
 
 
-/* Con esta función muevo los testeados masivos a su respecttivo grupo después de pasar los días de testeo */
+/* Con esta función muevo los testeados masivos a su respectivo grupo después de pasar los días de testeo */
 void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout, unsigned int typein);
 
+
+/* Con esta función muevo todos los testeados masivos a su respectivo grupo después de pasar los días de testeo */
+void move_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos);
+
+
+/* Esta función me actualiza el tiempo de los testeados masivamente, pero fuera de la zona de testeo masivo. Si ya cumplieron, los muevo. */
+void tested_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time);
 
 #endif

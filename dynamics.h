@@ -8,7 +8,7 @@
 
 
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción y qué reacción es. */
-std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double Ea, double Eb, double ETa, double ETb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double prev, Crandom &ran, double t, double* tj);
+std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, double prev, Crandom &ran, double t, double* tj);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */

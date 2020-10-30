@@ -1,7 +1,15 @@
 #include <math.h>
 #include "dynamics.h"
 
-std::vector<double> contagio(double Sa, double Sb, double STa, double STb, double Ea, double Eb, double ETa, double ETb, double Pa, double Pb, double PTa, double PTb, double PTAa, double PTAb, double La, double Lb, double LTa, double LTb, double LTAa, double LTAb, double IAa, double IAb, double prev, Crandom &ran, double t, double* tj){
+
+std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, double prev, Crandom &ran, double t, double* tj){
+  //Calculo los tamaños de cada vector
+  double Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
+  Sa = Val[0].size();  Sb = Vba[0].size();  STa = Val[1].size();  STb = Vba[1].size();
+  Ea = Val[2].size();  Eb = Vba[2].size();  ETa = Val[3].size();  ETb = Vba[3].size();
+  Pa = Val[4].size();  Pb = Vba[4].size();  PTa = Val[5].size();  PTb = Vba[5].size();  PTAa = Val[6].size();  PTAb = Vba[6].size();
+  La = Val[7].size();  Lb = Vba[7].size();  LTa = Val[8].size();  LTb = Vba[8].size();  LTAa = Val[9].size();  LTAb = Vba[9].size();
+  IAa = Val[10].size();  IAb = Vba[10].size();
 
   //Número de proponsidades
   const unsigned int n = 14;

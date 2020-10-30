@@ -14,5 +14,10 @@ void trabajadores::init(){
 
 void trabajadores::change(unsigned int now, unsigned int past){
   if(kind == past){kind = now;}
-  else{std::cerr << "Error: Tipo de trabajador no coincide.\nSe debio ingresar " << kind << " pero se ingresa " << past << std::endl;    std::exit(EXIT_FAILURE);}
+  else{
+    std::cerr << "Error: Tipo de trabajador no coincide.\nSe debio ingresar " << kind << " pero se ingresa " << past << std::endl;
+    int num[2] = {};
+    num[0]++;
+    num[3] = 0;
+    std::exit(EXIT_FAILURE);}
 }

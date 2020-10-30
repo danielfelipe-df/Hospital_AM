@@ -4,19 +4,19 @@
 #include "test.h"
 
 
-void main_trace(grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, grupo &RTa, grupo&RTb, grupo &RIa, grupo &RIb, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
+void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
   int num;
-  num = tested_isolated_inf(PTa, PTAa, Pa, altos, time, 5, 6, 4, ran);
-  aux_main(num, PTAa, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, phi1, mu, true);
+  num = tested_isolated_inf(Val[5], Val[6], Val[4], altos, time, 5, 6, 4, ran);
+  aux_main(num, Val[6], Val[0], Vba[0], Val[1], Vba[1], Val[2], Vba[2], Val[3], Vba[3], Val[4], Vba[4], Val[5], Vba[5], Val[7], Vba[7], Val[8], Vba[8], Val[11], Vba[11], Val[12], Vba[12], altos, bajos, ran, phi1, mu, true);
 
-  num = tested_isolated_inf(PTb, PTAb, Pb, bajos, time, 5, 6, 4, ran);
-  aux_main(num, PTAb, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, mu, chi, false);
+  num = tested_isolated_inf(Vba[5], Vba[6], Vba[4], bajos, time, 5, 6, 4, ran);
+  aux_main(num, Vba[6], Val[0], Vba[0], Val[1], Vba[1], Val[2], Vba[2], Val[3], Vba[3], Val[4], Vba[4], Val[5], Vba[5], Val[7], Vba[7], Val[8], Vba[8], Val[11], Vba[11], Val[12], Vba[12], altos, bajos, ran, mu, chi, false);
 
-  num = tested_isolated_inf(LTa, LTAa, La, altos, time, 8, 9, 7, ran);
-  aux_main(num, LTAa, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, phi1, mu, true);
+  num = tested_isolated_inf(Val[8], Val[9], Val[7], altos, time, 8, 9, 7, ran);
+  aux_main(num, Val[9], Val[0], Vba[0], Val[1], Vba[1], Val[2], Vba[2], Val[3], Vba[3], Val[4], Vba[4], Val[5], Vba[5], Val[7], Vba[7], Val[8], Vba[8], Val[11], Vba[11], Val[12], Vba[12], altos, bajos, ran, phi1, mu, true);
 
-  num = tested_isolated_inf(LTb, LTAb, Lb, bajos, time, 8, 9, 7, ran);
-  aux_main(num, LTAb, Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, La, Lb, LTa, LTb, RIa, RIb, RTa, RTb, altos, bajos, ran, mu, chi, false);
+  num = tested_isolated_inf(Vba[8], Vba[9], Vba[7], bajos, time, 8, 9, 7, ran);
+  aux_main(num, Vba[9], Val[0], Vba[0], Val[1], Vba[1], Val[2], Vba[2], Val[3], Vba[3], Val[4], Vba[4], Val[5], Vba[5], Val[7], Vba[7], Val[8], Vba[8], Val[11], Vba[11], Val[12], Vba[12], altos, bajos, ran, mu, chi, false);
 }
 
 
