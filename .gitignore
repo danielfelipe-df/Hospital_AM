@@ -8,3 +8,4 @@ coso.cpp
 *.gnu
 *.png
 Zips/
+build/
