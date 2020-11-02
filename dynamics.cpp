@@ -27,7 +27,6 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
 
   //Propensidades de ser leve
   As[4] = USDpl*(1-kappa)*psi*(Pa+PTa+PTAa);
-
   As[5] = USDpl*(1-kappa)*psi*(Pb+PTb+PTAb);
 
   //Propensidad de ser infeccioso grave y aislarse inmediatamente

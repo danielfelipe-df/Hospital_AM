@@ -11,11 +11,11 @@ void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *
 
 
 /* Esta es una función auxiliar para el 'main_trace' */
-void aux_main(int num, grupo &G, grupo &Sa, grupo &Sb, grupo &STa, grupo &STb, grupo &Ea, grupo &Eb, grupo &ETa, grupo &ETb, grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &RIa, grupo &RIb, grupo &RTa, grupo &RTb, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type);
+void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type, unsigned int index);
 
 
 /* Esta es la función para hacer la reaccion de rastreo */
-int reaction_trace(int index, grupo &S, grupo &ST, grupo &E, grupo &ET, grupo &P, grupo &PT, grupo &L, grupo &LT, grupo &RI, grupo &RT, trabajadores *family);
+int reaction_trace(int index, std::vector<grupo> &V, trabajadores *family);
 
 
 /* Esta es una función auxiliar para hallar a la persona en 'reaction_trace' */
