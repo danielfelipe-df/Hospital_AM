@@ -15,7 +15,7 @@ project(Hospital
 add_executable(Project code.cpp)
 
 #set the name of executable
-set_target_properties(Project PROPERTIES OUTPUT_NAME "x.hospital2")
+set_target_properties(Project PROPERTIES OUTPUT_NAME "x.code")
 
 #add the sources
 target_sources(Project PRIVATE
@@ -30,9 +30,7 @@ target_sources(Project PRIVATE
 
 #add the flags
 target_compile_options(Project PRIVATE
-  -Wall
-  -Werror
-  -g
+  -Wall  -Werror  -g  -O3
   )
 
 #add the sanitizers
