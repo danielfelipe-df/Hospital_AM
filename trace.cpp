@@ -1,5 +1,7 @@
+#include <iostream>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 #include "trace.h"
 #include "test.h"
 
@@ -22,10 +24,11 @@ void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *
 
 void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type, unsigned int index){
   unsigned int contador, aux, ind, my_size, Gsize;
+  double value1, value2, value3;
   if(type){Gsize = Val[index].size();}
   else{Gsize = Vba[index].size();}
   
-  for(unsigned int i=Gsize; i<Gsize; i++){
+  for(unsigned int i=Gsize-num; i<Gsize; i++){
     contador = 0;
     if(type){my_size = altos[Val[index][i]].my_inf.size();}
     else{my_size = bajos[Vba[index][i]].my_inf.size();}
@@ -34,55 +37,66 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
       if(type){ind = altos[Val[index][i]].my_inf[j];}
       else{ind = bajos[Vba[index][i]].my_inf[j];}
       
-      if(ind < Na){aux = reaction_trace(ind, Val, altos);}
-      else{aux = reaction_trace(ind-Na, Vba, bajos);}
+      if(ind < Na){aux = reaction_trace(Val, altos, ran, ind);}
+      else{aux = reaction_trace(Vba, bajos, ran, ind-Na);}
       contador += aux;
     }
     
     while(contador<trace){
-      ind = (int)(ran.r()*(cons1*Na + cons2*Nb));
-      if(ind < cons1*Na){aux = reaction_trace(ind, Val, altos);}
-      else{aux = reaction_trace(ind-Na, Vba, bajos);}
+      value1 = Val[6].size() + Val[9].size() + Val[10].size() + Val[13].size();
+      value2 = Vba[6].size() + Vba[9].size() + Vba[10].size() + Vba[13].size();
+      value3 = ran.r()*(cons1*(Na-value1) + cons2*(Nb-value2));
+      if(value3 < cons1*(Na-value1)){aux = reaction_trace(Val, altos, ran, -1);}
+      else{aux = reaction_trace(Vba, bajos, ran, -1);}
       contador += aux;
     }
   }
 }
 
 
-int reaction_trace(int index, std::vector<grupo> &V, trabajadores *family){
-  int num;
+int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, int index){
+  int agent;
+  if(index == -1){
+    grupo aux;
+    int ind;
+    for(unsigned int i=0; i<6; i++){std::copy(V[i].begin(), V[i].end(), std::back_inserter(aux));}
+    std::copy(V[7].begin(), V[7].end(), std::back_inserter(aux));
+    std::copy(V[8].begin(), V[8].end(), std::back_inserter(aux));
+    std::copy(V[11].begin(), V[11].end(), std::back_inserter(aux));
+    std::copy(V[12].begin(), V[12].end(), std::back_inserter(aux));
+    
+    ind = (int)(ran.r()*aux.size());
+    agent = aux[ind];
+    aux.clear();
+  }
+  else{
+    agent = index;
+  }
 
-  num = aux_trace(V[0], V[1], family, 0, 1, index);
-  if(num == 1){return num;}
-
-  num = aux_trace(V[2], V[3], family, 2, 3, index);
-  if(num == 1){return num;}
-
-  num = aux_trace(V[4], V[5], family, 4, 5, index);
-  if(num == 1){return num;}
-
-  num = aux_trace(V[7], V[8], family, 7, 8, index);
-  if(num == 1){return num;}
-
-  num = aux_trace(V[11], V[12], family, 11, 12, index);
-  if(num == 1){return num;}
-
-  return 0;
+  if(family[agent].kind == 0){std::cout << 1 << std::endl;    aux_trace(V[0], V[1], family, 0, 1, agent, true);    return 1;}
+  else if(family[agent].kind == 1){std::cout << 1 << std::endl;    aux_trace(V[0], V[1], family, 0, 1, agent, false);    return 1;}
+  else if(family[agent].kind == 2){std::cout << 2 << std::endl;    aux_trace(V[2], V[3], family, 2, 3, agent, true);    return 1;}
+  else if(family[agent].kind == 3){std::cout << 2 << std::endl;    aux_trace(V[2], V[3], family, 2, 3, agent, false);    return 1;}
+  else if(family[agent].kind == 4){std::cout << 3 << std::endl;    aux_trace(V[4], V[6], family, 4, 6, agent, true);    return 1;}
+  else if(family[agent].kind == 5){std::cout << 3 << std::endl;    aux_trace(V[5], V[6], family, 5, 6, agent, true);    return 1;}
+  else if(family[agent].kind == 7){std::cout << 4 << std::endl;    aux_trace(V[7], V[9], family, 7, 9, agent, true);    return 1;}
+  else if(family[agent].kind == 8){std::cout << 4 << std::endl;    aux_trace(V[8], V[9], family, 8, 9, agent, true);    return 1;}
+  else if(family[agent].kind == 11){std::cout << 5 << std::endl;    aux_trace(V[11], V[12], family, 11, 12, agent, true);    return 1;}
+  else if(family[agent].kind == 12){std::cout << 5 << std::endl;    aux_trace(V[11], V[12], family, 11, 12, agent, false);    return 1;}
+  else{return 0;}
 }
 
 
-int aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index){
+void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index, bool normal){
   std::vector<int>::iterator it;
   unsigned int ind;
   
-  if(G.size() != 0){
+  if(normal){
     it = std::find(G.begin(), G.end(), index);  ind = std::distance(G.begin(), it);
-    if(ind < G.size()){tested_reaction(G, T, ind, family, typeout, typein, Tt);      return 1;}
+    tested_reaction(G, T, ind, family, typeout, typein, 0.0);
   }
-  if(T.size() != 0){
+  else{
     it = std::find(T.begin(), T.end(), index);  ind = std::distance(T.begin(), it);
-    if(ind < T.size()){family[T[ind]].time = 0.0;      return 1;}
+    family[T[ind]].time = 0.0;
   }
-
-  return 0;
 }

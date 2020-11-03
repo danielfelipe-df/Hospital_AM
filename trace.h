@@ -15,11 +15,11 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
 
 
 /* Esta es la función para hacer la reaccion de rastreo */
-int reaction_trace(int index, std::vector<grupo> &V, trabajadores *family);
+int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, int index);
 
 
 /* Esta es una función auxiliar para hallar a la persona en 'reaction_trace' */
-int aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index);
+void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index, bool normal);
 
 
 #endif
