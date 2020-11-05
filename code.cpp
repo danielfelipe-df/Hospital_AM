@@ -32,8 +32,8 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 1;
-  unsigned int loops = T/(nu+delta);
+  double nu = 2, delta = 12;
+  //unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
   unsigned int tests = (int)(N*theta);
@@ -61,44 +61,45 @@ int main(void)
   //Variables auxiliares
   std::vector<double> ti_in;
   unsigned int n1, n2;
-  double aux, contador, num, promrec;
+  double aux, contador, promrec;
   unsigned int aux2;
 
-  std::ofstream fout;
-  std::string name;
+  //std::ofstream fout;
+  //std::string name;
 
+  //name = "datos_" + std::to_string((int)Tt) + "_" + std::to_string((int)(xi*100)) + ".csv";
+  //fout.open(name);
+  
   contador = 0;
-  num = 0;
   promrec = 0;
-
+  
   //Genero las corridas
   while(contador < ensemble){
-    std::cout << num << '\t' << contador << std::endl;
-
+    std::cout << contador << std::endl;
     //Los convierto del tamaño que son
-    vecal.resize(14);    vecba.resize(14);
-
+    vecal.resize(15);    vecba.resize(15);
+    
     //Le asigno a cada entrada el índice como valor
     vecal[0].resize(Na);    vecba[0].resize(Nb);
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
-    
+      
     //name = "Data/datos_" + std::to_string(i) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
-
+      
     //Inicio el tiempo
     t = 0.0;
-
+    
     //Imprimo los datos
     //print_all(vecal, vecba, t, name);
     
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
-
+    
     prev = 0.005;
-
+    
     //Obtengo el tiempo e índice de la reacción
     ti_in = contagio(vecal, vecba, prev, gseed, t, tj);
     
@@ -107,44 +108,56 @@ int main(void)
     
     //Actualizo los tiempos de los testeados masivamente que dan negativo
     update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-
+    
     //Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
     main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
-
+    
     //Genero la reacción según el índice que acabo de obtener
     react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist);
     
     //Sumo el tiempo de la reacción
     t += ti_in[0];
-
+    
     //Imprimo los datos
     //print_all(vecal, vecba, t, name);
     
     //Borro el vector de tiempo e índice
     ti_in.clear();
-
+    
     prev = 0.0;
-
-    for(unsigned int j=0; j<loops; j++){
-
+    
+    while(t < T){
+	
       //Región de testeo masivo
       aux = 0.0;
       n1 = 0;
       while(aux < nu){
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(vecal, vecba, prev, gseed, t, tj);
-      
+	
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
-
+	
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
-	
+	  
 	//Actualizo los tiempos de los testeados masivamente que dan negativo
 	update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
+
+	//Genero los tests masivos
+	/* Cuento los sus, exp, pre, lev y recI */
+	aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
+	aux2 += vecal[8].size() + vecba[8].size() + vecal[12].size() + vecba[12].size();
+	n2 = (int)(aux/dt);
+	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
+	  massive_reaction(vecal, vecba, gseed, altos, bajos);
+	  aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
+	  aux2 += vecal[8].size() + vecba[8].size() + vecal[12].size() + vecba[12].size();
+	}
+	n1 = n2;
 	
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist);
@@ -152,56 +165,45 @@ int main(void)
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
 	aux += ti_in[0];
-
-	//Genero los tests masivos
-	aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[4].size() + vecba[4].size();
-	aux2 += vecal[7].size() + vecba[7].size() + vecal[11].size() + vecba[11].size();
-	n2 = (int)(aux/dt);
-	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
-	  massive_reaction(vecal, vecba, gseed, altos, bajos);
-	  aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[4].size() + vecba[4].size();
-	  aux2 += vecal[7].size() + vecba[7].size() + vecal[11].size() + vecba[11].size();
-	}
-	n1 = n2;
-
+	
 	//Imprimo los datos
 	//print_all(vecal, vecba, t, name);
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
       }
-
+      
       //Muevo los testeados masivos a su respectivo lugar
       move_massive_all(vecal, vecba, altos, bajos);
       
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
-
+      
       //Región sin testeo masivo
       aux = 0.0;
       while(aux < delta){
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(vecal, vecba, prev, gseed, t, tj);
-      
+	
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
-
+	
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
-
+	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
-
+	
 	//Actualizo los tiempos de los testeados masivamente, y si ya cumplieron tiempo, los devuelvo
 	tested_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-
+	
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist);
-      
+	
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
 	aux += ti_in[0];
-
+	
 	//Imprimo los datos
 	//print_all(vecal, vecba, t, name);
 	
@@ -212,22 +214,16 @@ int main(void)
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
     }
-
-    if(vecal[11].size() + vecba[11].size() + vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() > 10){
-      promrec += vecal[11].size() + vecba[11].size() + vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size();
-      contador++;
-    }
-    num++;
-
+    /* Cuento los recI, recT y recA */
+    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
+    contador++;
+    
     //Borro los vectores
     vecal.clear();    vecba.clear();
   }
   promrec /= (contador*N);
 
-  name = "datos4_" + std::to_string((int)Tt) + "_" + std::to_string((int)(xi*100)) + ".csv";
-  fout.open(name, std::ios_base::app);
-  fout << trace << '\t' << theta << '\t' << delta << '\t' << promrec << '\t' << contador << '\t' << num - contador << '\t' << num << std::endl;;
-  fout.close();
+  std::cout << "AR: " << promrec << std::endl;
 
   return 0;
 }

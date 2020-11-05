@@ -8,11 +8,11 @@ public:
 
   /* Defino qué tipo de persona es
    * 0:sus, 1:susT,
-   * 2:exp, 3:expT,
-   * 4:pre, 5:preT, 6:preTA
-   * 7:lev, 8:levT, 9:levTA,
-   * 10:infA,
-   * 11:recI, 12:recT, 13:recA
+   * 2:exp, 3:expT, 4:expA
+   * 5:pre, 6:preT, 7:preTA
+   * 8:lev, 9:levT, 10:levTA,
+   * 11:infA,
+   * 12:recI, 13:recT, 14:recA
   */
   unsigned int kind;
 

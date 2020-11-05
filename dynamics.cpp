@@ -4,14 +4,14 @@
 
 std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, double prev, Crandom &ran, double t, double* tj){
   //Calculo los tamaños de cada vector
-  double Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
+  double Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
   Sa = Val[0].size();  Sb = Vba[0].size();  STa = Val[1].size();  STb = Vba[1].size();
-  Ea = Val[2].size();  Eb = Vba[2].size();  ETa = Val[3].size();  ETb = Vba[3].size();
-  Pa = Val[4].size();  Pb = Vba[4].size();  PTa = Val[5].size();  PTb = Vba[5].size();  PTAa = Val[6].size();  PTAb = Vba[6].size();
-  La = Val[7].size();  Lb = Vba[7].size();  LTa = Val[8].size();  LTb = Vba[8].size();  LTAa = Val[9].size();  LTAb = Vba[9].size();
-  IAa = Val[10].size();  IAb = Vba[10].size();
+  Ea = Val[2].size();  Eb = Vba[2].size();  ETa = Val[3].size();  ETb = Vba[3].size();  EAa = Val[4].size();  EAb = Val[4].size();
+  Pa = Val[5].size();  Pb = Vba[5].size();  PTa = Val[6].size();  PTb = Vba[6].size();  PTAa = Val[7].size();  PTAb = Vba[7].size();
+  La = Val[8].size();  Lb = Vba[8].size();  LTa = Val[9].size();  LTb = Vba[9].size();  LTAa = Val[10].size();  LTAb = Vba[10].size();
+  IAa = Val[11].size();  IAb = Vba[11].size();
 
-  //Número de proponsidades
+  //Número de propensidades
   const unsigned int n = 14;
 
   //Creo el arreglo de las propensidades
@@ -22,8 +22,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
   As[1] = beta*(Sb+STb)*(mu*(Pa+PTa+La+LTa)/(double)Na + chi*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*(IAb+PTAb+LTAb)/(double)Nb);
 
   //Propensidades de ser presintomático
-  As[2] = USDe*(Ea+ETa);
-  As[3] = USDe*(Eb+ETb);
+  As[2] = USDe*(Ea+ETa+EAa);
+  As[3] = USDe*(Eb+ETb+EAb);
 
   //Propensidades de ser leve
   As[4] = USDpl*(1-kappa)*psi*(Pa+PTa+PTAa);
