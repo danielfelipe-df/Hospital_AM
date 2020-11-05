@@ -40,7 +40,7 @@ const double USDplil = 1.0/(Dpl+Dil); //Inverso del periodo infeccioso total
 
 /* Tasas complementarias **************************************************/
 
-const double kappa = 0.8; //Proporción de contagiados que son asintomáticos
+const double kappa = 0.2; //Proporción de contagiados que son asintomáticos
 const double psi = 0.95; //Proporción de sintomáticos que son leves
 const double xi = 0.65; //Sensibilidad de la prueba
 const double theta = 0.5; //Cobertura
