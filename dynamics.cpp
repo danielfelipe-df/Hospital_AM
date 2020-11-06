@@ -4,12 +4,20 @@
 
 std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, double prev, Crandom &ran, double t, double* tj){
   //Calculo los tamaños de cada vector
-  double Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
+  double Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PAa, PAb, PMa, PMb, La, Lb, LTa, LTb, LAa, LAb, LMa, LMb, IAa, IAb;
+  /* Susceptibles */
   Sa = Val[0].size();  Sb = Vba[0].size();  STa = Val[1].size();  STb = Vba[1].size();
-  Ea = Val[2].size();  Eb = Vba[2].size();  ETa = Val[3].size();  ETb = Vba[3].size();  EAa = Val[4].size();  EAb = Val[4].size();
-  Pa = Val[5].size();  Pb = Vba[5].size();  PTa = Val[6].size();  PTb = Vba[6].size();  PTAa = Val[7].size();  PTAb = Vba[7].size();
-  La = Val[8].size();  Lb = Vba[8].size();  LTa = Val[9].size();  LTb = Vba[9].size();  LTAa = Val[10].size();  LTAb = Vba[10].size();
-  IAa = Val[11].size();  IAb = Vba[11].size();
+  /* Expuestos */
+  Ea = Val[2].size();  Eb = Vba[2].size();  ETa = Val[3].size();  ETb = Vba[3].size();
+  EAa = Val[4].size();  EAb = Val[4].size();
+  /* Presintomáticos */
+  Pa = Val[5].size();  Pb = Vba[5].size();  PTa = Val[6].size();  PTb = Vba[6].size();
+  PAa = Val[7].size();  PAb = Vba[7].size();  PMa = Val[8].size();  PMb = Vba[8].size();
+  /* Leves */
+  La = Val[9].size();  Lb = Vba[9].size();  LTa = Val[10].size();  LTb = Vba[10].size();
+  LAa = Val[11].size();  LAb = Vba[11].size();  LMa = Val[12].size();  LMb = Vba[12].size();
+  /* Graves */
+  IAa = Val[13].size();  IAb = Vba[13].size();
 
   //Número de propensidades
   const unsigned int n = 14;
@@ -18,28 +26,28 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
   double As[n];
 
   //Propensidades de exponerse
-  As[0] = beta*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb + eta*prev);
-  As[1] = beta*(Sb+STb)*(mu*(Pa+PTa+La+LTa)/(double)Na + chi*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*(IAb+PTAb+LTAb)/(double)Nb);
+  As[0] = beta*(Sa+STa)*(phi1*(Pa+PTa+PMa+La+LTa+LMa)/(double)Na + mu*(Pb+PTb+PMb+Lb+LTb+LMb)/(double)Nb + (1-alpha)*phi1*(IAa+PAa+LAa)/(double)Na + (1-alpha)*mu*(IAb+PAb+LAb)/(double)Nb + eta*prev);
+  As[1] = beta*(Sb+STb)*(mu*(Pa+PTa+PMa+La+LTa+LMa)/(double)Na + chi*(Pb+PTb+PMb+Lb+LTb+LMb)/(double)Nb + (1-alpha)*mu*(IAa+PAa+LAa)/(double)Na + (1-alpha)*chi*(IAb+PAb+LAb)/(double)Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*(Ea+ETa+EAa);
   As[3] = USDe*(Eb+ETb+EAb);
 
   //Propensidades de ser leve
-  As[4] = USDpl*(1-kappa)*psi*(Pa+PTa+PTAa);
-  As[5] = USDpl*(1-kappa)*psi*(Pb+PTb+PTAb);
+  As[4] = USDpl*(1-kappa)*psi*(Pa+PTa+PAa+PMa);
+  As[5] = USDpl*(1-kappa)*psi*(Pb+PTb+PAb+PMb);
 
   //Propensidad de ser infeccioso grave y aislarse inmediatamente
-  As[6] = USDpg*(1-kappa)*(1-psi)*(Pa+PTa+PTAa);
-  As[7] = USDpg*(1-kappa)*(1-psi)*(Pb+PTb+PTAb);
+  As[6] = USDpg*(1-kappa)*(1-psi)*(Pa+PTa+PAa+PMa);
+  As[7] = USDpg*(1-kappa)*(1-psi)*(Pb+PTb+PAb+PMb);
 
   //Propensidad de recuperarse siendo pre-sintomático
-  As[8] = USDplil*kappa*(Pa+PTa+PTAa);
-  As[9] = USDplil*kappa*(Pb+PTb+PTAb);
+  As[8] = USDplil*kappa*(Pa+PTa+PAa+PMa);
+  As[9] = USDplil*kappa*(Pb+PTb+PAb+PMb);
 
   //Propensidad de recuperarse siendo leve
-  As[10] = USDil*(La+LTa+LTAa);
-  As[11] = USDil*(Lb+LTb+LTAb);
+  As[10] = USDil*(La+LTa+LAa+LMa);
+  As[11] = USDil*(Lb+LTb+LAb+LMb);
 
   //Propensidad de recuperarse siendo infeccioso grave
   As[12] = USDig*IAa;
