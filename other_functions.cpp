@@ -72,3 +72,23 @@ void print_types(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, 
 
   fout.close();
 }
+
+
+void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name){
+  unsigned int veca[3] = {}, vecb[3] = {};
+
+  veca[2] += Val[13].size();    vecb[2] += Vba[13].size(); //Graves
+  for(unsigned int i=0; i<4; i++){
+    veca[0] += Val[i+5].size();    vecb[0] += Vba[i+5].size(); //Presintomáticos
+    veca[1] += Val[i+9].size();    vecb[1] += Vba[i+9].size(); //Leves
+  }
+
+  double infal=0, infba=0;
+  std::ofstream fout;
+  fout.open(name, std::ios_base::app);
+
+  for(unsigned int i=0; i<3; i++){infal += veca[i];    infba += vecb[i];}
+  fout << time << '\t' << infal << '\t' << infba << '\t' << infal + infba << std::endl;
+
+  fout.close();
+}
