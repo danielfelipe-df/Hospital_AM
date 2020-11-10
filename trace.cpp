@@ -29,8 +29,6 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
   if(type){Gsize = Val[index].size();}
   else{Gsize = Vba[index].size();}
 
-  unsigned int trace_net = 14;
-
   for(unsigned int i=Gsize-num; i<Gsize; i++){
     if(type){my_size = altos[Val[index][i]].my_inf.size();}
     else{my_size = bajos[Vba[index][i]].my_inf.size();}

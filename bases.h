@@ -25,7 +25,7 @@ const int Nb = N*0.82; //Número de personas de riesgo bajo
 
 /* Tasas de la dinámica ***************************************************/
 
-const double beta = 1.3; //Beta de infección
+const double beta = 1.1; //Beta de infección
 const double De = 2.9; //Periodo latente
 const double Dpl = 1.3; //Periodo infeccioso pre-sintomático para leves
 const double Dpg = 2.3; //Periodo infecciosos pre-sintomático para graves
@@ -59,6 +59,7 @@ const double phi1 = 0.6; //Tasa de contacto de tipo alto
 /* Rastreo ****************************************************************/
 
 const int trace = 3; //Número de personas rastreadas cada vez que haya contagio
+const unsigned int trace_net = 6; //Número de contactos en promedio por cada persona del staff
 
 /**************************************************************************/
 
