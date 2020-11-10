@@ -23,5 +23,3 @@ double Crandom::exponencial(float tau){
 double Crandom::gauss(float mu,float sigma){
   return sigma*std::sqrt(-2*std::log(r()))*std::cos(2*M_PI*r())+mu;
 }
-
-

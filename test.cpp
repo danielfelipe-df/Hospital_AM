@@ -12,7 +12,7 @@ void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 
 
 void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  unsigned int M = Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[9].size() + Vba[9].size() + Val[14].size() + Vba[14].size();
+  unsigned int M = Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size() + Vba[8].size() + Val[12].size() + Vba[12].size();
   unsigned int num = (int)(ran.r()*M);
 
   if(num < Val[0].size()){
@@ -33,17 +33,17 @@ void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom 
   else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size()){
     tested_reaction(Vba[5], Vba[6], (int)(ran.r()*Vba[5].size()), bajos, 5, 6, Tt); //Presintomático bajo
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[9].size()){
-    tested_reaction(Val[9], Val[10], (int)(ran.r()*Val[9].size()), altos, 9, 10, Tt); //Leve alto
+  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size()){
+    tested_reaction(Val[8], Val[9], (int)(ran.r()*Val[8].size()), altos, 8, 9, Tt); //Leve alto
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[9].size() + Vba[9].size()){
-    tested_reaction(Vba[9], Vba[10], (int)(ran.r()*Vba[9].size()), bajos, 9, 10, Tt); //Leve bajo
+  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size() + Vba[8].size()){
+    tested_reaction(Vba[8], Vba[9], (int)(ran.r()*Vba[8].size()), bajos, 8, 9, Tt); //Leve bajo
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[9].size() + Vba[9].size() + Val[14].size()){
-    tested_reaction(Val[14], Val[15], (int)(ran.r()*Val[14].size()), altos, 14, 15, Tt); //Recuperado no-detectado alto
+  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size() + Vba[8].size() + Val[12].size()){
+    tested_reaction(Val[12], Val[13], (int)(ran.r()*Val[12].size()), altos, 12, 13, Tt); //Recuperado no-detectado alto
   }
   else{
-    tested_reaction(Vba[14], Vba[15], (int)(ran.r()*Vba[14].size()), bajos, 14, 15, Tt); //Recuperado no-detectado bajo
+    tested_reaction(Vba[12], Vba[13], (int)(ran.r()*Vba[12].size()), bajos, 12, 13, Tt); //Recuperado no-detectado bajo
   }
 }
 
@@ -83,16 +83,12 @@ void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout
 void move_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos){
   move_massive(Val[1], Val[0], altos, 1, 0);      move_massive(Vba[1], Vba[0], bajos, 1, 0); //Susceptible testeado a susceptible
   move_massive(Val[3], Val[2], altos, 3, 2);      move_massive(Vba[3], Vba[2], bajos, 3, 2); //Expuesto testeado a expuesto
-  move_massive(Val[8], Val[5], altos, 8, 5);      move_massive(Vba[8], Vba[5], bajos, 8, 5); //Presintomático masivo a presintomático
-  move_massive(Val[12], Val[9], altos, 12, 9);      move_massive(Vba[12], Vba[9], bajos, 12, 9); //Leve masivo a leve
-  move_massive(Val[15], Val[14], altos, 15, 14);      move_massive(Vba[15], Vba[14], bajos, 15, 14); //Recuperado testeado a recuperado
+  move_massive(Val[13], Val[12], altos, 13, 12);      move_massive(Vba[13], Vba[12], bajos, 13, 12); //Recuperado testeado a recuperado
 }
 
 
 void tested_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
   tested_massive(Val[1], Val[0], altos, time, 1, 0);  tested_massive(Vba[1], Vba[0], bajos, time, 1, 0); //Susceptible testeado a susceptible
   tested_massive(Val[3], Val[2], altos, time, 3, 2);  tested_massive(Vba[3], Vba[2], bajos, time, 3, 2); //Expuesto testeado a expuesto
-  tested_massive(Val[8], Val[5], altos, time, 8, 5);  tested_massive(Vba[8], Vba[5], bajos, time, 8, 5); //Presintomático masivo a presintomátivo
-  tested_massive(Val[12], Val[9], altos, time, 12, 9);  tested_massive(Vba[12], Vba[9], bajos, time, 12, 9); //Leve masivo a masivo
-  tested_massive(Val[14], Val[15], altos, time, 14, 15);  tested_massive(Vba[14], Vba[15], bajos, time, 14, 15); //Recuperado testeado a recuperado
+  tested_massive(Val[13], Val[12], altos, time, 13, 12);  tested_massive(Vba[13], Vba[12], bajos, time, 13, 12); //Recuperado testeado a recuperado
 }

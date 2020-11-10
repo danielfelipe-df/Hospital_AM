@@ -32,7 +32,7 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 26;
+  double nu = 2, delta = 12;
   //unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
@@ -77,7 +77,7 @@ int main(void)
   while(contador < ensemble){
     std::cout << contador << std::endl;
     //Los convierto del tamaño que son
-    vecal.resize(17);    vecba.resize(17);
+    vecal.resize(15);    vecba.resize(15);
     
     //Le asigno a cada entrada el índice como valor
     vecal[0].resize(Na);    vecba[0].resize(Nb);
@@ -150,12 +150,12 @@ int main(void)
 	//Genero los tests masivos
 	/* Cuento los sus, exp, pre, lev y recI */
 	aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
-	aux2 += vecal[9].size() + vecba[9].size() + vecal[14].size() + vecba[14].size();
+	aux2 += vecal[8].size() + vecba[8].size() + vecal[12].size() + vecba[12].size();
 	n2 = (int)(aux/dt);
 	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
 	  massive_reaction(vecal, vecba, gseed, altos, bajos);
 	  aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
-	  aux2 += vecal[9].size() + vecba[9].size() + vecal[14].size() + vecba[14].size();
+	  aux2 += vecal[8].size() + vecba[8].size() + vecal[12].size() + vecba[12].size();
 	}
 	n1 = n2;
 	
@@ -215,7 +215,7 @@ int main(void)
       if(ti_in.size() != 0){break;}
     }
     /* Cuento los recI, recT y recA */
-    promrec += vecal[14].size() + vecba[14].size() + vecal[15].size() + vecba[15].size() + vecal[16].size() + vecba[16].size();
+    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
     contador++;
     
     //Borro los vectores

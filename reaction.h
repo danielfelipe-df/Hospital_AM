@@ -14,11 +14,11 @@ int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value
 
 
 /* Con esta función identifico a la persona que hico la infección */
-int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PAa, grupo &PAb, grupo &PMa, grupo &PMb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LAa, grupo &LAb, grupo &LMa, grupo &LMb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int index, trabajadores *altos, trabajadores *bajos);
+int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int index, trabajadores *altos, trabajadores *bajos);
 
 
 /* Esta es la función madre para la selección del que infectó */
-int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, grupo &Ge, grupo &Gf, Crandom &ran, int index, trabajadores *family);
+int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran, int index, trabajadores *family);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */

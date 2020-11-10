@@ -9,10 +9,10 @@ public:
   /* Defino qué tipo de persona es
    * 0:sus, 1:susT,
    * 2:exp, 3:expT, 4:expA
-   * 5:pre, 6:preT, 7:preA, 8:preM
-   * 9:lev, 10:levT, 11:levA, 12:levM
-   * 13:infA,
-   * 14:recI, 15:recT, 16:recA
+   * 5:pre, 6:preT, 7:preTA
+   * 8:lev, 9:levT, 10:levTA,
+   * 11:infA,
+   * 12:recI, 13:recT, 14:recA
   */
   unsigned int kind;
 

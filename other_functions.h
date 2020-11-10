@@ -30,7 +30,4 @@ void print_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
 void print_types(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name);
 
 
-/* Con esta función imprimo todos los infectados (total) divididos por sus tipo (alto y bajo) y el total (alto + bajo)*/
-void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name);
-
 #endif
