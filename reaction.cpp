@@ -3,7 +3,6 @@
 #include "trace.h"
 #include "test.h"
 
-
 void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
@@ -171,14 +170,20 @@ void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
       if(ind < Val[5].size()){
 	mother_reaction(Val[5], Val[8], ind, altos, 5, 8);
 	if(ran.r() < iota){// Leve a Leve aislado
-	  tested_reaction(Val[8], Val[10], Val[8].size()-1, altos, 8, 10, Tt);
+	  tested_reaction(Val[8], Val[10], Val[8].size()-1, altos, 8, 10, 0.0);
 	  aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
 	}
       }
     }
     if(Val[6].size() != 0){// Presintomático testeado a Leve testeado
       it = std::find(Val[6].begin(), Val[6].end(), agent);      ind = std::distance(Val[6].begin(), it);
-      if(ind < Val[6].size()){mother_reaction(Val[6], Val[9], ind, altos, 6, 9);}
+      if(ind < Val[6].size()){
+	mother_reaction(Val[6], Val[9], ind, altos, 6, 9);
+	if(ran.r() < iota){// Leve testeado a Leve aislado
+	  tested_reaction(Val[9], Val[10], Val[9].size()-1, altos, 9, 10, 0.0);
+	  aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
+	}
+      }
     }
     if(Val[7].size() != 0){// Presintomático aislado a Leve aislado
       it = std::find(Val[7].begin(), Val[7].end(), agent);      ind = std::distance(Val[7].begin(), it);
@@ -207,14 +212,20 @@ void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
       if(ind < Vba[5].size()){
 	mother_reaction(Vba[5], Vba[8], ind, bajos, 5, 8);
 	if(ran.r() < iota){// Leve a Leve aislado
-	  tested_reaction(Vba[8], Vba[10], Vba[8].size()-1, bajos, 8, 10, Tt);
+	  tested_reaction(Vba[8], Vba[10], Vba[8].size()-1, bajos, 8, 10, 0.0);
 	  aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
 	}
       }
     }
     if(Vba[6].size() != 0){// Presintomático testeado a Leve testeado
       it = std::find(Vba[6].begin(), Vba[6].end(), agent);      ind = std::distance(Vba[6].begin(), it);
-      if(ind < Vba[6].size()){mother_reaction(Vba[6], Vba[9], ind, bajos, 6, 9);}
+      if(ind < Vba[6].size()){
+	mother_reaction(Vba[6], Vba[9], ind, bajos, 6, 9);
+	if(ran.r() < iota){// Leve testeado a Leve aislado
+	  tested_reaction(Vba[9], Vba[10], Vba[9].size()-1, bajos, 9, 10, 0.0);
+	  aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
+	}
+      }
     }
     if(Vba[7].size() != 0){// Presintomático aislado a Leve aislado
       it = std::find(Vba[7].begin(), Vba[7].end(), agent);      ind = std::distance(Vba[7].begin(), it);
@@ -317,11 +328,11 @@ void reaction8(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
     if(Val[6].size() != 0){// Presintomático testeado a Recuperado detectado o no-detectado
       it = std::find(Val[6].begin(), Val[6].end(), agent);      ind = std::distance(Val[6].begin(), it);
       if(ind < Val[6].size()){
-        if(ran.r() < xi){
+        if(ran.r() < xi){//Presintomático testeado a Recuperado detectado
           mother_reaction(Val[6], Val[14], ind, altos, 6, 14);
  	  aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 14);
         }
-        else{
+        else{//Presintomático testeado a Recuperado detectado
           mother_reaction(Val[6], Val[12], ind, altos, 6, 12);
         }
       }
@@ -355,11 +366,11 @@ void reaction9(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
     if(Vba[6].size() != 0){// Presintomático testeado a Recuperado detectado o no-detectado
       it = std::find(Vba[6].begin(), Vba[6].end(), agent);      ind = std::distance(Vba[6].begin(), it);
       if(ind < Vba[6].size()){
-        if(ran.r() < xi){
+        if(ran.r() < xi){// Presintomático testeado a Recuperado detectado
           mother_reaction(Vba[6], Vba[14], ind, bajos, 6, 14);
  	  aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 14);
         }
-        else{
+        else{// Presintomático testeado a Recuperado no-detectado
           mother_reaction(Vba[6], Vba[12], ind, bajos, 6, 12);
         }
       }
@@ -393,11 +404,11 @@ void reaction10(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, 
     if(Val[9].size() != 0){// Leve testeado a Recuperado detectado o no-detectado
       it = std::find(Val[9].begin(), Val[9].end(), agent);      ind = std::distance(Val[9].begin(), it);
       if(ind < Val[9].size()){
-        if(ran.r() < xi){
+        if(ran.r() < xi){// Leve testeado a Recuperado detectado
           mother_reaction(Val[9], Val[14], ind, altos, 9, 14);
  	  aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 14);
         }
-        else{
+        else{// Leve testeado a Recuperado no-detectado
           mother_reaction(Val[9], Val[12], ind, altos, 9, 12);
         }
       }
@@ -431,11 +442,11 @@ void reaction11(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, 
     if(Vba[9].size() != 0){// Leve testeado a Recuperado detectado o no-detectado
       it = std::find(Vba[9].begin(), Vba[9].end(), agent);      ind = std::distance(Vba[9].begin(), it);
       if(ind < Vba[9].size()){
-        if(ran.r() < xi){
+        if(ran.r() < xi){// Leve testeado a Recuperado detectado
           mother_reaction(Vba[9], Vba[14], ind, bajos, 9, 14);
  	  aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 14);
         }
-        else{
+        else{// Leve testeado a Recuperado no-detectado
           mother_reaction(Vba[9], Vba[12], ind, bajos, 9, 12);
         }
       }
