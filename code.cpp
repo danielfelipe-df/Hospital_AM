@@ -50,11 +50,13 @@ int main(void)
 			 reaction10, reaction11, reaction12, reaction13};
 
   //Creo los arreglos para los argumentos de forma y orden de las distribuciones
-  double d_order[12] = {De, De, Dpl, Dpl, Dpg, Dpg, Dpl+Dil, Dpl+Dil, Dil, Dil, Dig, Dig};
-  double d_shape = 0.5;
+  double proms[12] = {De, De, Dpl, Dpl, Dpg, Dpg, Dpl+Dil, Dpl+Dil, Dil, Dil, Dig, Dig};
+  double d_shape, d_order, CoefVar = 3.9/5.2;
+  d_shape = std::sqrt(std::log((CoefVar*CoefVar) + 1.0));
   std::vector<lognormal_d> dist;
-  for(unsigned int i=0; i<12; i++){
-    lognormal_d my_dist(d_order[i], d_shape);
+  for(unsigned int i=0; i<12; i++){    
+    d_order = std::log(proms[i]) - 0.5*(d_shape*d_shape);
+    lognormal_d my_dist(d_order, d_shape);
     dist.push_back(my_dist);
   }
   
@@ -75,7 +77,8 @@ int main(void)
   
   //Genero las corridas
   while(contador < ensemble){
-    std::cout << contador << std::endl;
+    std::cout << '\r';
+    std::cout << "Vamos en la simulacion numero " << contador << " de " << ensemble << ".";
     //Los convierto del tamaño que son
     vecal.resize(15);    vecba.resize(15);
     
@@ -223,7 +226,7 @@ int main(void)
   }
   promrec /= (contador*N);
 
-  std::cout << "AR: " << promrec << std::endl;
+  std::cout << "\nAR: " << promrec << std::endl;
 
   return 0;
 }
