@@ -30,4 +30,7 @@ void print_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
 void print_types(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name);
 
 
+/* Con esta función imprimo la cantidad de infecciosos por tipo (alto y bajo) y el total */
+void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name);
+
 #endif
