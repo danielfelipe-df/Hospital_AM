@@ -86,3 +86,25 @@ void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
   fout << time << '\t' << value1 << '\t' << value2 << '\t' << value1 + value2 << std::endl;
   fout.close();
 }
+
+
+void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, std::string name){
+  std::ofstream fout;
+  fout.open(name);
+
+  fout << "Source\tTarget" << std::endl;
+  for(unsigned int i=12; i<14; i++){
+    for(unsigned int j=0; j<Val[i].size(); j++){
+      for(unsigned int k=0; k<altos[Val[i][j]].my_inf.size(); k++){
+	fout << Val[i][j] << '\t' << altos[Val[i][j]].my_inf[k] << std::endl;
+      }
+    }
+    for(unsigned int j=0; j<Vba[i].size(); j++){
+      for(unsigned int k=0; k<bajos[Vba[i][j]].my_inf.size(); k++){
+	fout << Vba[i][j] + Na << '\t' << bajos[Vba[i][j]].my_inf[k] << std::endl;
+      }
+    }
+  }
+
+  fout.close();
+}

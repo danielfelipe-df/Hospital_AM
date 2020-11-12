@@ -33,4 +33,8 @@ void print_types(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, 
 /* Con esta función imprimo la cantidad de infecciosos por tipo (alto y bajo) y el total */
 void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name);
 
+
+/* Con esta función imprimo los vínculos de la red de contagio */
+void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, std::string name);
+
 #endif
