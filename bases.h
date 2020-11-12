@@ -25,7 +25,7 @@ const int Nb = N*0.82; //Número de personas de riesgo bajo
 
 /* Tasas de la dinámica ***************************************************/
 
-const double beta = 1.1; //Beta de infección
+const double beta = 0.88*(1.0 - 0.143)*(1.0 - 0.102); //Beta de infección
 const double De = 2.9; //Periodo latente
 const double Dpl = 1.3; //Periodo infeccioso pre-sintomático para leves
 const double Dpg = 2.3; //Periodo infecciosos pre-sintomático para graves
@@ -50,7 +50,7 @@ const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada esta
 
 /* Tasas de contacto ******************************************************/
 
-const double alpha = 0.95; //Adherencia al aislamiento
+const double alpha = 1.0 - 1e-4; //Adherencia al aislamiento
 const double mu = 0.1; //Tasa de contacto cruzada
 const double chi = 0.7; //Tasa de contacto de tipo bajo
 const double eta = 0.7; //Tasa de contacto con externos
