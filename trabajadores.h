@@ -25,6 +25,12 @@ public:
   //Defino la variable que me dice el tiempo que permaence en el estado actual
   double tstate;
 
+  //Defino la variable que me dice el tiempo que el leve iota lleva desde que se testeó
+  double tlev;
+
+  //Defino la variable que me dice cuánto tiempo tiene que esperar el leve iota para saber el resultado del test
+  double tlevmax;
+
   //Guardo a las personas que infecto si soy infeccioso
   std::vector<int> my_inf;
 

@@ -1,4 +1,5 @@
 #include "test.h"
+#include "trace.h"
 
 
 void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double delta){
@@ -53,8 +54,13 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, dou
   for(unsigned int i=0; i<T.size(); i++){
     index = T[i];      family[index].time += time;
     if(family[index].time > family[index].tmax){
-      if(ran.r() < xi){family[index].change(typein1, typeout);	  TA.push_back(index);	contador++;}
-      else{family[index].change(typein2, typeout);	  G.push_back(index);}
+      if(ran.r() < xi){
+	family[index].change(typein1, typeout);	  TA.push_back(index);	contador++;
+	if(typein1 == 10){tested_lev_ais(index, family, 1e6);} //Si es Leve aislado a donde pasa pues se le pone el tlevmax en 1e6
+      }
+      else{
+	family[index].change(typein2, typeout);	  G.push_back(index);
+      }
       T.erase( T.begin() + i);
       family[index].time = 0.0;
       family[index].tmax = 0.0;
@@ -62,6 +68,12 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, dou
     }
   }
   return contador;
+}
+
+
+void tested_lev_ais(int agent, trabajadores *family, double Tmax){
+  family[agent].tlev = 0.0;
+  family[agent].tlevmax = Tmax;
 }
 
 
@@ -76,6 +88,46 @@ void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int t
 void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout, unsigned int typein){
   for(unsigned int i=0; i<T.size(); i++){
     if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0);      i--;}
+  }
+}
+
+
+void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
+  int index;
+  unsigned int contador = 0;
+  for(unsigned int i=0; i<Val[10].size()-contador; i++){
+    index = Val[10][i];
+    altos[index].tlev += time;
+    if(altos[index].tlev > altos[index].tlevmax){
+      if(ran.r() < xi){
+	tested_lev_ais(index, altos, 1e6);
+	Val[10].erase(Val[10].begin() + i);	Val[10].push_back(index);
+	aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
+	contador++;
+      }
+      else{
+	tested_reaction(Val[10], Val[8], i, altos, 10, 8, 0.0);
+      }
+      i--;
+    }
+  }
+
+  contador = 0;
+  for(unsigned int i=0; i<Vba[10].size()-contador; i++){
+    index = Vba[10][i];
+    bajos[index].tlev += time;
+    if(bajos[index].tlev > bajos[index].tlevmax){
+      if(ran.r() < xi){
+	tested_lev_ais(index, bajos, 1e6);
+	Vba[10].erase(Vba[10].begin() + i);	Vba[10].push_back(index);
+	aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
+	contador++;
+      }
+      else{
+	tested_reaction(Vba[10], Vba[8], i, bajos, 10, 8, 0.0);
+      }
+      i--;
+    }
   }
 }
 

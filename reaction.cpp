@@ -171,7 +171,7 @@ void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 	mother_reaction(Val[5], Val[8], ind, altos, 5, 8);
 	if(ran.r() < iota){// Leve a Leve aislado
 	  tested_reaction(Val[8], Val[10], Val[8].size()-1, altos, 8, 10, 0.0);
-	  aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
+	  tested_lev_ais(Val[10].back(), altos, Tt);
 	}
       }
     }
@@ -181,7 +181,7 @@ void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 	mother_reaction(Val[6], Val[9], ind, altos, 6, 9);
 	if(ran.r() < iota){// Leve testeado a Leve aislado
 	  tested_reaction(Val[9], Val[10], Val[9].size()-1, altos, 9, 10, 0.0);
-	  aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
+	  tested_lev_ais(Val[10].back(), altos, Tt);
 	}
       }
     }
@@ -213,7 +213,7 @@ void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 	mother_reaction(Vba[5], Vba[8], ind, bajos, 5, 8);
 	if(ran.r() < iota){// Leve a Leve aislado
 	  tested_reaction(Vba[8], Vba[10], Vba[8].size()-1, bajos, 8, 10, 0.0);
-	  aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
+	  tested_lev_ais(Vba[10].back(), bajos, Tt);
 	}
       }
     }
@@ -223,7 +223,7 @@ void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 	mother_reaction(Vba[6], Vba[9], ind, bajos, 6, 9);
 	if(ran.r() < iota){// Leve testeado a Leve aislado
 	  tested_reaction(Vba[9], Vba[10], Vba[9].size()-1, bajos, 9, 10, 0.0);
-	  aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
+	  tested_lev_ais(Vba[10].back(), bajos, Tt);
 	}
       }
     }

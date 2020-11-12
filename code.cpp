@@ -111,6 +111,9 @@ int main(void)
     
     //Actualizo los tiempos de los testeados masivamente que dan negativo
     update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
+
+    //Actualizo los tiempos de los leves aislado
+    result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
     
     //Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
     main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
@@ -146,6 +149,9 @@ int main(void)
 	  
 	//Actualizo los tiempos de los testeados masivamente que dan negativo
 	update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
+
+	//Actualizo los tiempos de los leves aislado
+	result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
@@ -193,6 +199,9 @@ int main(void)
 	
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
+
+	//Actualizo los tiempos de los leves aislado
+	result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
