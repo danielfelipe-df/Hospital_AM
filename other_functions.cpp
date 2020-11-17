@@ -71,10 +71,10 @@ void print_types(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, 
 void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, std::string name){
   unsigned int veca[3] = {}, vecb[3] = {};
 
-  veca[2] += Val[11].size();    vecb[2] += Vba[11].size(); //Graves  
-  for(unsigned int i=0; i<=2; i++){    
+  veca[2] += Val[11].size();    vecb[2] += Vba[11].size(); //Graves
+  for(unsigned int i=0; i<=2; i++){
     veca[0] += Val[i+5].size();    vecb[0] += Vba[i+5].size(); //Presintomáticos
-    veca[1] += Val[i+8].size();    vecb[1] += Vba[i+8].size(); //Leves    
+    veca[1] += Val[i+8].size();    vecb[1] += Vba[i+8].size(); //Leves
   }
 
   double value1, value2;
@@ -82,7 +82,7 @@ void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
   value2 = vecb[0] + vecb[1] + vecb[2];
   
   std::ofstream fout;
-  fout.open(name, std::ios_base::app);  
+  fout.open(name, std::ios_base::app);
   fout << time << '\t' << value1 << '\t' << value2 << '\t' << value1 + value2 << std::endl;
   fout.close();
 }
@@ -93,7 +93,7 @@ void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *a
   fout.open(name);
 
   fout << "Source\tTarget" << std::endl;
-  for(unsigned int i=12; i<14; i++){
+  for(unsigned int i=12; i<=14; i++){
     for(unsigned int j=0; j<Val[i].size(); j++){
       for(unsigned int k=0; k<altos[Val[i][j]].my_inf.size(); k++){
 	fout << Val[i][j] << '\t' << altos[Val[i][j]].my_inf[k] << std::endl;
