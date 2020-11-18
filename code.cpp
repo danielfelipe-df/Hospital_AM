@@ -32,7 +32,7 @@ int main(void)
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 12;
+  double nu = 2, delta = 5;
   //unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
@@ -54,7 +54,7 @@ int main(void)
   double d_shape, d_order, CoefVar = 3.9/5.2;
   d_shape = std::sqrt(std::log((CoefVar*CoefVar) + 1.0));
   std::vector<lognormal_d> dist;
-  for(unsigned int i=0; i<12; i++){    
+  for(unsigned int i=0; i<12; i++){
     d_order = std::log(proms[i]) - 0.5*(d_shape*d_shape);
     lognormal_d my_dist(d_order, d_shape);
     dist.push_back(my_dist);
@@ -86,12 +86,12 @@ int main(void)
     vecal[0].resize(Na);    vecba[0].resize(Nb);
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
-      
+    
     //name = "Data/datos_" + std::to_string(i) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
-      
+    
     //Inicio el tiempo
     t = 0.0;
     
@@ -101,39 +101,8 @@ int main(void)
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
     
-    prev = 0.005;
-    
-    //Obtengo el tiempo e índice de la reacción
-    ti_in = contagio(vecal, vecba, prev, gseed, t, tj);
-    
-    //Actualizo los tiempos de los estados que pueden transitar
-    update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
-    
-    //Actualizo los tiempos de los testeados masivamente que dan negativo
-    update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-
-    //Actualizo los tiempos de los leves aislado
-    result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
-    
-    //Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
-    main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
-    
-    //Genero la reacción según el índice que acabo de obtener
-    react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist);
-    
-    //Sumo el tiempo de la reacción
-    t += ti_in[0];
-    
-    //Imprimo los datos
-    //print_all(vecal, vecba, t, name);
-    
-    //Borro el vector de tiempo e índice
-    ti_in.clear();
-    
-    prev = 0.0;
-    
     while(t < T){
-	
+
       //Región de testeo masivo
       aux = 0.0;
       n1 = 0;
@@ -146,7 +115,7 @@ int main(void)
 	
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
-	  
+	
 	//Actualizo los tiempos de los testeados masivamente que dan negativo
 	update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
 
@@ -226,6 +195,8 @@ int main(void)
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
     }
+    ti_in.clear();
+
     /* Cuento los recI, recT y recA */
     promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
     contador++;
