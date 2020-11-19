@@ -27,7 +27,7 @@ const int Nb = N*0.82; //Número de personas de riesgo bajo
 
 /* Tasas de la dinámica ***************************************************/
 
-const double beta = 0.88*(1.0 - 0.143)*(1.0 - 0.102); //Beta de infección
+const double beta = 0.88*(1.0 - 0.102); //Beta de infección
 const double De = 2.9; //Periodo latente
 const double Dpl = 1.3; //Periodo infeccioso pre-sintomático para leves
 const double Dpg = 2.3; //Periodo infecciosos pre-sintomático para graves
@@ -49,6 +49,8 @@ const double theta = 0.5; //Cobertura
 const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
 const double Tt = 0.5; //Tiempo de reporte de la prueba
 const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
+const double N95 = 1.0 - 0.96; //Probabilidad de contagiarse usando tapabocas N95
+const double TBQ = 1.0 - 0.67; //Probabilidad de contagiarse usando tapabocas quirúrgico
 
 /* Tasas de contacto ******************************************************/
 

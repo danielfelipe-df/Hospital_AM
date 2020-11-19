@@ -18,8 +18,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
   double As[n];
 
   //Propensidades de exponerse
-  As[0] = beta*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb + eta*prev);
-  As[1] = beta*(Sb+STb)*(mu*(Pa+PTa+La+LTa)/(double)Na + chi*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*(IAb+PTAb+LTAb)/(double)Nb);
+  As[0] = beta*N95*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb + eta*prev);
+  As[1] = beta*(Sb+STb)*(mu*N95*(Pa+PTa+La+LTa)/(double)Na + chi*TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*N95*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*TBQ*(IAb+PTAb+LTAb)/(double)Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*(Ea+ETa+EAa);
@@ -54,7 +54,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
   //double prom = 230.0, sigma = 55.0, B = beta*Sa*eta*prev;
-  double prom = 165.47, sigma = 29.24, B = beta*(Sa+STa)*eta*prev;
+  double prom = 165.47, sigma = 29.24, B = beta*N95*(Sa+STa)*eta*prev;
   double tau = 0, index = 0;
   tau = biseccion(As, prom, sigma, t, B, std::log(ran.r()), tj, n, dist);
 
@@ -81,8 +81,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
 
   //Escojo a la persona que contagia, si hay infección
   int conta = 0;
-  if((int)index == 0){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 1, prev, t);}
-  else if((int)index == 1){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 0, prev, t);}
+  if((int)index == 0){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 1, prev, t, N95, N95);}
+  else if((int)index == 1){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 0, prev, t, N95, TBQ);}
 
   //Creo el vector resultados
   std::vector<double> result(3);
@@ -139,17 +139,17 @@ double phi(double* A, double* tj, unsigned int n, double prom, double sigma, dou
 }
 
 
-int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double prev, double t){
+int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double prev, double t, double TBa, double TBb){
   //Parámetros Gaussiana
   double prom = 165.47, sigma = 29.24;
 
   //Calculo la propensidad de cada grupo
   double num[5];
-  num[0] = cons1*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
-  num[1] = cons2*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
-  num[2] = (1-alpha)*cons1*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
-  num[3] = (1-alpha)*cons2*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
-  num[4] = alti*eta*prev*std::exp(-(prom-t)*(prom-t)/(2*sigma*sigma));
+  num[0] = cons1*TBa*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
+  num[1] = cons2*TBb*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
+  num[2] = (1-alpha)*cons1*TBa*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
+  num[3] = (1-alpha)*cons2*TBb*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
+  num[4] = alti*eta*N95*prev*std::exp(-(prom-t)*(prom-t)/(2*sigma*sigma));
 
   //Hallo el individuo que contagia
   grupo aux;
