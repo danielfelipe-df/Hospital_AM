@@ -12,10 +12,12 @@ typedef std::vector<int> grupo; //Redefino el vector de índices de personas com
 #include <boost/math/distributions/weibull.hpp>
 #include <boost/math/distributions/gamma.hpp>
 #include <boost/math/distributions/lognormal.hpp>
+#include <boost/math/distributions/normal.hpp>
 
 typedef boost::math::weibull_distribution<> weib_d;
 typedef boost::math::gamma_distribution<> gamma_d;
 typedef boost::math::lognormal_distribution<> lognormal_d;
+typedef boost::math::normal_distribution<> normal_d;
 
 /* Tamaño de las poblaciones **********************************************/
 

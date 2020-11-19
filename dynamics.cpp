@@ -54,7 +54,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
   //double prom = 230.0, sigma = 55.0, B = beta*Sa*eta*prev;
-  double prom = 165.47, sigma = 29.24, B = beta*Sa*eta*prev;
+  double prom = 165.47, sigma = 29.24, B = beta*(Sa+STa)*eta*prev;
   double tau = 0, index = 0;
   tau = biseccion(As, prom, sigma, t, B, std::log(ran.r()), tj, n, dist);
 
@@ -79,10 +79,16 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, d
   //Reinicio el tiempo tj de la reacción que se escogió
   tj[(int)index] = 0.0;
 
+  //Escojo a la persona que contagia, si hay infección
+  int conta = 0;
+  if((int)index == 0){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 1, prev, t);}
+  else if((int)index == 1){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 0, prev, t);}
+
   //Creo el vector resultados
-  std::vector<double> result(2);
+  std::vector<double> result(3);
   result[0] = tau; //Tiempo en el que sucede la reacción
   result[1] = index; //Número de la reacción que sucede
+  result[2] = conta; //Agente que hizo el contagio
 
   return result;
 }
@@ -130,4 +136,38 @@ double phi(double* A, double* tj, unsigned int n, double prom, double sigma, dou
   }
 
   return psi_num-psi_den;
+}
+
+
+int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double prev, double t){
+  //Parámetros Gaussiana
+  double prom = 165.47, sigma = 29.24;
+
+  //Calculo la propensidad de cada grupo
+  double num[5];
+  num[0] = cons1*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
+  num[1] = cons2*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
+  num[2] = (1-alpha)*cons1*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
+  num[3] = (1-alpha)*cons2*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
+  num[4] = alti*eta*prev*std::exp(-(prom-t)*(prom-t)/(2*sigma*sigma));
+
+  //Hallo el individuo que contagia
+  grupo aux;
+  double num2 = ran.r()*(num[0] + num[1] + num[2] + num[3] + num[4]);
+  if(num2 < num[0]){return selection_infectious(Pa, PTa, La, LTa, ran);}
+  else if(num2 < num[0] + num[1]){return selection_infectious(Pb, PTb, Lb, LTb, ran) + Na;}
+  else if(num2 < num[0] + num[1] + num[2]){return selection_infectious(IAa, PTAa, LTAa, aux, ran);}
+  else if(num2 < num[0] + num[1] + num[2] + num[3]){return selection_infectious(IAb, PTAb, LTAb, aux, ran) + Na;}
+  else{return -1;}
+}
+
+
+int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran){
+  double num = ran.r()*(Ga.size() + Gb.size() + Gc.size() + Gd.size());
+  int ind, agent;
+  if(num < Ga.size()){ind = (int)(ran.r()*Ga.size());    agent = Ga[ind];}
+  else if(num < Ga.size() + Gb.size()){ind = (int)(ran.r()*Gb.size());    agent = Gb[ind];}
+  else if(num < Ga.size() + Gb.size() + Gc.size()){ind = (int)(ran.r()*Gc.size());    agent = Gc[ind];}
+  else{ind = (int)(ran.r()*Gd.size());    agent = Gd[ind];}
+  return agent;
 }

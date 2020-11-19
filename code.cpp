@@ -11,7 +11,7 @@
 #include "reaction.h"
 #include "other_functions.h"
 
-typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist);
+typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI);
 
 int main(void)
 {
@@ -43,7 +43,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1000;
+  unsigned int ensemble = 10000;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -67,7 +67,7 @@ int main(void)
   unsigned int aux2;
 
   //std::ofstream fout;
-  //std::string name;
+  std::string name;
 
   //name = "datos_" + std::to_string((int)Tt) + "_" + std::to_string((int)(xi*100)) + ".csv";
   //fout.open(name);
@@ -138,7 +138,7 @@ int main(void)
 	n1 = n2;
 	
 	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist);
+	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist, ti_in[2]);
 	
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
@@ -179,7 +179,7 @@ int main(void)
 	tested_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
 	
 	//Genero la reacción según el índice que acabo de obtener
-	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist);
+	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist, ti_in[2]);
 	
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
@@ -198,11 +198,16 @@ int main(void)
     ti_in.clear();
 
     /* Cuento los recI, recT y recA */
-    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
-    contador++;
+    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();    
+
+    name = "Data/datos_" + std::to_string((int)contador) + ".csv";
+
+    print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores
     vecal.clear();    vecba.clear();
+
+    contador++;
   }
   promrec /= (contador*N);
 
