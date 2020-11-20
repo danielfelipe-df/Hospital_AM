@@ -2,9 +2,9 @@
 #define DYNAMICS_H
 
 #include <vector>
-#include "Random64.h"
-#include "bases.h"
-#include "trabajadores.h"
+#include <Random64.h>
+#include <bases.h>
+#include <trabajadores.h>
 
 
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción y qué reacción es. */

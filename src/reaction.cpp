@@ -1,7 +1,7 @@
 #include <iostream>
-#include "reaction.h"
-#include "trace.h"
-#include "test.h"
+#include <reaction.h>
+#include <trace.h>
+#include <test.h>
 
 void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein){
   int agent = Out[index];

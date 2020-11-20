@@ -1,5 +1,5 @@
-#include "test.h"
-#include "trace.h"
+#include <test.h>
+#include <trace.h>
 
 
 void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double delta){

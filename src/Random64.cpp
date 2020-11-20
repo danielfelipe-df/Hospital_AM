@@ -1,5 +1,5 @@
 #include <cmath>
-#include "Random64.h"
+#include <Random64.h>
 
 Crandom::Crandom(unsigned long long j){
   v=4101842887655102017LL; w=1;

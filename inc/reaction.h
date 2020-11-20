@@ -1,9 +1,9 @@
 #ifndef REACTION_H
 #define REACTION_H
 
-#include "Random64.h"
-#include "bases.h"
-#include "trabajadores.h"
+#include <Random64.h>
+#include <bases.h>
+#include <trabajadores.h>
 
 /* Esta función es la función plantilla para hacer las reacciones */
 void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein);

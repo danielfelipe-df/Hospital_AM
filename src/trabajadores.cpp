@@ -1,6 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
-#include "trabajadores.h"
+#include <trabajadores.h>
 
 void trabajadores::init(){
   kind = 0;

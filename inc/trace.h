@@ -1,9 +1,9 @@
 #ifndef TRACE_H
 #define TRACE_H
 
-#include "Random64.h"
-#include "bases.h"
-#include "trabajadores.h"
+#include <Random64.h>
+#include <bases.h>
+#include <trabajadores.h>
 
 
 /* Esta es la función para hacer rastreo */

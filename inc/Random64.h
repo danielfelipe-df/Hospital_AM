@@ -4,7 +4,7 @@
 //Constantes del generador aleatorio
 class Crandom{
   unsigned long long u,v,w;
-  
+
 public:
   Crandom(unsigned long long j);
   unsigned long long int64();

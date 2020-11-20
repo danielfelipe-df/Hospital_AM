@@ -2,9 +2,9 @@
 #define TEST_H
 
 
-#include "Random64.h"
-#include "bases.h"
-#include "trabajadores.h"
+#include <Random64.h>
+#include <bases.h>
+#include <trabajadores.h>
 
 
 /* Esta función es la función plantilla para hacer los cambios de estado normal a testeado */

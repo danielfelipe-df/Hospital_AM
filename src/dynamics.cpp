@@ -1,5 +1,5 @@
 #include <math.h>
-#include "dynamics.h"
+#include <dynamics.h>
 
 
 std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, double prev, Crandom &ran, double t, double* tj){

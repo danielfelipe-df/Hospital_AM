@@ -2,8 +2,8 @@
 #define OTHER_FUNCTIONS_H
 
 #include <string>
-#include "bases.h"
-#include "trabajadores.h"
+#include <bases.h>
+#include <trabajadores.h>
 
 
 /* Con esta función actualizo los tiempos de estado de ese grupo */

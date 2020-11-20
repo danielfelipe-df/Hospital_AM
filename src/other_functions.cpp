@@ -1,5 +1,5 @@
 #include <fstream>
-#include "other_functions.h"
+#include <other_functions.h>
 
 
 void update_times(grupo &G, trabajadores *family, double time){

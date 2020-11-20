@@ -2,8 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
-#include "trace.h"
-#include "test.h"
+#include <trace.h>
+#include <test.h>
 
 
 void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
