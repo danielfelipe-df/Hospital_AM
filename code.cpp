@@ -2,19 +2,21 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "Random64.h"
-#include "bases.h"
-#include "trabajadores.h"
-#include "dynamics.h"
-#include "test.h"
-#include "trace.h"
-#include "reaction.h"
-#include "other_functions.h"
+#include <Random64.h>
+#include <bases.h>
+#include <trabajadores.h>
+#include <dynamics.h>
+#include <test.h>
+#include <trace.h>
+#include <reaction.h>
+#include <other_functions.h>
 
 typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI);
 
 int main(void)
 {
+  std::string name2 = "Total";
+  
   //Creo los arreglos de cada tipo
   trabajadores altos[Na], bajos[Nb];
 
@@ -64,16 +66,17 @@ int main(void)
   std::vector<double> ti_in;
   unsigned int n1, n2;
   double aux, contador, promrec;
-  unsigned int aux2;
+  unsigned int aux2, num;
 
-  //std::ofstream fout;
+  std::ofstream fout;
   std::string name;
 
-  //name = "datos_" + std::to_string((int)Tt) + "_" + std::to_string((int)(xi*100)) + ".csv";
-  //fout.open(name);
+  name = "Results/Data/datos_" + name2 + "_" + std::to_string((int)(N95*100)) + "_" + std::to_string((int)(TBQ*100)) + ".csv";
+  fout.open(name);
   
   contador = 0;
   promrec = 0;
+  num = 0;
   
   //Genero las corridas
   while(contador < ensemble){
@@ -87,7 +90,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
     
-    //name = "Data/datos_" + std::to_string(i) + ".csv";
+    //name = "Results/Data_" + name2 + "/datos_" + std::string(num/50) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -198,20 +201,24 @@ int main(void)
     ti_in.clear();
 
     /* Cuento los recI, recT y recA */
-    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();    
+    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
+    fout << vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() << std::endl;
 
-    name = "Data/datos_" + std::to_string((int)contador) + ".csv";
-
+    /* Imprimo la Red */
+    name = "Results/Data_" + name2 + "/datos_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores
     vecal.clear();    vecba.clear();
 
     contador++;
+    num++;
   }
+  fout.close();
+  
   promrec /= (contador*N);
 
-  std::cout << "\nAR: " << promrec << std::endl;
+  std::cout << "\nAR " << name2 << ": " << promrec << std::endl;
 
   return 0;
 }
