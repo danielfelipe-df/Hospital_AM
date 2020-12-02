@@ -104,7 +104,7 @@ void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajador
       if(ran.r() < xi){
 	tested_lev_ais(index, altos, 1e6, false);
 	Val[10].erase(Val[10].begin() + i);	Val[10].push_back(index);
-	aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
+	aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10, false);
 	contador++;
       }
       else{
@@ -122,7 +122,7 @@ void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajador
       if(ran.r() < xi){
 	tested_lev_ais(index, bajos, 1e6, false);
 	Vba[10].erase(Vba[10].begin() + i);	Vba[10].push_back(index);
-	aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
+	aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10, false);
 	contador++;
       }
       else{

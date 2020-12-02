@@ -9,22 +9,22 @@
 void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
   int num;
   num = tested_isolated_inf(Val[6], Val[7], Val[5], altos, time, 6, 7, 5, ran); //Presintomáticos altos
-  aux_main(num, Val, Vba, altos, bajos, ran, phi1, mu, true, 7);
+  aux_main(num, Val, Vba, altos, bajos, ran, phi1, mu, true, 7, true);
 
   num = tested_isolated_inf(Vba[6], Vba[7], Vba[5], bajos, time, 6, 7, 5, ran); //Presintomáticos bajos
-  aux_main(num, Val, Vba, altos, bajos, ran, mu, chi, false, 7);
+  aux_main(num, Val, Vba, altos, bajos, ran, mu, chi, false, 7, true);
 
   num = tested_isolated_inf(Val[9], Val[10], Val[8], altos, time, 9, 10, 8, ran); //Leves altos
-  aux_main(num, Val, Vba, altos, bajos, ran, phi1, mu, true, 10);
+  aux_main(num, Val, Vba, altos, bajos, ran, phi1, mu, true, 10, false);
 
   num = tested_isolated_inf(Vba[9], Vba[10], Vba[8], bajos, time, 9, 10, 8, ran); //Leves bajos
-  aux_main(num, Val, Vba, altos, bajos, ran, mu, chi, false, 10);
+  aux_main(num, Val, Vba, altos, bajos, ran, mu, chi, false, 10, false);
 }
 
 
-void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type, unsigned int index){
+void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type, unsigned int index, bool pre){
   unsigned int contador, aux, aux2, ind, my_size, Gsize, j;
-  double value;
+  double value, aux3;
   grupo vaux;
   if(type){Gsize = Val[index].size();}
   else{Gsize = Vba[index].size();}
@@ -33,13 +33,22 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
     if(type){my_size = altos[Val[index][i]].my_inf.size();}
     else{my_size = bajos[Vba[index][i]].my_inf.size();}
 
-    for(j=0; j<my_size && j<trace_net; j++){
+    for(j=0; j<my_size; j++){
       if(type){ind = altos[Val[index][i]].my_inf[j];}
       else{ind = bajos[Vba[index][i]].my_inf[j];}
       vaux.push_back(ind);
     }
 
-    while(j<trace_net){
+    if(pre){
+      if(type){aux3 = (int)(3*(trace_net - my_size));}
+      else{aux3 = (int)(3*(trace_net - my_size));}
+    }
+    else{
+      if(type){aux3 = (int)((altos[Val[index][i]].tstate + 2)*(trace_net - my_size));}
+      else{aux3 = (int)((bajos[Vba[index][i]].tstate + 2)*(trace_net - my_size));}
+    }
+
+    while((0 < j) && (j < aux3)){
       value = ran.r()*(cons1*Na + cons2*Nb);
       if(value < cons1*Na){ind = (int)(ran.r()*Na);}
       else{ind = (int)(ran.r()*Nb) + Na;}
@@ -48,6 +57,7 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
     }
 
     contador = 0;
+    eliminar_repetidos(vaux);
     while(vaux.size() > 0 && contador < trace){
       aux2 = (int)(ran.r()*vaux.size());
       ind = vaux[aux2];
@@ -88,4 +98,14 @@ void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein
     it = std::find(T.begin(), T.end(), index);  ind = std::distance(T.begin(), it);
     family[T[ind]].time = 0.0;
   }
+}
+
+
+void eliminar_repetidos(std::vector<int> &y)
+{
+  auto end = y.end();
+  for(auto it = y.begin(); it != end; it++){
+    end = std::remove(it + 1, end, *it);
+  }
+  y.erase(end, y.end());
 }
