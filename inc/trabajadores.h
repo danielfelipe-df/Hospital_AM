@@ -31,6 +31,9 @@ public:
   //Defino la variable que me dice cuánto tiempo tiene que esperar el leve iota para saber el resultado del test
   double tlevmax;
 
+  //Defino el tiempo que se demoran en entregarme la prueba
+  double myTt;
+
   //Guardo a las personas que infecto si soy infeccioso
   std::vector<int> my_inf;
 

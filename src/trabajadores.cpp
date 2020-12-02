@@ -9,6 +9,7 @@ void trabajadores::init(){
   tstate = 0;
   tlev = 0;
   tlevmax = 0;
+  myTt = 0;
   my_inf.clear();
   DF = -2;
 }
