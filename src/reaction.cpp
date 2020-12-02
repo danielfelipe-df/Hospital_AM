@@ -191,8 +191,8 @@ void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
       if(ind < Val[5].size()){
 	mother_reaction(Val[5], Val[8], ind, altos, 5, 8);
 	if(ran.r() < iota){// Leve a Leve aislado
-	  tested_reaction(Val[8], Val[10], Val[8].size()-1, altos, 8, 10, 0.0);
-	  tested_lev_ais(Val[10].back(), altos, Tt);
+	  tested_reaction(Val[8], Val[10], Val[8].size()-1, altos, 8, 10, 0.0, false);
+	  tested_lev_ais(Val[10].back(), altos, ran.r(), true);
 	}
       }
     }
@@ -201,8 +201,8 @@ void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
       if(ind < Val[6].size()){
 	mother_reaction(Val[6], Val[9], ind, altos, 6, 9);
 	if(ran.r() < iota){// Leve testeado a Leve aislado
-	  tested_reaction(Val[9], Val[10], Val[9].size()-1, altos, 9, 10, 0.0);
-	  tested_lev_ais(Val[10].back(), altos, Tt);
+	  tested_reaction(Val[9], Val[10], Val[9].size()-1, altos, 9, 10, 0.0, false);
+	  tested_lev_ais(Val[10].back(), altos, ran.r(), true);
 	}
       }
     }
@@ -233,8 +233,8 @@ void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
       if(ind < Vba[5].size()){
 	mother_reaction(Vba[5], Vba[8], ind, bajos, 5, 8);
 	if(ran.r() < iota){// Leve a Leve aislado
-	  tested_reaction(Vba[8], Vba[10], Vba[8].size()-1, bajos, 8, 10, 0.0);
-	  tested_lev_ais(Vba[10].back(), bajos, Tt);
+	  tested_reaction(Vba[8], Vba[10], Vba[8].size()-1, bajos, 8, 10, 0.0, false);
+	  tested_lev_ais(Vba[10].back(), bajos, ran.r(), true);
 	}
       }
     }
@@ -243,8 +243,8 @@ void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
       if(ind < Vba[6].size()){
 	mother_reaction(Vba[6], Vba[9], ind, bajos, 6, 9);
 	if(ran.r() < iota){// Leve testeado a Leve aislado
-	  tested_reaction(Vba[9], Vba[10], Vba[9].size()-1, bajos, 9, 10, 0.0);
-	  tested_lev_ais(Vba[10].back(), bajos, Tt);
+	  tested_reaction(Vba[9], Vba[10], Vba[9].size()-1, bajos, 9, 10, 0.0, false);
+	  tested_lev_ais(Vba[10].back(), bajos, ran.r(), true);
 	}
       }
     }

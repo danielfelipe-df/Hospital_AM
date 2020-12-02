@@ -8,7 +8,11 @@
 
 
 /* Esta función es la función plantilla para hacer los cambios de estado normal a testeado */
-void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double delta);
+void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double ran, bool dist);
+
+
+/* Esta función complementa la reacción cuando algún leve tipo iota se aisla. Aquí se le hace el test para saber si se queda ahí o se devuelve. */
+void tested_lev_ais(int agent, trabajadores *family, double value, bool dist);
 
 
 /* Esta función es la que genera la reacción en el testeo masivo */
@@ -17,10 +21,6 @@ void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom 
 
 /* Esta función me actualiza los tiempos de los testeados y si cumplieron el tiempo los aisla o los devuelvo al estado normal.*/
 int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran);
-
-
-/* Esta función complementa la reacción cuando algún leve tipo iota se aisla. Aquí se le hace el test para saber si se queda ahí o se devuelve. */
-void tested_lev_ais(int agent, trabajadores *family, double Tmax);
 
 
 /* Esta función me actualiza el tiempo de los testeados masivamente, pero fuera de la zona de testeo masivo. Si ya cumplieron, los muevo. */

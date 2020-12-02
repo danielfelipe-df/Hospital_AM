@@ -27,7 +27,7 @@ int main(void)
   double prev = 0.013;
 
   //Creo el generador de semillas
-  Crandom gseed(Tt*xi*100 + 16876);
+  Crandom gseed(xi*100 + 16876);
 
   //Defino la cantidad de tiempo de la corrida
   int T = 420;

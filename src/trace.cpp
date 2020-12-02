@@ -68,8 +68,8 @@ int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, in
   else if(family[index].kind == 3){aux_trace(V[3], V[4], family, 3, 4, index, true);    return 1;} //Expuesto testeado
   else if(family[index].kind == 5){aux_trace(V[5], V[7], family, 5, 7, index, true);    return 1;} //Presintomático
   else if(family[index].kind == 6){aux_trace(V[6], V[7], family, 6, 7, index, true);    return 1;} //Presintomático testeado
-  else if(family[index].kind == 8){aux_trace(V[8], V[10], family, 8, 10, index, true);    tested_lev_ais(V[10].back(), family, 1e6);    return 1;} //Leve
-  else if(family[index].kind == 9){aux_trace(V[9], V[10], family, 9, 10, index, true);    tested_lev_ais(V[10].back(), family, 1e6);    return 1;} //Leve testeado
+  else if(family[index].kind == 8){aux_trace(V[8], V[10], family, 8, 10, index, true);    tested_lev_ais(V[10].back(), family, 1e6, false);    return 1;} //Leve
+  else if(family[index].kind == 9){aux_trace(V[9], V[10], family, 9, 10, index, true);    tested_lev_ais(V[10].back(), family, 1e6, false);    return 1;} //Leve testeado
   else if(family[index].kind == 12){aux_trace(V[12], V[13], family, 12, 13, index, true);    return 1;} //Recuperado no-detectado
   else if(family[index].kind == 13){aux_trace(V[12], V[13], family, 12, 13, index, false);    return 1;} //Recuperado testeado
   else{return 0;}
@@ -82,7 +82,7 @@ void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein
 
   if(normal){
     it = std::find(G.begin(), G.end(), index);  ind = std::distance(G.begin(), it);
-    tested_reaction(G, T, ind, family, typeout, typein, 0.0);
+    tested_reaction(G, T, ind, family, typeout, typein, 0.0, false);
   }
   else{
     it = std::find(T.begin(), T.end(), index);  ind = std::distance(T.begin(), it);

@@ -46,7 +46,8 @@ const double psi = 0.95; //Proporción de sintomáticos que son leves
 const double xi = 0.9; //Sensibilidad de la prueba
 const double theta = 0.5; //Cobertura
 const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
-const double Tt = 1.82; //Tiempo de reporte de la prueba
+//const double Tt = 1.82; //Tiempo de reporte de la prueba
+const lognormal_d dist_Tt(0.51192, 0.41694);
 const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
 const double N95 = 0.051; //Reducción en la probabilidad de contagiarse usando tapabocas N95
 const double TBQ = 0.39; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
