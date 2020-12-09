@@ -48,10 +48,10 @@ const double theta = 0.5; //Cobertura
 const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
 const lognormal_d dist_Tt(0.51192, 0.41694);
 const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
-const double N95 = 1.0 - 0.221; //Reducción en la probabilidad de contagiarse usando tapabocas N95
-const double TBQ = 1.0 - 0.143; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
-const double HW = 1.0 - 0.041; //Reducción en la probabilidad de contagiarse si se lava las manos
-const double SDP = 1.0 - 0.102; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
+const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando tapabocas N95
+const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
+const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
+const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
 const double beta = 1.3*HW*SDP; //Beta de infección
 
 /* Tasas de contacto ******************************************************/
