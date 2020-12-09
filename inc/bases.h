@@ -50,7 +50,7 @@ const lognormal_d dist_Tt(0.51192, 0.41694);
 const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
 const double N95 = 1.0 - 0.221; //Reducción en la probabilidad de contagiarse usando tapabocas N95
 const double TBQ = 1.0 - 0.143; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
-const double HW = 1.0 - 0.36; //Reducción en la probabilidad de contagiarse si se lava las manos
+const double HW = 1.0 - 0.041; //Reducción en la probabilidad de contagiarse si se lava las manos
 const double SDP = 1.0 - 0.102; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
 const double beta = 1.3*HW*SDP; //Beta de infección
 
