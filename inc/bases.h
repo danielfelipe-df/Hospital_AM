@@ -52,7 +52,7 @@ const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando t
 const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
 const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
 const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
-const double beta = 1.3*HW*SDP; //Beta de infección
+const double beta = 0.88*HW*SDP; //Beta de infección
 
 /* Tasas de contacto ******************************************************/
 
