@@ -90,7 +90,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
     
-    //name = "Results/Data_" + name2 + "/datos_" + std::string(num/50) + ".csv";
+    name = "Results/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -99,7 +99,7 @@ int main(void)
     t = 0.0;
     
     //Imprimo los datos
-    //print_all(vecal, vecba, t, name);
+    if(num%50 == 0){print_inf(vecal, vecba, t, name);}
     
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
@@ -148,7 +148,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-	//print_all(vecal, vecba, t, name);
+        if(num%50 == 0){print_inf(vecal, vecba, t, name);}
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -189,7 +189,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-	//print_all(vecal, vecba, t, name);
+        if(num%50 == 0){print_inf(vecal, vecba, t, name);}
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -205,7 +205,7 @@ int main(void)
     fout << vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() << std::endl;
 
     /* Imprimo la Red */
-    name = "Results/Data_" + name2 + "/datos_" + std::to_string(num) + ".csv";
+    name = "Results/Data_" + name2 + "_Grafos/datos_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores
