@@ -28,7 +28,7 @@ int main(void)
   Crandom gseed(xi*100 + 16876);
 
   //Defino la cantidad de tiempo de la corrida
-  int T = 420;
+  int T = 720;
   double t;
 
   //Defino las variables del acordeón

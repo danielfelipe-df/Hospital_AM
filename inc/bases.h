@@ -70,12 +70,12 @@ const unsigned int trace_net = 6; //Número de contactos en promedio por cada pe
 
 /* Parámetros de gaussianas ***********************************************/
 
-/* Prevalencia externa alta
+/* Prevalencia externa alta */
 const size_t N_gauss = 2;
 const double A_gauss[N_gauss] = {1.52e-3, 1.39e-2};
 const double Mu_gauss[N_gauss] = {8.58e1, 1.27e2};
 const double Sigma_gauss[N_gauss] = {8.25, 3.53e1};
-*/
+
 
 /* Prevalencia externa media
 const size_t N_gauss = 4;
@@ -84,12 +84,12 @@ const double Mu_gauss[N_gauss] = {1.07e2, 9.23e1, 1.18e2, 2.32e2};
 const double Sigma_gauss[N_gauss] = {3.45e1, 6.13, 1.35e1, 4.46e1};
 */
 
-/* Prevalencia externa baja */
+/* Prevalencia externa baja
 const size_t N_gauss = 2;
 const double A_gauss[N_gauss] = {1.34e-3, 6.87e-4};
 const double Mu_gauss[N_gauss] = {1.42e2, 7.84e1};
 const double Sigma_gauss[N_gauss] = {5.5e1, 4-15e1};
-
+*/
 
 /**************************************************************************/
 
