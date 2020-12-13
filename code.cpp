@@ -16,6 +16,7 @@ typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Cran
 int main(void)
 {
   std::string name2 = "Total";
+  std::string name3 = "Alto";
   
   //Creo los arreglos de cada tipo
   trabajadores altos[Na], bajos[Nb];
@@ -68,7 +69,7 @@ int main(void)
   std::ofstream fout;
   std::string name;
 
-  name = "Results/Data/datos_" + name2 + "_" + std::to_string((int)(N95*100)) + "_" + std::to_string((int)(TBQ*100)) + ".csv";
+  name = "Results/Data/datos_" + name3 + "_" + name2 + "_" + std::to_string((int)(N95*100)) + "_" + std::to_string((int)(TBQ*100)) + ".csv";
   fout.open(name);
   
   contador = 0;
@@ -87,7 +88,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
     
-    name = "Results/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
+    name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -202,7 +203,7 @@ int main(void)
     fout << vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() << std::endl;
 
     /* Imprimo la Red */
-    name = "Results/Data_" + name2 + "_Grafos/datos_" + std::to_string(num) + ".csv";
+    name = "Results/Data_" + name3 + "/Data_" + name2 + "_Grafos/datos_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores
@@ -215,7 +216,7 @@ int main(void)
   
   promrec /= (contador*N);
 
-  std::cout << "\nAR " << name2 << ": " << promrec << std::endl;
+  std::cout << "\nAR " << name3 << " " << name2 << ": " << promrec << std::endl;
 
   return 0;
 }
