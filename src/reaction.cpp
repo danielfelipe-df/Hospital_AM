@@ -27,10 +27,15 @@ int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value
 
 
 int infected(trabajadores *altos, Crandom &ran){
+  /*
   int min = 0, max = 10;
   double mean = 6.0, sd = 1.0;
+  */
+
+  int min = 0, max = 180;
+  double mean = 150.0, sd = 30.0;
   normal_d my_dist(mean, sd);
-  
+
   int number = quantile(my_dist, ran.r());
 
   if(number < min){number = min;}
