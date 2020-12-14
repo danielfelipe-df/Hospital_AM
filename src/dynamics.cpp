@@ -180,7 +180,20 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
 }
 
 
-
 double function_gauss(double x, double A, double mu, double sigma){
   return A*std::exp(-(x-mu)*(x-mu)/(2*sigma*sigma));
 }
+
+
+double int_beta_gauss(double t0, double t1, double mu, double sigma, double A, double m, double b){
+  double A1 = m*A*sigma*sigma, A2 = std::sqrt(M_PI_2)*sigma*A*(m*t0 + b), Un2S = 1/(M_SQRT2*sigma);
+  double x1 = (t1 - mu)*Un2S, x0 = (t0 - mu)*Un2S;
+  return A1*(std::exp(-x0*x0) - std::exp(-x1*x1)) + A2*(std::erf(x1) - std::erf(x0));
+}
+
+
+double int_beta(double t0, double t1, double m, double b){
+  return 0.5*m*(t1*t1 - t0*t0) + b*(t1 - t0);
+}
+
+

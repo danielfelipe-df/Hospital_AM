@@ -35,4 +35,12 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
 double function_gauss(double x, double A, double mu, double sigma);
 
 
+/* Esta es la integral, entre t0 y t1, de una gaussiana por una ecuación lineal */
+double int_beta_gauss(double t0, double t1, double mu, double sigma, double A, double m, double b);
+
+
+/* Esta es la integral de una ecuación lineal */
+double int_beta(double t0, double t1, double m, double b);
+
+
 #endif
