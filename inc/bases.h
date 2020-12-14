@@ -52,7 +52,11 @@ const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando t
 const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
 const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
 const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
-const double beta = 0.88*HW*SDP; //Beta de infección
+const double beta = 0.88; //Beta de infección
+const double N_beta = 3; //Número de funciones en las que se divide beta
+const double m_beta[N_beta] = {0.0, 9.396, -4.968}; //Pendiente de la función que define el beta
+const double b_beta[N_beta] = {0.001, -2.348, 4.699}; //Corte en y de la función que define el beta
+const double lim_beta[N_beta+1] = {0.0, 0.25, 0.5, 1.0}; //Límites de los tramos
 
 /* Tasas de contacto ******************************************************/
 

@@ -43,4 +43,8 @@ double int_beta_gauss(double t0, double t1, double mu, double sigma, double A, d
 double int_beta(double t0, double t1, double m, double b);
 
 
+/* Esta es la función para el beta */
+double function_beta(double x);
+
+
 #endif

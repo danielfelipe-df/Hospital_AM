@@ -18,8 +18,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   double As[n];
 
   //Propensidades de exponerse. (El alto no tiene la parte la gaussiana. Esa está implementada en la función bisección.)
-  As[0] = beta*N95*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb);
-  As[1] = beta*(Sb+STb)*(mu*N95*(Pa+PTa+La+LTa)/(double)Na + chi*TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*N95*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*TBQ*(IAb+PTAb+LTAb)/(double)Nb);
+  As[0] = HW*SDP*N95*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb);
+  As[1] = HW*SDP*(Sb+STb)*(mu*N95*(Pa+PTa+La+LTa)/(double)Na + chi*TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*N95*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*TBQ*(IAb+PTAb+LTAb)/(double)Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*(Ea+ETa+EAa);
@@ -53,7 +53,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   //for(unsigned int i=2; i<n; i++){lognormal_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double B = beta*N95*(Sa+STa)*eta, tau = 0, index = 0;
+  double B = N95*HW*SDP*(Sa+STa)*eta, tau = 0, index = 0;
   tau = biseccion(As, t, B, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
   if(tau < 1e6){//Si el tiempo en el que pasa la reacción es menor al máximo (1e6), entonces es porque la reacción si sucede
@@ -61,8 +61,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
     double cumulative[n];
     double value = 0;
     for(size_t i=0; i<N_gauss; i++){value += function_gauss(t, A_gauss[i], Mu_gauss[i], Sigma_gauss[i]);}
-    cumulative[0] = As[0] + B*value;
-    cumulative[1] = cumulative[0] + As[1];
+    cumulative[0] = function_beta(t)*As[0] + B*value;
+    cumulative[1] = cumulative[0] + function_beta(t)*As[1];
     for(unsigned int i=2; i<n; i++){cumulative[i] = cumulative[i-1] + As[i];}//(pdf(dist[i-2], tj[i]+tau)/cdf(complement(dist[i-2], tj[i]+tau)));}
 
     //Escojo la reacción a escoger
@@ -196,4 +196,9 @@ double int_beta(double t0, double t1, double m, double b){
   return 0.5*m*(t1*t1 - t0*t0) + b*(t1 - t0);
 }
 
+
+double function_beta(double x){
+  double myx = x - std::floor(x);
+  for(size_t i=0; i<N_beta; i++){if(myx <= lim_beta[i+1]){return m_beta[i]*myx + b_beta[i];}}
+}
 
