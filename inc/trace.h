@@ -3,6 +3,8 @@
 
 #include <Random64.h>
 #include <bases.h>
+#include <Constants/cons_rastreo.h>
+#include <Constants/cons_contact.h>
 #include <trabajadores.h>
 
 

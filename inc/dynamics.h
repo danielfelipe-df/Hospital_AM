@@ -4,6 +4,8 @@
 #include <vector>
 #include <Random64.h>
 #include <bases.h>
+#include <Constants/cons_dynamics.h>
+#include <Constants/cons_contact.h>
 #include <trabajadores.h>
 
 
@@ -40,11 +42,11 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
 
 
 /* Esta es la función gaussiana */
-double function_gauss(double x, double A, double mu, double sigma);
+double function_gauss(double x, double A, double prom, double sigma);
 
 
 /* Esta es la integral, entre t0 y t1, de una gaussiana por una ecuación lineal */
-double int_beta_gauss(double t0, double t1, double mu, double sigma, double A, double m, double b);
+double int_beta_gauss(double t0, double t1, double prom, double sigma, double A, double m, double b);
 
 
 /* Esta es la integral de una ecuación lineal */

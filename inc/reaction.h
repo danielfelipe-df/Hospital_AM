@@ -3,6 +3,8 @@
 
 #include <Random64.h>
 #include <bases.h>
+#include <Constants/cons_dynamics.h>
+#include <Constants/cons_contact.h>
 #include <trabajadores.h>
 
 /* Esta función es la función plantilla para hacer las reacciones */

@@ -4,6 +4,7 @@
 
 #include <Random64.h>
 #include <bases.h>
+#include <Constants/cons_test.h>
 #include <trabajadores.h>
 
 
