@@ -23,6 +23,14 @@ double function(double A, double prom, double sigma, double t, double tau);
 double phi(double* A, double* tj, unsigned int n, double B, double deltat, double t, std::vector<lognormal_d> &dist);
 
 
+/* Es la función auxiliar de phi para cuando los límites de la integral no se diferencian por más de 1.0 de diferencia */
+void aux_phi_function(double t0, double diff, double &value_gnum, double &value_bnum);
+
+
+/* Es la función auxiliar principal de phi para hacer toda la integración */
+void main_aux_phi_function(double t0, double diff, double &value_gnum, double &value_bnum, double t);
+
+
 /* Con esta función identifico a la persona que hico la infección */
 int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb);
 
@@ -45,6 +53,10 @@ double int_beta(double t0, double t1, double m, double b);
 
 /* Esta es la función para el beta */
 double function_beta(double x);
+
+
+/* Esta es la función que me devuelve el índice de la función en beta a usar */
+size_t index_beta(double x);
 
 
 #endif

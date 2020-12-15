@@ -1,4 +1,5 @@
 #include <math.h>
+#include <iostream>
 #include <dynamics.h>
 
 
@@ -122,17 +123,26 @@ double function(double A, double prom, double sigma, double t, double tau){
 double phi(double* A, double* tj, unsigned int n, double B, double deltat, double t, std::vector<lognormal_d> &dist){
   double psi_num, psi_den;
 
-  double value_num = 0, value_den = 0;
-  for(size_t i=0; i<N_gauss; i++){
-    value_num += function(A_gauss[i], Mu_gauss[i], Sigma_gauss[i], t, tj[0]+deltat);
-    value_den += function(A_gauss[i], Mu_gauss[i], Sigma_gauss[i], t, tj[0]);
-  }
+  double value_gnum1 = 0, value_gden1 = 0, value_gnum2 = 0, value_gden2 = 0;
+  double value_bnum1 = 0, value_bden1 = 0, value_bnum2 = 0, value_bden2 = 0;
+  double t0 = t - std::floor(t);
+  double diff = std::floor(t);
 
-  psi_num = -A[0]*(tj[0]+deltat) - B*value_num;
-  psi_den = -A[0]*tj[0] - B*value_den;
+  main_aux_phi_function(t0, diff, value_gnum2, value_bnum2, t);
+  main_aux_phi_function(t0, diff, value_gden2, value_bden2, t);
 
-  psi_num += -A[1]*(tj[1]+deltat);
-  psi_den += -A[1]*tj[1];
+  main_aux_phi_function(tj[0]+deltat, diff, value_gnum1, value_bnum1, t);
+  main_aux_phi_function(tj[0], diff, value_gden1, value_bden1, t);  
+
+  psi_num = -A[0]*(value_bnum1 - value_bnum2) - B*(value_gnum1 - value_gnum2);
+  psi_den = -A[0]*(value_bden1 - value_bden2) - B*(value_gden1 - value_gden2);
+
+  value_gnum1 = 0;  value_gden1 = 0;  value_bnum1 = 0;  value_bden1 = 0;
+  main_aux_phi_function(tj[1]+deltat, diff, value_gnum1, value_bnum1, t);
+  main_aux_phi_function(tj[1], diff, value_gden1, value_bden1, t);
+
+  psi_num += -A[1]*(value_bnum1 - value_bnum2);
+  psi_den += -A[1]*(value_bden1 - value_bden2);
 
   for(unsigned int i=2; i<n; i++){
     //psi_num += std::log(cdf(complement(dist[i-2], tj[i]+deltat)));
@@ -142,6 +152,54 @@ double phi(double* A, double* tj, unsigned int n, double B, double deltat, doubl
   }
 
   return psi_num-psi_den;
+}
+
+
+void aux_phi_function(double t0, double diff, double &value_gnum, double &value_bnum){
+  if(t0 < lim_beta[1]){
+    for(size_t k=0; k<N_gauss; k++){
+      value_gnum += int_beta_gauss(diff, diff+t0, Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[0], b_beta[0]);
+    }
+    value_bnum += int_beta(lim_beta[0], t0, m_beta[0], b_beta[0]);
+  }
+  else if(t0 < lim_beta[2]){
+    for(size_t k=0; k<N_gauss; k++){
+      value_gnum += int_beta_gauss(diff, diff+lim_beta[1], Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[0], b_beta[0]);
+      value_gnum += int_beta_gauss(diff+lim_beta[1], diff+t0, Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[1], b_beta[1]);
+    }
+    value_bnum += int_beta(lim_beta[0], lim_beta[1], m_beta[0], b_beta[0]);
+    value_bnum += int_beta(lim_beta[1], t0, m_beta[1], b_beta[1]);
+  }
+  else{
+    for(size_t k=0; k<N_gauss; k++){
+      value_gnum += int_beta_gauss(diff, diff+lim_beta[1], Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[0], b_beta[0]);
+      value_gnum += int_beta_gauss(diff+lim_beta[1], diff+lim_beta[2], Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[1], b_beta[1]);
+      value_gnum += int_beta_gauss(diff+lim_beta[2], diff+t0, Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[2], b_beta[2]);
+    }
+    value_bnum += int_beta(lim_beta[0], lim_beta[1], m_beta[0], b_beta[0]);
+    value_bnum += int_beta(lim_beta[1], lim_beta[2], m_beta[1], b_beta[1]);
+    value_bnum += int_beta(lim_beta[2], t0, m_beta[2], b_beta[2]);
+  }
+}
+
+
+void main_aux_phi_function(double t0, double diff, double &value_gnum, double &value_bnum, double t){
+  if(t0 < 1.0){
+    aux_phi_function(t0, diff, value_gnum, value_bnum);
+  }
+  else{
+    while(diff < (t+t0-1)){
+      for(size_t j=0; j<N_beta; j++){
+	for(size_t k=0; k<N_gauss; k++){
+	  value_gnum += int_beta_gauss(diff+lim_beta[j], diff+lim_beta[j+1], Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[j], b_beta[j]);
+	}
+	value_bnum += int_beta(lim_beta[j], lim_beta[j+1], m_beta[j], b_beta[j]);
+      }
+      diff++;
+    }
+    t0 -= std::floor(t0);
+    aux_phi_function(t0, diff, value_gnum, value_bnum);
+  }
 }
 
 
@@ -199,6 +257,16 @@ double int_beta(double t0, double t1, double m, double b){
 
 double function_beta(double x){
   double myx = x - std::floor(x);
-  for(size_t i=0; i<N_beta; i++){if(myx <= lim_beta[i+1]){return m_beta[i]*myx + b_beta[i];}}
+  size_t i;
+  for(i=0; i<(N_beta-1); i++){if(myx <= lim_beta[i+1]){return m_beta[i]*myx + b_beta[i];}}
+  return m_beta[i]*myx + b_beta[i];
+}
+
+
+size_t index_beta(double x){
+  double myx = x - std::floor(x);
+  size_t i;
+  for(i=0; i<(N_beta-1); i++){if(myx <= lim_beta[i+1]){return i;}}
+  return i;
 }
 
