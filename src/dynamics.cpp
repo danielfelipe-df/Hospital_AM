@@ -132,7 +132,7 @@ double phi(double* A, double* tj, unsigned int n, double B, double deltat, doubl
   main_aux_phi_function(t0, diff, value_gden2, value_bden2, t);
 
   main_aux_phi_function(tj[0]+deltat, diff, value_gnum1, value_bnum1, t);
-  main_aux_phi_function(tj[0], diff, value_gden1, value_bden1, t);  
+  main_aux_phi_function(tj[0], diff, value_gden1, value_bden1, t);
 
   psi_num = -A[0]*(value_bnum1 - value_bnum2) - B*(value_gnum1 - value_gnum2);
   psi_den = -A[0]*(value_bden1 - value_bden2) - B*(value_gden1 - value_gden2);
@@ -238,14 +238,14 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
 }
 
 
-double function_gauss(double x, double A, double mu, double sigma){
-  return A*std::exp(-(x-mu)*(x-mu)/(2*sigma*sigma));
+double function_gauss(double x, double A, double prom, double sigma){
+  return A*std::exp(-(x-prom)*(x-prom)/(2*sigma*sigma));
 }
 
 
-double int_beta_gauss(double t0, double t1, double mu, double sigma, double A, double m, double b){
+double int_beta_gauss(double t0, double t1, double prom, double sigma, double A, double m, double b){
   double A1 = m*A*sigma*sigma, A2 = std::sqrt(M_PI_2)*sigma*A*(m*t0 + b), Un2S = 1/(M_SQRT2*sigma);
-  double x1 = (t1 - mu)*Un2S, x0 = (t0 - mu)*Un2S;
+  double x1 = (t1 - prom)*Un2S, x0 = (t0 - prom)*Un2S;
   return A1*(std::exp(-x0*x0) - std::exp(-x1*x1)) + A2*(std::erf(x1) - std::erf(x0));
 }
 
