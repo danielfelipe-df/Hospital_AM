@@ -43,7 +43,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1e5;
+  unsigned int ensemble = 1e4;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
