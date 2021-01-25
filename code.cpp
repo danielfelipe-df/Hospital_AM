@@ -23,12 +23,6 @@ int main(void)
 
   //Creo los vectores en donde están las personas de cada estadío
   std::vector<grupo> vecal, vecba; //En el hospital
-  std::vector<grupo> outal, outba; //Fuera del hospital
-
-  //Defino la cantidad de turnos y el número de personas en cada uno
-  const int numTurnos = 5;
-  const int numPerAl = Na/numTurnos;
-  const int numPerBa = Nb/numTurnos;
 
   //Creo el generador de semillas
   Crandom gseed(xi*100 + 16876);
@@ -90,16 +84,10 @@ int main(void)
     vecal.resize(15);    vecba.resize(15);
     
     //Le asigno a cada entrada el índice como valor
-    vecal[0].resize(numPerAl);    vecba[0].resize(numPerBa);
-    for(unsigned int j=0; j<numPerAl; j++){vecal[0][j] = j;    altos[j].init(0);}
-    for(unsigned int j=0; j<numPerba; j++){vecba[0][j] = j;    bajos[j].init(0);}
+    vecal[0].resize(Na);    vecba[0].resize(Nb);
+    for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
+    for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
 
-    outal[0].resize(numPerAl*(numTurnos-1));    outba[0].resize(numPerBa*(numTurnos-1));
-    for(unsigned int k=1; k<numTurnos; k++){
-      for(unsigned int j=numPerAl*(k-1); j<(numPerAl*k); j++){outal[0][j] = j+numPerAl;    altos[j+numPerAl].init(k);}
-      for(unsigned int j=numPerBa*(k-1); j<(numPerBa*k); j++){outba[0][j] = j+numPerBa;    bajos[j+numPerBa].init(k);}
-    }
-    
     name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
@@ -115,7 +103,6 @@ int main(void)
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
     
     while(t < T){
-
       //Región de testeo masivo
       aux = 0.0;
       n1 = 0;
@@ -131,13 +118,13 @@ int main(void)
 	
 	//Actualizo los tiempos de los testeados masivamente que dan negativo
 	update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-
+	
 	//Actualizo los tiempos de los leves aislado
 	result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
-
+	
 	//Genero los tests masivos
 	/* Cuento los sus, exp, pre, lev y recI */
 	aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
@@ -158,7 +145,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-        if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+	if(num%50 == 0){print_inf(vecal, vecba, t, name);}
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();

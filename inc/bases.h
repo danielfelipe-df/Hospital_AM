@@ -26,10 +26,6 @@ typedef boost::math::normal_distribution<> normal_d;
 const int N = 1000; //Número de personas en el sistema
 const int Na = N*0.18; //Número de personas de riesgo alto
 const int Nb = N*0.82; //Número de personas de riesgo bajo
-const int numTurnos = 5; //Número de turnos de los trabajadores
-const int numPerAl = Na/numTurnos; //Número de personas de riesgo alto por turno
-const int numPerBa = Nb/numTurnos; //Número de personas de riesgo bajo por turno
-
 
 /* Tasas de la dinámica ***************************************************/
 
@@ -53,22 +49,24 @@ const double psi = 0.95; //Proporción de sintomáticos que son leves
 const double xi = 0.9; //Sensibilidad de la prueba
 const double theta = 0.5; //Cobertura
 const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
-const lognormal_d dist_Tt(0.51192, 0.41694);
 const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
 const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando tapabocas N95
 const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
 const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
 const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
 const double beta = 0.88*HW*SDP; //Beta de infección
+const lognormal_d dist_Tt(0.51192, 0.41694); //Distribución de los tiempos de entrega de examen
 
 
 /* Tasas de contacto ******************************************************/
 
 const double alpha = 0.9; //Adherencia al aislamiento
-const double mu = 0.1; //Tasa de contacto cruzada
-const double chi = 0.7; //Tasa de contacto de tipo bajo
-const double eta = 0.7; //Tasa de contacto con externos
-const double phi1 = 0.6; //Tasa de contacto de tipo alto
+const double dismin = 0.33; //Disminución de las tasas de contacto debido a los horarios
+const double mu = 0.1*dismin; //Tasa de contacto cruzada
+const double chi = 0.7*dismin; //Tasa de contacto de tipo bajo
+const double phi1 = 0.6*dismin; //Tasa de contacto de tipo alto
+const double eta = 0.7*dismin; //Tasa de contacto con externos (hospitalizados)
+const double lambda = 0.7*(1.0-dismin); //Tasa de contacto con externos (familiares)
 
 
 /* Rastreo ****************************************************************/
