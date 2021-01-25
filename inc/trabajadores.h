@@ -40,8 +40,11 @@ public:
   //Guardo la identidad de la persona que me infectó
   int DF;
 
+  //Guardo el índice del horario al cuál pertenece la persona
+  int schedule;
+
   //Función de iniciación
-  void init();
+  void init(int mySchedule);
 
   //Función de campio de estado
   void change(unsigned int now, unsigned int past);

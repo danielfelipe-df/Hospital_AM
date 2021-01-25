@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <trabajadores.h>
 
-void trabajadores::init(){
+void trabajadores::init(int mySchedule){
   kind = 0;
   time = 0;
   tmax = 0;
@@ -12,6 +12,7 @@ void trabajadores::init(){
   myTt = 0;
   my_inf.clear();
   DF = -2;
+  schedule = mySchedule;
 }
 
 

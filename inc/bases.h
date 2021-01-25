@@ -7,6 +7,7 @@
 
 typedef std::vector<int> grupo; //Redefino el vector de índices de personas como grupo
 
+
 /* Distribuciones *********************************************************/
 
 #include <boost/math/distributions/weibull.hpp>
@@ -19,11 +20,16 @@ typedef boost::math::gamma_distribution<> gamma_d;
 typedef boost::math::lognormal_distribution<> lognormal_d;
 typedef boost::math::normal_distribution<> normal_d;
 
+
 /* Tamaño de las poblaciones **********************************************/
 
 const int N = 1000; //Número de personas en el sistema
 const int Na = N*0.18; //Número de personas de riesgo alto
 const int Nb = N*0.82; //Número de personas de riesgo bajo
+const int numTurnos = 5; //Número de turnos de los trabajadores
+const int numPerAl = Na/numTurnos; //Número de personas de riesgo alto por turno
+const int numPerBa = Nb/numTurnos; //Número de personas de riesgo bajo por turno
+
 
 /* Tasas de la dinámica ***************************************************/
 
@@ -38,6 +44,7 @@ const double USDpg = 1.0/Dpg; //Inverso del periodo infeccioso pre-sintomático 
 const double USDil = 1.0/Dil; //Inverso del periodo infeccioso de leves
 const double USDig = 1.0/Dig; //Inverso del periodo infeccioso de graves
 const double USDplil = 1.0/(Dpl+Dil); //Inverso del periodo infeccioso total
+
 
 /* Tasas complementarias **************************************************/
 
@@ -54,6 +61,7 @@ const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lav
 const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
 const double beta = 0.88*HW*SDP; //Beta de infección
 
+
 /* Tasas de contacto ******************************************************/
 
 const double alpha = 0.9; //Adherencia al aislamiento
@@ -61,6 +69,7 @@ const double mu = 0.1; //Tasa de contacto cruzada
 const double chi = 0.7; //Tasa de contacto de tipo bajo
 const double eta = 0.7; //Tasa de contacto con externos
 const double phi1 = 0.6; //Tasa de contacto de tipo alto
+
 
 /* Rastreo ****************************************************************/
 
