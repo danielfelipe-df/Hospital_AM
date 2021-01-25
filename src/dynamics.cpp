@@ -53,16 +53,17 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   //for(unsigned int i=2; i<n; i++){lognormal_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double B = beta*N95*(Sa+STa)*eta, tau = 0, index = 0;
-  tau = biseccion(As, t, B, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
+  double Ba1 = beta*N95*(Sa+STa)*eta, Ba2 = beta*N95*(Sa+STa)*lambda, Bb = beta*TBQ*(Sb+STb)*lambda;
+  double tau = 0, index = 0;
+  tau = biseccion(As, t, Ba1, Ba2, Bb, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
   if(tau < 1e6){//Si el tiempo en el que pasa la reacción es menor al máximo (1e6), entonces es porque la reacción si sucede
     //Hallo el vector que me guarda la propensidad acumulada en orden
     double cumulative[n];
     double value = 0;
     for(size_t i=0; i<N_gauss; i++){value += function_gauss(t, A_gauss[i], Mu_gauss[i], Sigma_gauss[i]);}
-    cumulative[0] = As[0] + B*value;
-    cumulative[1] = cumulative[0] + As[1];
+    cumulative[0] = As[0] + Ba1*value + Ba2*value;
+    cumulative[1] = cumulative[0] + As[1] + Bb*value;
     for(unsigned int i=2; i<n; i++){cumulative[i] = cumulative[i-1] + As[i];}//(pdf(dist[i-2], tj[i]+tau)/cdf(complement(dist[i-2], tj[i]+tau)));}
 
     //Escojo la reacción a escoger
@@ -94,15 +95,15 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
 }
 
 
-double biseccion(double* A, double t, double B, double ranr, double* tj, int n, std::vector<lognormal_d> &dist){
+double biseccion(double* A, double t, double Ba1, double Ba2, double Bb, double ranr, double* tj, int n, std::vector<lognormal_d> &dist){
   double m,fa,fm;
   double lim = 1e3, min = 0.0;
   double a = min, b = lim, eps = 1e-7, pmax = 100, p=0;
-  fa = phi(A, tj, n, B, a, t, dist) - ranr;
+  fa = phi(A, tj, n, Ba1, Ba2, Bb, a, t, dist) - ranr;
 
   while(b-a>eps && p<pmax){
     m = (a+b)/2;
-    fm = phi(A, tj, n, B, m, t, dist) - ranr;
+    fm = phi(A, tj, n, Ba1, Ba2, Bb, m, t, dist) - ranr;
     if(fa*fm<0){b = m;}
     else{a = m; fa = fm;}
     p++;
@@ -119,7 +120,7 @@ double function(double A, double prom, double sigma, double t, double tau){
 }
 
 
-double phi(double* A, double* tj, unsigned int n, double B, double deltat, double t, std::vector<lognormal_d> &dist){
+double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double Bb, double deltat, double t, std::vector<lognormal_d> &dist){
   double psi_num, psi_den;
 
   double value_num = 0, value_den = 0;
@@ -128,11 +129,11 @@ double phi(double* A, double* tj, unsigned int n, double B, double deltat, doubl
     value_den += function(A_gauss[i], Mu_gauss[i], Sigma_gauss[i], t, tj[0]);
   }
 
-  psi_num = -A[0]*(tj[0]+deltat) - B*value_num;
-  psi_den = -A[0]*tj[0] - B*value_den;
+  psi_num = -A[0]*(tj[0]+deltat) - Ba1*value_num - Ba2*value_den;
+  psi_den = -A[0]*tj[0] - Ba1*value_den - Ba2*value_den;
 
-  psi_num += -A[1]*(tj[1]+deltat);
-  psi_den += -A[1]*tj[1];
+  psi_num += -A[1]*(tj[1]+deltat) - Bb*value_num;
+  psi_den += -A[1]*tj[1] - Bb*value_den;
 
   for(unsigned int i=2; i<n; i++){
     //psi_num += std::log(cdf(complement(dist[i-2], tj[i]+deltat)));
@@ -151,12 +152,13 @@ int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grup
   for(size_t i=0; i<N_gauss; i++){value += function_gauss(t, A_gauss[i], Mu_gauss[i], Sigma_gauss[i]);}
 
   //Calculo la propensidad de cada grupo
-  double num[5];
+  double num[6];
   num[0] = cons1*TBa*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
   num[1] = cons2*TBb*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
   num[2] = (1-alpha)*cons1*TBa*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
   num[3] = (1-alpha)*cons2*TBb*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
-  num[4] = alti*eta*N95*value;
+  num[4] = alti*lambda*N95*value + (1-alti)*lambda*TBQ*value;
+  num[5] = alti*eta*N95*value;
 
   //Hallo el individuo que contagia
   grupo aux;
@@ -165,6 +167,7 @@ int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grup
   else if(num2 < num[0] + num[1]){return selection_infectious(Pb, PTb, Lb, LTb, ran) + Na;}
   else if(num2 < num[0] + num[1] + num[2]){return selection_infectious(IAa, PTAa, LTAa, aux, ran);}
   else if(num2 < num[0] + num[1] + num[2] + num[3]){return selection_infectious(IAb, PTAb, LTAb, aux, ran) + Na;}
+  else if(num2 < num[0] + num[1] + num[2] + num[3] + num[4]){return -2;}
   else{return -1;}
 }
 

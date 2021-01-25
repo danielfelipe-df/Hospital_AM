@@ -12,7 +12,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */
-double biseccion(double* A, double t, double B, double ranr, double* tj, int n, std::vector<lognormal_d> &dist);
+double biseccion(double* A, double t, double Ba1, double Ba2, double Bb, double ranr, double* tj, int n, std::vector<lognormal_d> &dist);
 
 
 /* Es la función integrada de la prevalencia externa */
@@ -20,7 +20,7 @@ double function(double A, double prom, double sigma, double t, double tau);
 
 
 /* Es la función phi */
-double phi(double* A, double* tj, unsigned int n, double B, double deltat, double t, std::vector<lognormal_d> &dist);
+double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double Bb, double deltat, double t, std::vector<lognormal_d> &dist);
 
 
 /* Con esta función identifico a la persona que hico la infección */

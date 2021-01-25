@@ -26,14 +26,12 @@ int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value
 }
 
 
-int infected(trabajadores *altos, Crandom &ran){
+int infected(trabajadores *family, Crandom &ran, int size, int min, int max, double mean, double sd){
   /*
   int min = 0, max = 10;
   double mean = 6.0, sd = 1.0;
   */
-
-  int min = 0, max = 180;
-  double mean = 150.0, sd = 30.0;
+  
   normal_d my_dist(mean, sd);
 
   int number = quantile(my_dist, ran.r());
@@ -42,11 +40,11 @@ int infected(trabajadores *altos, Crandom &ran){
   else if(number > max){number = max;}
 
   grupo aux;
-  for(int i=0; i<number; i++){aux.push_back((int)(ran.r()*Na));}
+  for(int i=0; i<number; i++){aux.push_back((int)(ran.r()*size));}
 
   int agent, ind, kind;
   if(aux.size() != 0){
-    ind = (int)(ran.r()*aux.size());    agent = aux[ind];    kind = altos[agent].kind;
+    ind = (int)(ran.r()*aux.size());    agent = aux[ind];    kind = family[agent].kind;
     if(kind == 0 || kind == 1 ){return agent;}
     else{return -1;}
   }
@@ -61,7 +59,7 @@ int infected(trabajadores *altos, Crandom &ran){
 void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
   int agentS;
   unsigned int index;
-  if(agentI != -1){/* Si el que infecta no es externo */
+  if(agentI > -1){/* Si el que infecta no es externo */
     index = (int)(ran.r()*(Val[0].size() + Val[1].size()));
     int value1 = Val[2].size(), value2;
     /* Susceptible a Expuesto */
@@ -79,7 +77,7 @@ void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
     else{bajos[agentI-Na].my_inf.push_back(agentS);}
   }
   else{/* Si el que infecta es externo */
-    agentS = infected(altos, ran);
+    agentS = infected(altos, ran, Na, 0, Na, 150.0, 30.0);
     if(agentS != -1){/* Si la infección debido al externo se realizó */
       /* Susceptible a Expuesto */
       if(altos[agentS].kind == 0){
@@ -99,21 +97,41 @@ void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 /* Susceptible a expuesto. Bajo */
 void reaction1(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
-  unsigned int index = (int)(ran.r()*(Vba[0].size() + Vba[1].size()));
-  int agentS, value1 = Vba[2].size(), value2;
-  /* Susceptible a Expuesto */
-  if(index < Vba[0].size()){agentS = Vba[0][index];    mother_reaction(Vba[0], Vba[2], index, bajos, 0, 2);}
-  /* Susceptible testeado a Expuesto testeado */
-  else{agentS = Vba[1][index-Vba[0].size()];    mother_reaction(Vba[1], Vba[3], index-Vba[0].size(), bajos, 1, 3);}
-  value2 = Vba[2].size();
-
-  /* Guardo a la persona que me infectó */
-  if(value2 > value1){bajos[Vba[2].back()].DF = agentI;}
-  else{bajos[Vba[3].back()].DF = agentI;}
-
-  /* Guardo a la persona que infecté */
-  if(agentI < Na){altos[agentI].my_inf.push_back(agentS + Na);}
-  else{bajos[agentI-Na].my_inf.push_back(agentS + Na);}
+  int agentS;
+  unsigned int index;
+  if(agentI > -1){
+    index = (int)(ran.r()*(Vba[0].size() + Vba[1].size()));
+    int value1 = Vba[2].size(), value2;
+    /* Susceptible a Expuesto */
+    if(index < Vba[0].size()){agentS = Vba[0][index];    mother_reaction(Vba[0], Vba[2], index, bajos, 0, 2);}
+    /* Susceptible testeado a Expuesto testeado */
+    else{agentS = Vba[1][index-Vba[0].size()];    mother_reaction(Vba[1], Vba[3], index-Vba[0].size(), bajos, 1, 3);}
+    value2 = Vba[2].size();
+    
+    /* Guardo a la persona que me infectó */
+    if(value2 > value1){bajos[Vba[2].back()].DF = agentI;}
+    else{bajos[Vba[3].back()].DF = agentI;}
+    
+    /* Guardo a la persona que infecté */
+    if(agentI < Na){altos[agentI].my_inf.push_back(agentS + Na);}
+    else{bajos[agentI-Na].my_inf.push_back(agentS + Na);}
+  }
+  else{/* Si el que infecta es externo */
+    agentS = infected(bajos, ran, Nb, 0, Nb, 750, 30.0);
+    if(agentS != -1){/* Si la infección debido al externo se realizó */
+      /* Susceptible a Expuesto */
+      if(bajos[agentS].kind == 0){
+	std::vector<int>::iterator it = std::find(Vba[0].begin(), Vba[0].end(), agentS);
+	index = std::distance(Vba[0].begin(), it);
+	mother_reaction(Vba[0], Vba[2], index, bajos, 0, 2);}
+      /* Susceptible testeado a Expuesto testado */
+      else{
+	std::vector<int>::iterator it = std::find(Vba[1].begin(), Vba[1].end(), agentS);
+	index = std::distance(Vba[1].begin(), it);
+	mother_reaction(Vba[1], Vba[3], index, bajos, 1, 3);
+      }
+    }
+  }
 }
 
 
