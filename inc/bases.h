@@ -54,14 +54,14 @@ const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando t
 const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
 const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
 const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
-const double beta = 0.88*HW*SDP; //Beta de infección
+const double beta = 2.65*HW*SDP; //Beta de infección
 const lognormal_d dist_Tt(0.51192, 0.41694); //Distribución de los tiempos de entrega de examen
 
 
 /* Tasas de contacto ******************************************************/
 
 const double alpha = 0.9; //Adherencia al aislamiento
-const double dismin = 0.33; //Disminución de las tasas de contacto debido a los horarios
+const double dismin = 1.0/3.0; //Disminución de las tasas de contacto debido a los horarios
 const double mu = 0.1*dismin; //Tasa de contacto cruzada
 const double chi = 0.7*dismin; //Tasa de contacto de tipo bajo
 const double phi1 = 0.6*dismin; //Tasa de contacto de tipo alto
@@ -85,10 +85,10 @@ const double Sigma_gauss[N_gauss] = {8.25, 3.52e1};
 
 
 /* Prevalencia externa media
-const size_t N_gauss = 4;
-const double A_gauss[N_gauss] = {8.04e-3, 1.11e-3, 1.18e-3, 4.4e-3};
-const double Mu_gauss[N_gauss] = {1.07e2, 9.23e1, 1.85e2, 2.32e2};
-const double Sigma_gauss[N_gauss] = {3.45e1, 6.13, 1.35e1, 4.46e1};
+const size_t N_gauss = 2;
+const double A_gauss[N_gauss] = {8.04e-3, 1.11e-3};//, 1.18e-3, 4.4e-3};
+const double Mu_gauss[N_gauss] = {1.07e2, 9.23e1},//, 1.85e2, 2.32e2};
+const double Sigma_gauss[N_gauss] = {3.45e1, 6.13};//, 1.35e1, 4.46e1};
 */
 
 /* Prevalencia externa baja
