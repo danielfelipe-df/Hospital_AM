@@ -53,7 +53,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   //for(unsigned int i=2; i<n; i++){lognormal_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double Ba1 = beta*N95*(Sa+STa)*eta, Ba2 = beta*N95*(Sa+STa)*lambda, Bb = beta*TBQ*(Sb+STb)*lambda;
+  double Ba1 = beta*N95*(Sa+STa)*eta, Ba2 = beta*(Sa+STa)*lambda, Bb = beta*(Sb+STb)*lambda;
   double tau = 0, index = 0;
   tau = biseccion(As, t, Ba1, Ba2, Bb, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
@@ -157,12 +157,12 @@ int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grup
   num[1] = cons2*TBb*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
   num[2] = (1-alpha)*cons1*TBa*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
   num[3] = (1-alpha)*cons2*TBb*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
-  num[4] = alti*lambda*N95*value + (1-alti)*lambda*TBQ*value;
+  num[4] = alti*lambda*value + (1-alti)*lambda*value;
   num[5] = alti*eta*N95*value;
 
   //Hallo el individuo que contagia
   grupo aux;
-  double num2 = ran.r()*(num[0] + num[1] + num[2] + num[3] + num[4]);
+  double num2 = ran.r()*(num[0] + num[1] + num[2] + num[3] + num[4] + num[5]);
   if(num2 < num[0]){return selection_infectious(Pa, PTa, La, LTa, ran);}
   else if(num2 < num[0] + num[1]){return selection_infectious(Pb, PTb, Lb, LTb, ran) + Na;}
   else if(num2 < num[0] + num[1] + num[2]){return selection_infectious(IAa, PTAa, LTAa, aux, ran);}
