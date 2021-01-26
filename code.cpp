@@ -43,7 +43,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1e5;
+  unsigned int ensemble = 1e4;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -65,6 +65,7 @@ int main(void)
   unsigned int n1, n2;
   double aux, contador, promrec;
   unsigned int aux2, num;
+  double ARi, ARh, ARc;
 
   std::ofstream fout;
   std::string name;
@@ -88,16 +89,19 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
 
-    name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
+    //name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
     
     //Inicio el tiempo
     t = 0.0;
+    ARi = 0.0;
+    ARh = 0.0;
+    ARc = 0.0;
     
     //Imprimo los datos
-    if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+    //if(num%50 == 0){print_inf(vecal, vecba, t, name);}
     
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
@@ -112,6 +116,13 @@ int main(void)
 	
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
+
+	//Voy contado de que tipo fue el contagio
+	if((int)ti_in[1] == 0 || (int)ti_in[1] == 1){
+	  if((int)ti_in[2] == -2){ARc++;}
+	  else if((int)ti_in[2] == -1){ARh++;}
+	  else{ARi++;}
+	}
 	
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
@@ -145,7 +156,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-	if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+	//if(num%50 == 0){print_inf(vecal, vecba, t, name);}
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -165,6 +176,13 @@ int main(void)
 	
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
+
+	//Voy contado de que tipo fue el contagio
+	if((int)ti_in[1] == 0 || (int)ti_in[1] == 1){
+	  if((int)ti_in[2] == -2){ARc++;}
+	  else if((int)ti_in[2] == -1){ARh++;}
+	  else{ARi++;}
+	}
 	
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
@@ -186,7 +204,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-        if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+        //if(num%50 == 0){print_inf(vecal, vecba, t, name);}
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -199,7 +217,8 @@ int main(void)
 
     /* Cuento los recI, recT y recA */
     promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
-    fout << vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() << std::endl;
+    fout << vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() << '\t';
+    fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */
     name = "Results/Data_" + name3 + "/Data_" + name2 + "_Grafos/datos_" + std::to_string(num) + ".csv";
