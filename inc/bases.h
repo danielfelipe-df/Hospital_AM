@@ -54,19 +54,34 @@ const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando t
 const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
 const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
 const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
-const double beta = 2.65*HW*SDP; //Beta de infección
 const lognormal_d dist_Tt(0.51192, 0.41694); //Distribución de los tiempos de entrega de examen
+
+
+/* Tasas de contagio *******************************************************/
+
+const size_t N_betaL = 2; //Número de secciones lineales del beta
+const double m_betaL[N_betaL] = {0.0, 0.0}; //Pendiente de la ecuación lineal para el beta laboral
+const double b_betaL[N_betaL] = {2.65, 0.0}; //Corte en Y de la ecuación lineal para el beta laboral
+const double lim_betaL[N_betaL+1] = {0.0, 1/3.0, 1.0}; //Tiempos entre cada una de las regiones del beta
+const size_t N_betaF = 2; //Número de secciones lineales del beta
+const double m_betaF[N_betaF] = {0.0, 0.0}; //Pendiente de la ecuación lineal para el beta familiar
+const double b_betaF[N_betaF] = {0.0, 2.65}; //Corte en Y de la ecuación lineal para el beta familiar
+const double lim_betaF[N_betaF+1] = {0.0, 1/3.0, 1.0}; //Tiempos entre cada una de las regiones del beta
+
+
+/* Tasas de contacto *******************************************************/
+
+const size_t N_rate = 2; //Número de funciones en las que se dividen las tasas de contacto
 
 
 /* Tasas de contacto ******************************************************/
 
 const double alpha = 0.9; //Adherencia al aislamiento
-const double dismin = 1.0/3.0; //Disminución de las tasas de contacto debido a los horarios
-const double mu = 0.1*dismin; //Tasa de contacto cruzada
-const double chi = 0.7*dismin; //Tasa de contacto de tipo bajo
-const double phi1 = 0.6*dismin; //Tasa de contacto de tipo alto
-const double eta = 0.7*dismin; //Tasa de contacto con externos (hospitalizados)
-const double lambda = 0.7*(1.0-dismin); //Tasa de contacto con externos (familiares)
+const double mu = 0.1; //Tasa de contacto cruzada
+const double chi = 0.7; //Tasa de contacto de tipo bajo
+const double phi1 = 0.6; //Tasa de contacto de tipo alto
+const double eta = 0.7; //Tasa de contacto con externos (hospitalizados)
+const double lambda = 0.7; //Tasa de contacto con externos (familiares)
 
 
 /* Rastreo ****************************************************************/
@@ -87,7 +102,7 @@ const double Sigma_gauss[N_gauss] = {8.25, 3.52e1};
 /* Prevalencia externa media
 const size_t N_gauss = 2;
 const double A_gauss[N_gauss] = {8.04e-3, 1.11e-3};//, 1.18e-3, 4.4e-3};
-const double Mu_gauss[N_gauss] = {1.07e2, 9.23e1},//, 1.85e2, 2.32e2};
+const double Mu_gauss[N_gauss] = {1.07e2, 9.23e1};//, 1.85e2, 2.32e2};
 const double Sigma_gauss[N_gauss] = {3.45e1, 6.13};//, 1.35e1, 4.46e1};
 */
 

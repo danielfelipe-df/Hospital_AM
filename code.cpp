@@ -43,7 +43,7 @@ int main(void)
   double tj[14];
 
   //Defino el número de corridas
-  unsigned int ensemble = 1e4;
+  unsigned int ensemble = 1e3;
 
   //Creo el arreglo de las funciones de reacción
   reactions react[14] = {reaction0, reaction1, reaction2, reaction3, reaction4, reaction5, reaction6, reaction7, reaction8, reaction9,
@@ -89,7 +89,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
 
-    //name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
+    name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -101,7 +101,7 @@ int main(void)
     ARc = 0.0;
     
     //Imprimo los datos
-    //if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+    print_inf(vecal, vecba, t, name);
     
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
@@ -156,7 +156,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-	//if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+	print_inf(vecal, vecba, t, name);
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -204,7 +204,7 @@ int main(void)
 	aux += ti_in[0];
 	
 	//Imprimo los datos
-        //if(num%50 == 0){print_inf(vecal, vecba, t, name);}
+        print_inf(vecal, vecba, t, name);
 	
 	//Borro el vector de tiempo e índice
 	ti_in.clear();

@@ -35,4 +35,22 @@ int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ra
 double function_gauss(double x, double A, double mu, double sigma);
 
 
+void aux_phi_function(double t0, double diff, double &gnum, double &bnum, const double* lim_beta, const double* m_beta, const double* b_beta, const size_t N_beta);
+
+
+void main_aux_phi_function(double t0, double diff, double &gnum, double &bnum, double t, const double* lim_beta, const double* m_beta, const double* b_beta, const size_t N_beta);
+
+
+double int_beta_gauss(double t0, double t1, double prom, double sigma, double A, double m, double b);
+
+
+double int_beta(double t0, double t1, double m, double b);
+
+
+double function_beta(double x, const double* lim_beta, const double* m_beta, const double* b_beta, size_t N_beta);
+
+
+size_t index_beta(double x, const double* lim_beta, const size_t N_beta);
+
+
 #endif
