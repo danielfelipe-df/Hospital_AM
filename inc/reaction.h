@@ -14,7 +14,7 @@ int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value
 
 
 /* Esta función me escoje el infectado, si el infeccioso es un externo */
-int infected(trabajadores *family, Crandom &ran, int size, int min, int max, double mean, double sd);
+int infected(trabajadores *family, int max);
 
 
 /* Esta función me hace la reacción de contagio para un susceptible alto */

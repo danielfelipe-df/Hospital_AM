@@ -26,30 +26,11 @@ int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value
 }
 
 
-int infected(trabajadores *family, Crandom &ran, int size, int min, int max, double mean, double sd){
-  /*
-  int min = 0, max = 10;
-  double mean = 6.0, sd = 1.0;
-  */
-  
-  normal_d my_dist(mean, sd);
-
-  int number = quantile(my_dist, ran.r());
-
-  if(number < min){number = min;}
-  else if(number > max){number = max;}
-
-  grupo aux;
-  for(int i=0; i<number; i++){aux.push_back((int)(ran.r()*size));}
-
-  int agent, ind, kind;
-  if(aux.size() != 0){
-    ind = (int)(ran.r()*aux.size());    agent = aux[ind];    kind = family[agent].kind;
-    if(kind == 0 || kind == 1 ){return agent;}
-    else{return -1;}
-  }
-  else{
-    return -1;
+int infected(trabajadores *family, int max){
+  int kind;
+  for(size_t i=0; i<max; i++){
+    kind = family[i].kind;
+    if(kind == 0 || kind == 1){return i;}
   }
 }
 
@@ -77,7 +58,7 @@ void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
     else{bajos[agentI-Na].my_inf.push_back(agentS);}
   }
   else{/* Si el que infecta es externo */
-    agentS = infected(altos, ran, Na, 0, Na, 150.0, 30.0);
+    agentS = infected(altos, Na);
     if(agentS != -1){/* Si la infección debido al externo se realizó */
       /* Susceptible a Expuesto */
       if(altos[agentS].kind == 0){
@@ -117,7 +98,7 @@ void reaction1(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
     else{bajos[agentI-Na].my_inf.push_back(agentS + Na);}
   }
   else{/* Si el que infecta es externo */
-    agentS = infected(bajos, ran, Nb, 0, Nb, 750, 30.0);
+    agentS = infected(bajos, Nb);
     if(agentS != -1){/* Si la infección debido al externo se realizó */
       /* Susceptible a Expuesto */
       if(bajos[agentS].kind == 0){
