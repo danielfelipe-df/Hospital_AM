@@ -18,8 +18,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   double As[n];
 
   //Propensidades de exponerse. (El alto no tiene la parte la gaussiana. Esa está implementada en la función bisección.)
-  As[0] = HW*SDP*N95*(Sa+STa)*(phi1*(Pa+PTa+La+LTa)/(double)Na + mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*phi1*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*mu*(IAb+PTAb+LTAb)/(double)Nb);
-  As[1] = HW*SDP*(Sb+STb)*(mu*N95*(Pa+PTa+La+LTa)/(double)Na + chi*TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-alpha)*mu*N95*(IAa+PTAa+LTAa)/(double)Na + (1-alpha)*chi*TBQ*(IAb+PTAb+LTAb)/(double)Nb);
+  As[0] = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa)*(MyCons.phi1*(Pa+PTa+La+LTa)/(double)Na + MyCons.mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-MyCons.alpha)*MyCons.phi1*(IAa+PTAa+LTAa)/(double)Na + (1-MyCons.alpha)*MyCons.mu*(IAb+PTAb+LTAb)/(double)Nb);
+  As[1] = MyCons.HW*MyCons.SDP*(Sb+STb)*(MyCons.mu*MyCons.N95*(Pa+PTa+La+LTa)/(double)Na + MyCons.chi*MyCons.TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-MyCons.alpha)*MyCons.mu*MyCons.N95*(IAa+PTAa+LTAa)/(double)Na + (1-MyCons.alpha)*MyCons.chi*MyCons.TBQ*(IAb+PTAb+LTAb)/(double)Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*(Ea+ETa+EAa);
@@ -53,7 +53,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   //for(unsigned int i=2; i<n; i++){lognormal_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double Ba1 = HW*SDP*N95*(Sa+STa)*eta, Ba2 = HW*SDP*(Sa+STa)*lambda, Bb = HW*SDP*(Sb+STb)*lambda;
+  double Ba1 = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa)*MyCons.eta, Ba2 = MyCons.HW*MyCons.SDP*(Sa+STa)*MyCons.lambda, Bb = MyCons.HW*MyCons.SDP*(Sb+STb)*MyCons.lambda;
   double tau = 0, index = 0;
   tau = biseccion(As, t, Ba1, Ba2, Bb, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
@@ -61,9 +61,9 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
     //Hallo el vector que me guarda la propensidad acumulada en orden
     double cumulative[n];
     double value = 0;
-    for(size_t i=0; i<N_gauss; i++){value += function_gauss(t, A_gauss[i], Mu_gauss[i], Sigma_gauss[i]);}
-    cumulative[0] = function_beta(t, lim_betaL, m_betaL, b_betaL, N_betaL)*As[0] + Ba1*value + Ba2*value;
-    cumulative[1] = cumulative[0] + function_beta(t, lim_betaF, m_betaF, b_betaF, N_betaF)*As[1] + Bb*value;
+    for(size_t i=0; i<MyCons.N_gauss; i++){value += function_gauss(t, MyCons.A_gauss[i], MyCons.Mu_gauss[i], MyCons.Sigma_gauss[i]);}
+    cumulative[0] = function_beta(t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL)*As[0] + Ba1*value + Ba2*value;
+    cumulative[1] = cumulative[0] + function_beta(t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF)*As[1] + Bb*value;
     for(unsigned int i=2; i<n; i++){cumulative[i] = cumulative[i-1] + As[i];}//(pdf(dist[i-2], tj[i]+tau)/cdf(complement(dist[i-2], tj[i]+tau)));}
 
     //Escojo la reacción a escoger
@@ -82,8 +82,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
 
   //Escojo a la persona que contagia, si hay infección
   int conta = 0;
-  if((int)index == 0){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 1, t, N95, N95);}
-  else if((int)index == 1){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], phi1, mu, ran, 0, t, N95, TBQ);}
+  if((int)index == 0){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], MyCons.phi1, MyCons.mu, ran, 1, t, MyCons.N95, MyCons.N95);}
+  else if((int)index == 1){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], MyCons.phi1, MyCons.mu, ran, 0, t, MyCons.N95, MyCons.TBQ);}
 
   //Creo el vector resultados
   std::vector<double> result(3);
@@ -130,25 +130,25 @@ double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double
   double t0 = t - std::floor(t);
   double diff = std::floor(t);
 
-  main_aux_phi_function(t0, diff, gnumL2, bnumL2, t, lim_betaL, m_betaL, b_betaL, N_betaL);
-  main_aux_phi_function(t0, diff, gdenL2, bdenL2, t, lim_betaL, m_betaL, b_betaL, N_betaL);
-  main_aux_phi_function(t0, diff, gnumF2, bnumF2, t, lim_betaF, m_betaF, b_betaF, N_betaF);
-  main_aux_phi_function(t0, diff, gdenF2, bdenF2, t, lim_betaF, m_betaF, b_betaF, N_betaF);
+  main_aux_phi_function(t0, diff, gnumL2, bnumL2, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(t0, diff, gdenL2, bdenL2, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(t0, diff, gnumF2, bnumF2, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+  main_aux_phi_function(t0, diff, gdenF2, bdenF2, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
 
-  main_aux_phi_function(tj[0]+deltat, diff, gnumL1, bnumL1, t, lim_betaL, m_betaL, b_betaL, N_betaL);
-  main_aux_phi_function(tj[0], diff, gdenL1, bdenL1, t, lim_betaL, m_betaL, b_betaL, N_betaL);
-  main_aux_phi_function(tj[0]+deltat, diff, gnumF1, bnumF1, t, lim_betaF, m_betaF, b_betaF, N_betaF);
-  main_aux_phi_function(tj[0], diff, gdenF1, bdenF1, t, lim_betaF, m_betaF, b_betaF, N_betaF);
+  main_aux_phi_function(tj[0]+deltat, diff, gnumL1, bnumL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(tj[0], diff, gdenL1, bdenL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(tj[0]+deltat, diff, gnumF1, bnumF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+  main_aux_phi_function(tj[0], diff, gdenF1, bdenF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
 
   psi_num = -A[0]*(bnumL1 - bnumL2) - Ba1*(gnumL1 - gnumL2) - Ba2*(gnumF1 - gnumF2);
   psi_den = -A[0]*(bdenL1 - bdenL2) - Ba1*(gdenL1 - gdenL2) - Ba2*(gdenF1 - gdenF2);
 
   gnumL1 = 0;  gdenL1 = 0;  bnumL1 = 0;  bdenL1 = 0;
   gnumF1 = 0;  gdenF1 = 0;  bnumF1 = 0;  bdenF1 = 0;
-  main_aux_phi_function(tj[1]+deltat, diff, gnumL1, bnumL1, t, lim_betaL, m_betaL, b_betaL, N_betaL);
-  main_aux_phi_function(tj[1], diff, gdenL1, bdenL1, t, lim_betaL, m_betaL, b_betaL, N_betaL);
-  main_aux_phi_function(tj[1]+deltat, diff, gnumF1, bnumF1, t, lim_betaF, m_betaF, b_betaF, N_betaF);
-  main_aux_phi_function(tj[1], diff, gdenF1, bdenF1, t, lim_betaF, m_betaF, b_betaF, N_betaF);
+  main_aux_phi_function(tj[1]+deltat, diff, gnumL1, bnumL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(tj[1], diff, gdenL1, bdenL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(tj[1]+deltat, diff, gnumF1, bnumF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+  main_aux_phi_function(tj[1], diff, gdenF1, bdenF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
 
   psi_num += -A[1]*(bnumL1 - bnumL2) - Bb*(gnumF1 - gnumF2);
   psi_den += -A[1]*(bdenL1 - bdenL2) - Bb*(gdenF1 - gdenF2);
@@ -164,20 +164,20 @@ double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double
 }
 
 
-int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb){
+int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb){  
   //Reviso si la infección se realizó dentro del hospital o afuera
-  if(t - std::floor(t) < lim_betaL[1]){// Si fue adentro, entonces acoto las propensidades a las que pertenecen a la dinámica interna
+  if(t - std::floor(t) < MyCons.lim_betaL[1]){// Si fue adentro, entonces acoto las propensidades a las que pertenecen a la dinámica interna
     //Parámetros Gaussiana
     double value = 0;
-    for(size_t i=0; i<N_gauss; i++){value += function_gauss(t, A_gauss[i], Mu_gauss[i], Sigma_gauss[i]);}
+    for(size_t i=0; i<MyCons.N_gauss; i++){value += function_gauss(t, MyCons.A_gauss[i], MyCons.Mu_gauss[i], MyCons.Sigma_gauss[i]);}
     
     //Calculo la propensidad de cada grupo
     double num[5];
     num[0] = cons1*TBa*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
     num[1] = cons2*TBb*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
-    num[2] = (1-alpha)*cons1*TBa*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
-    num[3] = (1-alpha)*cons2*TBb*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
-    num[4] = alti*eta*N95*value;
+    num[2] = (1-MyCons.alpha)*cons1*TBa*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
+    num[3] = (1-MyCons.alpha)*cons2*TBb*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
+    num[4] = alti*MyCons.eta*MyCons.N95*value;
     
     //Hallo el individuo que contagia
     grupo aux;
@@ -218,15 +218,15 @@ void aux_phi_function(double t0, double diff, double &gnum, double &bnum, const 
       
       for(size_t j=0; j<(i-1); j++){//Hacemos el algoritmo de integración acumulado durante los intervalos anteriores
 	bnum += int_beta(lim_beta[j], lim_beta[j+1], m_beta[j], b_beta[j]);
-	for(size_t k=0; k<N_gauss; k++){
-	  gnum += int_beta_gauss(diff+lim_beta[j], diff+lim_beta[j+1], Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[j], b_beta[j]);
+	for(size_t k=0; k<MyCons.N_gauss; k++){
+	  gnum += int_beta_gauss(diff+lim_beta[j], diff+lim_beta[j+1], MyCons.Mu_gauss[k], MyCons.Sigma_gauss[k], MyCons.A_gauss[k], m_beta[j], b_beta[j]);
 	}
       }
 
       //Realizamos la integración en el último intervalo hasta t0
       bnum += int_beta(lim_beta[i-1], t0, m_beta[i-1], b_beta[i-1]);
-      for(size_t k=0; k<N_gauss; k++){
-	gnum += int_beta_gauss(diff+lim_beta[i-1], diff+t0, Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[i-1], b_beta[i-1]);
+      for(size_t k=0; k<MyCons.N_gauss; k++){
+	gnum += int_beta_gauss(diff+lim_beta[i-1], diff+t0, MyCons.Mu_gauss[k], MyCons.Sigma_gauss[k], MyCons.A_gauss[k], m_beta[i-1], b_beta[i-1]);
       }
 
       //Rompemos el ciclo porque ya no es necesario seguir
@@ -246,8 +246,8 @@ void main_aux_phi_function(double t0, double diff, double &gnum, double &bnum, d
     //Hago la integración sobre todos los intervalos de tiempo de beta completos
     while(diff < (t+t0-1)){
       for(size_t j=0; j<N_beta; j++){
-	for(size_t k=0; k<N_gauss; k++){
-	  gnum += int_beta_gauss(diff+lim_beta[j], diff+lim_beta[j+1], Mu_gauss[k], Sigma_gauss[k], A_gauss[k], m_beta[j], b_beta[j]);
+	for(size_t k=0; k<MyCons.N_gauss; k++){
+	  gnum += int_beta_gauss(diff+lim_beta[j], diff+lim_beta[j+1], MyCons.Mu_gauss[k], MyCons.Sigma_gauss[k], MyCons.A_gauss[k], m_beta[j], b_beta[j]);
 	}
 	bnum += int_beta(lim_beta[j], lim_beta[j+1], m_beta[j], b_beta[j]);
       }

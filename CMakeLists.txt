@@ -22,6 +22,7 @@ include_directories(${CMAKE_SOURCE_DIR}/inc)
 
 # Add the sources
 target_sources(Project PRIVATE
+  src/constants.cpp
   src/dynamics.cpp
   src/other_functions.cpp
   src/Random64.cpp
@@ -29,6 +30,7 @@ target_sources(Project PRIVATE
   src/test.cpp
   src/trabajadores.cpp
   src/trace.cpp
+  src/other_CSV.cpp
   )
 
 # Add the flags

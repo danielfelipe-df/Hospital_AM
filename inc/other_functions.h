@@ -2,6 +2,7 @@
 #define OTHER_FUNCTIONS_H
 
 #include <string>
+#include <vector>
 #include <bases.h>
 #include <trabajadores.h>
 
@@ -36,5 +37,6 @@ void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
 
 /* Con esta función imprimo los vínculos de la red de contagio */
 void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, std::string name);
+
 
 #endif

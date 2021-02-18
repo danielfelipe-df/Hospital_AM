@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <time.h>
 #include <Random64.h>
 #include <bases.h>
 #include <trabajadores.h>
@@ -17,7 +18,7 @@ int main(void)
 {
   std::string name2 = "Total";
   std::string name3 = "Alto";
-  
+
   //Creo los arreglos de cada tipo
   trabajadores altos[Na], bajos[Nb];
 
@@ -25,19 +26,19 @@ int main(void)
   std::vector<grupo> vecal, vecba; //En el hospital
 
   //Creo el generador de semillas
-  Crandom gseed(xi*100 + 16876);
+  Crandom gseed(difftime(time(0),0));
 
   //Defino la cantidad de tiempo de la corrida
   int T = 720;
   double t;
 
   //Defino las variables del acordeón
-  double nu = 2, delta = 5;
+  //double nu = myconstants["Nu"], delta = myconstants["Delta"];
   //unsigned int loops = T/(nu+delta);
 
   //Defino las variables para el testeo masivo
-  unsigned int tests = (int)(N*theta);
-  double dt = nu/((double)tests);
+  unsigned int tests = (int)(N*MyCons.theta);
+  double dt = MyCons.nu/((double)tests);
 
   //Defino la variable de tiempo propio de cada reacción(tj)
   double tj[14];
@@ -70,7 +71,7 @@ int main(void)
   std::ofstream fout;
   std::string name;
 
-  name = "Results/Data/datos_" + name3 + "_" + name2 + "_" + std::to_string((int)(N95*100)) + "_" + std::to_string((int)(TBQ*100)) + ".csv";
+  name = "Results/Data/datos_" + nameCons + "_" + name3 + "_" + name2 + ".csv";
   fout.open(name);
   
   contador = 0;
@@ -89,7 +90,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
 
-    name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + std::to_string(num/50) + ".csv";
+    name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -110,7 +111,7 @@ int main(void)
       //Región de testeo masivo
       aux = 0.0;
       n1 = 0;
-      while(aux < nu){
+      while(aux < MyCons.nu){
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(vecal, vecba, gseed, t, tj);
 	
@@ -131,7 +132,7 @@ int main(void)
 	update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los leves aislado
-	result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
+	if(MyCons.AisLev){result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);}
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
@@ -170,7 +171,7 @@ int main(void)
       
       //Región sin testeo masivo
       aux = 0.0;
-      while(aux < delta){
+      while(aux < MyCons.delta){
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(vecal, vecba, gseed, t, tj);
 	
@@ -188,7 +189,7 @@ int main(void)
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
 
 	//Actualizo los tiempos de los leves aislado
-	result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);
+	if(MyCons.AisLev){result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);}
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
@@ -221,7 +222,7 @@ int main(void)
     fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */
-    name = "Results/Data_" + name3 + "/Data_" + name2 + "_Grafos/datos_" + std::to_string(num) + ".csv";
+    name = "Results/Data_" + name3 + "/Data_" + name2 + "_Grafos/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores

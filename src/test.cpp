@@ -62,7 +62,7 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, dou
   for(unsigned int i=0; i<T.size(); i++){
     index = T[i];      family[index].time += time;
     if(family[index].time > family[index].tmax){
-      if(ran.r() < xi){
+      if(ran.r() < MyCons.xi){
 	family[index].change(typein1, typeout);	  TA.push_back(index);	contador++;
 	if(typein1 == 10){tested_lev_ais(index, family, 1e6, false);} //Si es Leve aislado a donde pasa pues se le pone el tlevmax en 1e6
       }
@@ -101,10 +101,10 @@ void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajador
     index = Val[10][i];
     altos[index].tlev += time;
     if(altos[index].tlev > altos[index].tlevmax){
-      if(ran.r() < xi){
+      if(ran.r() < MyCons.xi){
 	tested_lev_ais(index, altos, 1e6, false);
 	Val[10].erase(Val[10].begin() + i);	Val[10].push_back(index);
-	aux_main(1, Val, Vba, altos, bajos, ran, phi1, mu, true, 10, false);
+	aux_main(1, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 10, false);
 	contador++;
       }
       else{
@@ -119,10 +119,10 @@ void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajador
     index = Vba[10][i];
     bajos[index].tlev += time;
     if(bajos[index].tlev > bajos[index].tlevmax){
-      if(ran.r() < xi){
+      if(ran.r() < MyCons.xi){
 	tested_lev_ais(index, bajos, 1e6, false);
 	Vba[10].erase(Vba[10].begin() + i);	Vba[10].push_back(index);
-	aux_main(1, Val, Vba, altos, bajos, ran, mu, chi, false, 10, false);
+	aux_main(1, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 10, false);
 	contador++;
       }
       else{

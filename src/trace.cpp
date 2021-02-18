@@ -9,16 +9,16 @@
 void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
   int num;
   num = tested_isolated_inf(Val[6], Val[7], Val[5], altos, time, 6, 7, 5, ran); //Presintomáticos altos
-  aux_main(num, Val, Vba, altos, bajos, ran, phi1, mu, true, 7, true);
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 7, true);
 
   num = tested_isolated_inf(Vba[6], Vba[7], Vba[5], bajos, time, 6, 7, 5, ran); //Presintomáticos bajos
-  aux_main(num, Val, Vba, altos, bajos, ran, mu, chi, false, 7, true);
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 7, true);
 
   num = tested_isolated_inf(Val[9], Val[10], Val[8], altos, time, 9, 10, 8, ran); //Leves altos
-  aux_main(num, Val, Vba, altos, bajos, ran, phi1, mu, true, 10, false);
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 10, false);
 
   num = tested_isolated_inf(Vba[9], Vba[10], Vba[8], bajos, time, 9, 10, 8, ran); //Leves bajos
-  aux_main(num, Val, Vba, altos, bajos, ran, mu, chi, false, 10, false);
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 10, false);
 }
 
 
@@ -40,12 +40,12 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
     }
 
     if(pre){
-      if(type){aux3 = (int)(3*(trace_net - my_size));}
-      else{aux3 = (int)(3*(trace_net - my_size));}
+      if(type){aux3 = (int)(3*(MyCons.trace_net - my_size));}
+      else{aux3 = (int)(3*(MyCons.trace_net - my_size));}
     }
     else{
-      if(type){aux3 = (int)((altos[Val[index][i]].tstate + 2)*(trace_net - my_size));}
-      else{aux3 = (int)((bajos[Vba[index][i]].tstate + 2)*(trace_net - my_size));}
+      if(type){aux3 = (int)((altos[Val[index][i]].tstate + 2)*(MyCons.trace_net - my_size));}
+      else{aux3 = (int)((bajos[Vba[index][i]].tstate + 2)*(MyCons.trace_net - my_size));}
     }
 
     while((0 < j) && (j < aux3)){
@@ -58,7 +58,7 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
 
     contador = 0;
     eliminar_repetidos(vaux);
-    while(vaux.size() > 0 && contador < trace){
+    while(vaux.size() > 0 && contador < MyCons.trace){
       aux2 = (int)(ran.r()*vaux.size());
       ind = vaux[aux2];
       if(ind < Na){aux = reaction_trace(Val, altos, ran, ind);}
@@ -78,8 +78,8 @@ int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, in
   else if(family[index].kind == 3){aux_trace(V[3], V[4], family, 3, 4, index, true);    return 1;} //Expuesto testeado
   else if(family[index].kind == 5){aux_trace(V[5], V[7], family, 5, 7, index, true);    return 1;} //Presintomático
   else if(family[index].kind == 6){aux_trace(V[6], V[7], family, 6, 7, index, true);    return 1;} //Presintomático testeado
-  else if(family[index].kind == 8){aux_trace(V[8], V[10], family, 8, 10, index, true);    tested_lev_ais(V[10].back(), family, 1e6, false);    return 1;} //Leve
-  else if(family[index].kind == 9){aux_trace(V[9], V[10], family, 9, 10, index, true);    tested_lev_ais(V[10].back(), family, 1e6, false);    return 1;} //Leve testeado
+  else if(family[index].kind == 8){aux_trace(V[8], V[10], family, 8, 10, index, true);    if(MyCons.AisLev){tested_lev_ais(V[10].back(), family, 1e6, false);}    return 1;} //Leve
+  else if(family[index].kind == 9){aux_trace(V[9], V[10], family, 9, 10, index, true);    if(MyCons.AisLev){tested_lev_ais(V[10].back(), family, 1e6, false);}    return 1;} //Leve testeado
   else if(family[index].kind == 12){aux_trace(V[12], V[13], family, 12, 13, index, true);    return 1;} //Recuperado no-detectado
   else if(family[index].kind == 13){aux_trace(V[12], V[13], family, 12, 13, index, false);    return 1;} //Recuperado testeado
   else{return 0;}
