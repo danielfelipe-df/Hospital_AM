@@ -7,7 +7,7 @@
 #include <string>
 
 const std::string folderCons = "data/";
-const std::string nameCons = "constantes1";
+const std::string nameCons = "template";
 const std::string extCons = ".csv";
 const constants MyCons(folderCons + nameCons + extCons);
 
@@ -68,18 +68,6 @@ const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada esta
 const lognormal_d dist_Tt(0.51192, 0.41694); //Distribución de los tiempos de entrega de examen
 
 
-/* Tasas de contagio *******************************************************/
-
-//const size_t N_betaL = 2; //Número de secciones lineales del beta
-//const double m_betaL[N_betaL] = {0.0, 0.0}; //Pendiente de la ecuación lineal para el beta laboral
-//const double b_betaL[N_betaL] = {2.65, 0.0}; //Corte en Y de la ecuación lineal para el beta laboral
-//const double lim_betaL[N_betaL+1] = {0.0, 1/3.0, 1.0}; //Tiempos entre cada una de las regiones del beta
-//const size_t N_betaF = 2; //Número de secciones lineales del beta
-//const double m_betaF[N_betaF] = {0.0, 0.0}; //Pendiente de la ecuación lineal para el beta familiar
-//const double b_betaF[N_betaF] = {0.0, 2.65}; //Corte en Y de la ecuación lineal para el beta familiar
-//const double lim_betaF[N_betaF+1] = {0.0, 1/3.0, 1.0}; //Tiempos entre cada una de las regiones del beta
-
-
 /* Tasas de contacto *******************************************************/
 
 const size_t N_rate = 2; //Número de funciones en las que se dividen las tasas de contacto
@@ -100,29 +88,6 @@ const size_t N_rate = 2; //Número de funciones en las que se dividen las tasas 
 //const int trace = 3; //Número de personas rastreadas cada vez que haya contagio
 //const unsigned int trace_net = 6; //Número de contactos en promedio por cada persona del staff
 
-
-/* Parámetros de gaussianas ***********************************************/
-
-/* Prevalencia externa alta
-const size_t N_gauss = 2;
-const double A_gauss[N_gauss] = {1.52e-3, 1.39e-2};
-const double Mu_gauss[N_gauss] = {8.51e1, 1.27e2};
-const double Sigma_gauss[N_gauss] = {8.25, 3.52e1};
-*/
-
-/* Prevalencia externa media
-const size_t N_gauss = 2;
-const double A_gauss[N_gauss] = {8.04e-3, 1.11e-3};//, 1.18e-3, 4.4e-3};
-const double Mu_gauss[N_gauss] = {1.07e2, 9.23e1};//, 1.85e2, 2.32e2};
-const double Sigma_gauss[N_gauss] = {3.45e1, 6.13};//, 1.35e1, 4.46e1};
-*/
-
-/* Prevalencia externa baja
-const size_t N_gauss = 2;
-const double A_gauss[N_gauss] = {1.33e-3, 6.87e-4};
-const double Mu_gauss[N_gauss] = {1.41e2, 7.84e1};
-const double Sigma_gauss[N_gauss] = {5.5e1, 4.15e1};
-*/
 
 /**************************************************************************/
 

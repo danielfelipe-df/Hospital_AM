@@ -21,7 +21,7 @@ void tested_lev_ais(int agent, trabajadores *family, double value, bool dist){
 
 
 void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos){
-  unsigned int M = Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size() + Vba[8].size() + Val[12].size() + Vba[12].size();
+  unsigned int M = Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size() + Vba[6].size() + Val[9].size() + Vba[9].size() + Val[13].size() + Vba[13].size();
   unsigned int num = (int)(ran.r()*M);
 
   if(num < Val[0].size()){
@@ -30,29 +30,29 @@ void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom 
   else if(num < Val[0].size() + Vba[0].size()){
     tested_reaction(Vba[0], Vba[1], (int)(ran.r()*Vba[0].size()), bajos, 0, 1, ran.r(), true); //Suscpetible bajo
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size()){
-    tested_reaction(Val[2], Val[3], (int)(ran.r()*Val[2].size()), altos, 2, 3, ran.r(), true); //Expuesto alto
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size()){
+    tested_reaction(Val[3], Val[4], (int)(ran.r()*Val[3].size()), altos, 3, 4, ran.r(), true); //Expuesto alto
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size()){
-    tested_reaction(Vba[2], Vba[3], (int)(ran.r()*Vba[2].size()), bajos, 2, 3, ran.r(), true); //Expuesto bajo
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size()){
+    tested_reaction(Vba[3], Vba[4], (int)(ran.r()*Vba[3].size()), bajos, 3, 4, ran.r(), true); //Expuesto bajo
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size()){
-    tested_reaction(Val[5], Val[6], (int)(ran.r()*Val[5].size()), altos, 5, 6, ran.r(), true); //Presintomático alto
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size()){
+    tested_reaction(Val[6], Val[7], (int)(ran.r()*Val[6].size()), altos, 6, 7, ran.r(), true); //Presintomático alto
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size()){
-    tested_reaction(Vba[5], Vba[6], (int)(ran.r()*Vba[5].size()), bajos, 5, 6, ran.r(), true); //Presintomático bajo
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size() + Vba[6].size()){
+    tested_reaction(Vba[6], Vba[7], (int)(ran.r()*Vba[6].size()), bajos, 6, 7, ran.r(), true); //Presintomático bajo
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size()){
-    tested_reaction(Val[8], Val[9], (int)(ran.r()*Val[8].size()), altos, 8, 9, ran.r(), true); //Leve alto
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size() + Vba[6].size() + Val[9].size()){
+    tested_reaction(Val[9], Val[10], (int)(ran.r()*Val[9].size()), altos, 9, 10, ran.r(), true); //Leve alto
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size() + Vba[8].size()){
-    tested_reaction(Vba[8], Vba[9], (int)(ran.r()*Vba[8].size()), bajos, 8, 9, ran.r(), true); //Leve bajo
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size() + Vba[6].size() + Val[9].size() + Vba[9].size()){
+    tested_reaction(Vba[9], Vba[10], (int)(ran.r()*Vba[9].size()), bajos, 9, 10, ran.r(), true); //Leve bajo
   }
-  else if(num < Val[0].size() + Vba[0].size() + Val[2].size() + Vba[2].size() + Val[5].size() + Vba[5].size() + Val[8].size() + Vba[8].size() + Val[12].size()){
-    tested_reaction(Val[12], Val[13], (int)(ran.r()*Val[12].size()), altos, 12, 13, ran.r(), true); //Recuperado no-detectado alto
+  else if(num < Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size() + Vba[6].size() + Val[9].size() + Vba[9].size() + Val[13].size()){
+    tested_reaction(Val[13], Val[14], (int)(ran.r()*Val[13].size()), altos, 13, 14, ran.r(), true); //Recuperado no-detectado alto
   }
   else{
-    tested_reaction(Vba[12], Vba[13], (int)(ran.r()*Vba[12].size()), bajos, 12, 13, ran.r(), true); //Recuperado no-detectado bajo
+    tested_reaction(Vba[13], Vba[14], (int)(ran.r()*Vba[13].size()), bajos, 13, 14, ran.r(), true); //Recuperado no-detectado bajo
   }
 }
 
@@ -97,36 +97,36 @@ void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout
 void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
   int index;
   unsigned int contador = 0;
-  for(unsigned int i=0; i<Val[10].size()-contador; i++){
-    index = Val[10][i];
+  for(unsigned int i=0; i<Val[11].size()-contador; i++){
+    index = Val[11][i];
     altos[index].tlev += time;
     if(altos[index].tlev > altos[index].tlevmax){
       if(ran.r() < MyCons.xi){
 	tested_lev_ais(index, altos, 1e6, false);
-	Val[10].erase(Val[10].begin() + i);	Val[10].push_back(index);
-	aux_main(1, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 10, false);
+	Val[11].erase(Val[11].begin() + i);	Val[11].push_back(index);
+	aux_main(1, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 11, false);
 	contador++;
       }
       else{
-	tested_reaction(Val[10], Val[8], i, altos, 10, 8, 0.0, false);
+	tested_reaction(Val[11], Val[9], i, altos, 11, 9, 0.0, false);
       }
       i--;
     }
   }
 
   contador = 0;
-  for(unsigned int i=0; i<Vba[10].size()-contador; i++){
-    index = Vba[10][i];
+  for(unsigned int i=0; i<Vba[11].size()-contador; i++){
+    index = Vba[11][i];
     bajos[index].tlev += time;
     if(bajos[index].tlev > bajos[index].tlevmax){
       if(ran.r() < MyCons.xi){
 	tested_lev_ais(index, bajos, 1e6, false);
-	Vba[10].erase(Vba[10].begin() + i);	Vba[10].push_back(index);
-	aux_main(1, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 10, false);
+	Vba[11].erase(Vba[11].begin() + i);	Vba[11].push_back(index);
+	aux_main(1, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 11, false);
 	contador++;
       }
       else{
-	tested_reaction(Vba[10], Vba[8], i, bajos, 10, 8, 0.0, false);
+	tested_reaction(Vba[11], Vba[9], i, bajos, 11, 9, 0.0, false);
       }
       i--;
     }
@@ -136,13 +136,13 @@ void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajador
 
 void move_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos){
   move_massive(Val[1], Val[0], altos, 1, 0);      move_massive(Vba[1], Vba[0], bajos, 1, 0); //Susceptible testeado a susceptible
-  move_massive(Val[3], Val[2], altos, 3, 2);      move_massive(Vba[3], Vba[2], bajos, 3, 2); //Expuesto testeado a expuesto
-  move_massive(Val[13], Val[12], altos, 13, 12);      move_massive(Vba[13], Vba[12], bajos, 13, 12); //Recuperado testeado a recuperado
+  move_massive(Val[4], Val[3], altos, 4, 3);      move_massive(Vba[4], Vba[3], bajos, 4, 3); //Expuesto testeado a expuesto
+  move_massive(Val[14], Val[13], altos, 14, 13);      move_massive(Vba[14], Vba[13], bajos, 14, 13); //Recuperado testeado a recuperado
 }
 
 
 void tested_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
   tested_massive(Val[1], Val[0], altos, time, 1, 0);  tested_massive(Vba[1], Vba[0], bajos, time, 1, 0); //Susceptible testeado a susceptible
-  tested_massive(Val[3], Val[2], altos, time, 3, 2);  tested_massive(Vba[3], Vba[2], bajos, time, 3, 2); //Expuesto testeado a expuesto
-  tested_massive(Val[13], Val[12], altos, time, 13, 12);  tested_massive(Vba[13], Vba[12], bajos, time, 13, 12); //Recuperado testeado a recuperado
+  tested_massive(Val[4], Val[3], altos, time, 4, 3);  tested_massive(Vba[4], Vba[3], bajos, time, 4, 3); //Expuesto testeado a expuesto
+  tested_massive(Val[14], Val[13], altos, time, 14, 13);  tested_massive(Vba[14], Vba[13], bajos, time, 14, 13); //Recuperado testeado a recuperado
 }

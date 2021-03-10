@@ -83,7 +83,7 @@ int main(void)
     std::cout << '\r';
     std::cout << "Vamos en la simulacion numero " << contador << " de " << ensemble << ".";
     //Los convierto del tamaño que son
-    vecal.resize(15);    vecba.resize(15);
+    vecal.resize(16);    vecba.resize(16);
     
     //Le asigno a cada entrada el índice como valor
     vecal[0].resize(Na);    vecba[0].resize(Nb);
@@ -139,13 +139,13 @@ int main(void)
 	
 	//Genero los tests masivos
 	/* Cuento los sus, exp, pre, lev y recI */
-	aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
-	aux2 += vecal[8].size() + vecba[8].size() + vecal[12].size() + vecba[12].size();
+	aux2 = vecal[0].size() + vecba[0].size() + vecal[3].size() + vecba[3].size() + vecal[3].size() + vecba[6].size();
+	aux2 += vecal[9].size() + vecba[9].size() + vecal[13].size() + vecba[13].size();
 	n2 = (int)(aux/dt);
 	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
 	  massive_reaction(vecal, vecba, gseed, altos, bajos);
-	  aux2 = vecal[0].size() + vecba[0].size() + vecal[2].size() + vecba[2].size() + vecal[5].size() + vecba[5].size();
-	  aux2 += vecal[8].size() + vecba[8].size() + vecal[12].size() + vecba[12].size();
+	  aux2 = vecal[0].size() + vecba[0].size() + vecal[3].size() + vecba[3].size() + vecal[3].size() + vecba[6].size();
+	  aux2 += vecal[9].size() + vecba[9].size() + vecal[13].size() + vecba[13].size();
 	}
 	n1 = n2;
 	
@@ -217,8 +217,8 @@ int main(void)
     ti_in.clear();
 
     /* Cuento los recI, recT y recA */
-    promrec += vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size();
-    fout << vecal[12].size() + vecba[12].size() + vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() << '\t';
+    promrec += vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() + vecal[15].size() + vecba[15].size();
+    fout << vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() + vecal[15].size() + vecba[15].size() << '\t';
     fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */

@@ -7,12 +7,12 @@ class trabajadores{
 public:
 
   /* Defino qué tipo de persona es
-   * 0:sus, 1:susT,
-   * 2:exp, 3:expT, 4:expA
-   * 5:pre, 6:preT, 7:preTA
-   * 8:lev, 9:levT, 10:levTA,
-   * 11:infA,
-   * 12:recI, 13:recT, 14:recA
+   * 0:sus, 1:susT, 2:susA
+   * 3:exp, 4:expT, 5:expA
+   * 6:pre, 7:preT, 8:preTA
+   * 9:lev, 10:levT, 11:levTA,
+   * 12:infA,
+   * 13:recI, 14:recT, 15:recA
   */
   unsigned int kind;
 

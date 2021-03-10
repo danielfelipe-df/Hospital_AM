@@ -4,12 +4,12 @@
 
 std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, double t, double* tj){
   //Calculo los tamaños de cada vector
-  double Sa, Sb, STa, STb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
-  Sa = Val[0].size();  Sb = Vba[0].size();  STa = Val[1].size();  STb = Vba[1].size();
-  Ea = Val[2].size();  Eb = Vba[2].size();  ETa = Val[3].size();  ETb = Vba[3].size();  EAa = Val[4].size();  EAb = Val[4].size();
-  Pa = Val[5].size();  Pb = Vba[5].size();  PTa = Val[6].size();  PTb = Vba[6].size();  PTAa = Val[7].size();  PTAb = Vba[7].size();
-  La = Val[8].size();  Lb = Vba[8].size();  LTa = Val[9].size();  LTb = Vba[9].size();  LTAa = Val[10].size();  LTAb = Vba[10].size();
-  IAa = Val[11].size();  IAb = Vba[11].size();
+  double Sa, Sb, STa, STb, SAa, SAb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
+  Sa = Val[0].size();  Sb = Vba[0].size();  STa = Val[1].size();  STb = Vba[1].size();  SAa = Val[2].size();  SAb = Vba[2].size();
+  Ea = Val[3].size();  Eb = Vba[3].size();  ETa = Val[4].size();  ETb = Vba[4].size();  EAa = Val[5].size();  EAb = Val[5].size();
+  Pa = Val[6].size();  Pb = Vba[6].size();  PTa = Val[7].size();  PTb = Vba[7].size();  PTAa = Val[8].size();  PTAb = Vba[8].size();
+  La = Val[9].size();  Lb = Vba[9].size();  LTa = Val[10].size();  LTb = Vba[10].size();  LTAa = Val[11].size();  LTAb = Vba[11].size();
+  IAa = Val[12].size();  IAb = Vba[12].size();
 
   //Número de propensidades
   const unsigned int n = 14;
@@ -18,8 +18,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   double As[n];
 
   //Propensidades de exponerse. (El alto no tiene la parte la gaussiana. Esa está implementada en la función bisección.)
-  As[0] = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa)*(MyCons.phi1*(Pa+PTa+La+LTa)/(double)Na + MyCons.mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-MyCons.alpha)*MyCons.phi1*(IAa+PTAa+LTAa)/(double)Na + (1-MyCons.alpha)*MyCons.mu*(IAb+PTAb+LTAb)/(double)Nb);
-  As[1] = MyCons.HW*MyCons.SDP*(Sb+STb)*(MyCons.mu*MyCons.N95*(Pa+PTa+La+LTa)/(double)Na + MyCons.chi*MyCons.TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-MyCons.alpha)*MyCons.mu*MyCons.N95*(IAa+PTAa+LTAa)/(double)Na + (1-MyCons.alpha)*MyCons.chi*MyCons.TBQ*(IAb+PTAb+LTAb)/(double)Nb);
+  As[0] = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa+(1-MyCons.alpha)*SAa)*(MyCons.phi1*(Pa+PTa+La+LTa)/(double)Na + MyCons.mu*(Pb+PTb+Lb+LTb)/(double)Nb + (1-MyCons.alpha)*MyCons.phi1*(IAa+PTAa+LTAa)/(double)Na + (1-MyCons.alpha)*MyCons.mu*(IAb+PTAb+LTAb)/(double)Nb);
+  As[1] = MyCons.HW*MyCons.SDP*(Sb+STb+(1-MyCons.alpha)*SAb)*(MyCons.mu*MyCons.N95*(Pa+PTa+La+LTa)/(double)Na + MyCons.chi*MyCons.TBQ*(Pb+PTb+Lb+LTb)/(double)Nb + (1-MyCons.alpha)*MyCons.mu*MyCons.N95*(IAa+PTAa+LTAa)/(double)Na + (1-MyCons.alpha)*MyCons.chi*MyCons.TBQ*(IAb+PTAb+LTAb)/(double)Nb);
 
   //Propensidades de ser presintomático
   As[2] = USDe*(Ea+ETa+EAa);
@@ -53,7 +53,7 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
   //for(unsigned int i=2; i<n; i++){lognormal_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double Ba1 = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa)*MyCons.eta, Ba2 = MyCons.HW*MyCons.SDP*(Sa+STa)*MyCons.lambda, Bb = MyCons.HW*MyCons.SDP*(Sb+STb)*MyCons.lambda;
+  double Ba1 = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.eta, Ba2 = MyCons.HW*MyCons.SDP*(Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.lambda, Bb = MyCons.HW*MyCons.SDP*(Sb+STb+(1-MyCons.alpha)*SAb)*MyCons.lambda;
   double tau = 0, index = 0;
   tau = biseccion(As, t, Ba1, Ba2, Bb, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
@@ -82,8 +82,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
 
   //Escojo a la persona que contagia, si hay infección
   int conta = 0;
-  if((int)index == 0){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], MyCons.phi1, MyCons.mu, ran, 1, t, MyCons.N95, MyCons.N95);}
-  else if((int)index == 1){conta = who_infected(Val[5], Vba[5], Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], MyCons.phi1, MyCons.mu, ran, 0, t, MyCons.N95, MyCons.TBQ);}
+  if((int)index == 0){conta = who_infected(Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], Val[12], Vba[12], MyCons.phi1, MyCons.mu, ran, 1, t, MyCons.N95, MyCons.N95);}
+  else if((int)index == 1){conta = who_infected(Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], Val[12], Vba[12], MyCons.phi1, MyCons.mu, ran, 0, t, MyCons.N95, MyCons.TBQ);}
 
   //Creo el vector resultados
   std::vector<double> result(3);

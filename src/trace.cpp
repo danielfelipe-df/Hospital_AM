@@ -8,17 +8,17 @@
 
 void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
   int num;
-  num = tested_isolated_inf(Val[6], Val[7], Val[5], altos, time, 6, 7, 5, ran); //Presintomáticos altos
-  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 7, true);
+  num = tested_isolated_inf(Val[7], Val[8], Val[6], altos, time, 7, 8, 6, ran); //Presintomáticos altos
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 8, true);
 
-  num = tested_isolated_inf(Vba[6], Vba[7], Vba[5], bajos, time, 6, 7, 5, ran); //Presintomáticos bajos
-  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 7, true);
+  num = tested_isolated_inf(Vba[7], Vba[8], Vba[6], bajos, time, 7, 8, 6, ran); //Presintomáticos bajos
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 8, true);
 
-  num = tested_isolated_inf(Val[9], Val[10], Val[8], altos, time, 9, 10, 8, ran); //Leves altos
-  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 10, false);
+  num = tested_isolated_inf(Val[10], Val[11], Val[9], altos, time, 10, 11, 9, ran); //Leves altos
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 11, false);
 
-  num = tested_isolated_inf(Vba[9], Vba[10], Vba[8], bajos, time, 9, 10, 8, ran); //Leves bajos
-  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 10, false);
+  num = tested_isolated_inf(Vba[10], Vba[11], Vba[9], bajos, time, 10, 11, 9, ran); //Leves bajos
+  aux_main(num, Val, Vba, altos, bajos, ran, MyCons.mu, MyCons.chi, false, 11, false);
 }
 
 
@@ -72,16 +72,16 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
 
 
 int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, int index){
-  if(family[index].kind == 0){aux_trace(V[0], V[1], family, 0, 1, index, true);    return 1;} //Susceptible
-  else if(family[index].kind == 1){aux_trace(V[0], V[1], family, 0, 1, index, false);    return 1;} //Susceptible testeado
-  else if(family[index].kind == 2){aux_trace(V[2], V[4], family, 2, 4, index, true);    return 1;} //Expuesto
-  else if(family[index].kind == 3){aux_trace(V[3], V[4], family, 3, 4, index, true);    return 1;} //Expuesto testeado
-  else if(family[index].kind == 5){aux_trace(V[5], V[7], family, 5, 7, index, true);    return 1;} //Presintomático
-  else if(family[index].kind == 6){aux_trace(V[6], V[7], family, 6, 7, index, true);    return 1;} //Presintomático testeado
-  else if(family[index].kind == 8){aux_trace(V[8], V[10], family, 8, 10, index, true);    if(MyCons.AisLev){tested_lev_ais(V[10].back(), family, 1e6, false);}    return 1;} //Leve
-  else if(family[index].kind == 9){aux_trace(V[9], V[10], family, 9, 10, index, true);    if(MyCons.AisLev){tested_lev_ais(V[10].back(), family, 1e6, false);}    return 1;} //Leve testeado
-  else if(family[index].kind == 12){aux_trace(V[12], V[13], family, 12, 13, index, true);    return 1;} //Recuperado no-detectado
-  else if(family[index].kind == 13){aux_trace(V[12], V[13], family, 12, 13, index, false);    return 1;} //Recuperado testeado
+  if(family[index].kind == 0){aux_trace(V[0], V[2], family, 0, 2, index, true);    return 1;} //Susceptible
+  else if(family[index].kind == 1){aux_trace(V[1], V[2], family, 1, 2, index, true);    return 1;} //Susceptible testeado
+  else if(family[index].kind == 3){aux_trace(V[3], V[5], family, 3, 5, index, true);    return 1;} //Expuesto
+  else if(family[index].kind == 4){aux_trace(V[4], V[5], family, 4, 5, index, true);    return 1;} //Expuesto testeado
+  else if(family[index].kind == 6){aux_trace(V[6], V[8], family, 6, 8, index, true);    return 1;} //Presintomático
+  else if(family[index].kind == 7){aux_trace(V[7], V[8], family, 7, 8, index, true);    return 1;} //Presintomático testeado
+  else if(family[index].kind == 9){aux_trace(V[9], V[11], family, 9, 11, index, true);    if(MyCons.AisLev){tested_lev_ais(V[11].back(), family, 1e6, false);}    return 1;} //Leve
+  else if(family[index].kind == 10){aux_trace(V[10], V[11], family, 10, 11, index, true);    if(MyCons.AisLev){tested_lev_ais(V[11].back(), family, 1e6, false);}    return 1;} //Leve testeado
+  else if(family[index].kind == 13){aux_trace(V[13], V[14], family, 13, 14, index, true);    return 1;} //Recuperado no-detectado
+  else if(family[index].kind == 14){aux_trace(V[14], V[14], family, 14, 14, index, false);    return 1;} //Recuperado testeado
   else{return 0;}
 }
 
