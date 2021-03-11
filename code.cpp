@@ -16,9 +16,6 @@ typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Cran
 
 int main(void)
 {
-  std::string name2 = "Total";
-  std::string name3 = "Alto";
-
   //Creo los arreglos de cada tipo
   trabajadores altos[Na], bajos[Nb];
 
@@ -71,7 +68,7 @@ int main(void)
   std::ofstream fout;
   std::string name;
 
-  name = "Results/Data/datos_" + nameCons + "_" + name3 + "_" + name2 + ".csv";
+  name = "Results/Data/datos_" + nameCons + ".csv";
   fout.open(name);
   
   contador = 0;
@@ -90,7 +87,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
 
-    name = "Results/Data_" + name3 + "/Data_" + name2 + "/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
+    name = "Results/Data_Prevalencia/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -133,6 +130,9 @@ int main(void)
 	
 	//Actualizo los tiempos de los leves aislado
 	if(MyCons.AisLev){result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);}
+
+	//Actualizo los tiempos de los rastreados
+	trace_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
@@ -190,6 +190,9 @@ int main(void)
 
 	//Actualizo los tiempos de los leves aislado
 	if(MyCons.AisLev){result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);}
+
+	//Actualizo los tiempos de los rastreados
+	trace_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
 	
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
@@ -222,7 +225,7 @@ int main(void)
     fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */
-    name = "Results/Data_" + name3 + "/Data_" + name2 + "_Grafos/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
+    name = "Results/Data_Grafos/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores
@@ -235,7 +238,7 @@ int main(void)
   
   promrec /= (contador*N);
 
-  std::cout << "\nAR " << name3 << " " << name2 << ": " << promrec << std::endl;
+  std::cout << "\nAR " << nameCons << ": " << promrec << std::endl;
 
   return 0;
 }

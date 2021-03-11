@@ -64,7 +64,7 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, dou
     if(family[index].time > family[index].tmax){
       if(ran.r() < MyCons.xi){
 	family[index].change(typein1, typeout);	  TA.push_back(index);	contador++;
-	if(typein1 == 10){tested_lev_ais(index, family, 1e6, false);} //Si es Leve aislado a donde pasa pues se le pone el tlevmax en 1e6
+	if(typein1 == 11){tested_lev_ais(index, family, 1e6, false);} //Si es Leve aislado a donde pasa pues se le pone el tlevmax en 1e6
       }
       else{
 	family[index].change(typein2, typeout);	  G.push_back(index);

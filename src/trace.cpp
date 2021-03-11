@@ -5,6 +5,15 @@
 #include <trace.h>
 #include <test.h>
 
+void trace_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double time, bool is_traced){
+  int agent = Out[index];
+  Out.erase(Out.begin() + index);
+  In.push_back(agent);
+  family[agent].change(typein, typeout);
+  family[agent].ttrace = time;
+  family[agent].btrace = is_traced;
+}
+
 
 void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
   int num;
@@ -92,7 +101,7 @@ void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein
 
   if(normal){
     it = std::find(G.begin(), G.end(), index);  ind = std::distance(G.begin(), it);
-    tested_reaction(G, T, ind, family, typeout, typein, 0.0, false);
+    trace_reaction(G, T, ind, family, typeout, typein, 0.0, true);
   }
   else{
     it = std::find(T.begin(), T.end(), index);  ind = std::distance(T.begin(), it);
@@ -108,4 +117,23 @@ void eliminar_repetidos(std::vector<int> &y)
     end = std::remove(it + 1, end, *it);
   }
   y.erase(end, y.end());
+}
+
+
+void trace_massive(grupo &R, grupo &G, trabajadores *family, double time, int typeout, int typein){
+  for(size_t i=0; i<R.size(); i++){
+    if(family[R[i]].btrace){
+      family[R[i]].ttrace += time;
+      if(family[R[i]].ttrace > TtraceMax){trace_reaction(R, G, i, family, typeout, typein, 0.0, false);	i--;}
+    }
+  }
+}
+
+
+void trace_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
+  trace_massive(Val[2], Val[0], altos, time, 2, 0);  trace_massive(Vba[2], Vba[0], bajos, time, 2, 0); // Susceptible aislado a susceptible
+  trace_massive(Val[5], Val[3], altos, time, 5, 3);  trace_massive(Vba[5], Vba[3], bajos, time, 5, 3); // Expuesto aislado a expuesto
+  trace_massive(Val[8], Val[6], altos, time, 8, 6);  trace_massive(Vba[8], Vba[6], bajos, time, 8, 6); // Presintomático aislado a presintomático
+  trace_massive(Val[11], Val[9], altos, time, 11, 9);  trace_massive(Vba[11], Vba[9], bajos, time, 11, 9); // Leve aislado a leve
+  trace_massive(Val[14], Val[13], altos, time, 14, 13);  trace_massive(Vba[14], Vba[13], bajos, time, 14, 13); // Recuperado aislado a recuperado
 }

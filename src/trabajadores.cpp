@@ -10,6 +10,8 @@ void trabajadores::init(){
   tlev = 0;
   tlevmax = 0;
   myTt = 0;
+  btrace = false;
+  ttrace = 0;
   my_inf.clear();
   DF = -2;
 }

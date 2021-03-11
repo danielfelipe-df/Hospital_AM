@@ -6,6 +6,10 @@
 #include <trabajadores.h>
 
 
+/* Esta es la función para hacer la reacción del rastreo */
+void trace_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double time, bool is_traced);
+
+
 /* Esta es la función para hacer rastreo */
 void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran);
 
@@ -24,5 +28,14 @@ void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein
 
 /* Eliminar repetidos en el vector */
 void eliminar_repetidos(std::vector<int> &y);
+
+
+/* Esta función mira cuáles rastreados ya cumplieron el tiempo, y los devuelve */
+void trace_massive(grupo &R, grupo &G, trabajadores *family, double time, int typeout, int typein);
+
+
+/* Esta función cambia a todos los rastreados que ya cumplieron el tiempo */
+void trace_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time);
+
 
 #endif

@@ -57,37 +57,9 @@ const double USDplil = 1.0/(Dpl+Dil); //Inverso del periodo infeccioso total
 
 const double kappa = 0.2; //Proporción de contagiados que son asintomáticos
 const double psi = 0.95; //Proporción de sintomáticos que son leves
-//const double xi = 0.9; //Sensibilidad de la prueba
-//const double theta = 0.5; //Cobertura
-//const double iota = 0.6; //Proporción de sintomáticos leves testeados continuamente
 const double TM = 0.5; //Tiempo mínimo que deben pasar los agentes en cada estado
-//const double N95 = 0.31; //Reducción en la probabilidad de contagiarse usando tapabocas N95
-//const double TBQ = 0.84; //Reducción en el probabilidad de contagiarse usando tapabocas quirúrgico
-//const double HW = 0.64; //Reducción en la probabilidad de contagiarse si se lava las manos
-//const double SDP = 0.89; //Reducción en la probabilidad de contagiarse si mantiene distanciamiento
+const double TtraceMax = 15; //Tiempo que los agentes pasaran aislados debido al rastreo
 const lognormal_d dist_Tt(0.51192, 0.41694); //Distribución de los tiempos de entrega de examen
-
-
-/* Tasas de contacto *******************************************************/
-
-const size_t N_rate = 2; //Número de funciones en las que se dividen las tasas de contacto
-
-
-/* Tasas de contacto ******************************************************/
-
-//const double alpha = 0.9; //Adherencia al aislamiento
-//const double mu = 0.1; //Tasa de contacto cruzada
-//const double chi = 0.7; //Tasa de contacto de tipo bajo
-//const double phi1 = 0.6; //Tasa de contacto de tipo alto
-//const double eta = 0.7; //Tasa de contacto con externos (hospitalizados)
-//const double lambda = 0.7; //Tasa de contacto con externos (familiares)
-
-
-/* Rastreo ****************************************************************/
-
-//const int trace = 3; //Número de personas rastreadas cada vez que haya contagio
-//const unsigned int trace_net = 6; //Número de contactos en promedio por cada persona del staff
-
 
 /**************************************************************************/
 
