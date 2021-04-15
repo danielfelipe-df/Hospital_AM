@@ -2,10 +2,12 @@
 #include <constants.h>
 #include <other_CSV.h>
 
-constants::constants(std::string name){
+constants::constants(){
   std::vector<std::vector<std::wstring> > data;
 
-  csv_ws(data, name);
+  this->name = "template";
+
+  csv_ws(data, "dat/" + name + ".csv");
 
   this->xi = std::stod(data[0][2]); //Xi
   this->theta = std::stod(data[1][2]); //Theta

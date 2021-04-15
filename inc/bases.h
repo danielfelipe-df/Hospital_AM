@@ -6,10 +6,7 @@
 #include <constants.h>
 #include <string>
 
-const std::string folderCons = "data/";
-const std::string nameCons = "template";
-const std::string extCons = ".csv";
-const constants MyCons(folderCons + nameCons + extCons);
+const constants MyCons;
 
 
 /* Índice de personas *****************************************************/

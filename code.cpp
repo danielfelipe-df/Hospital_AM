@@ -68,7 +68,7 @@ int main(void)
   std::ofstream fout;
   std::string name;
 
-  name = "Results/Data/datos_" + nameCons + ".csv";
+  name = "res/Data/datos_" + MyCons.name + ".csv";
   fout.open(name);
   
   contador = 0;
@@ -87,7 +87,7 @@ int main(void)
     for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
     for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
 
-    name = "Results/Data_Prevalencia/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
+    name = "res/Data_Prevalencia/datos_" + MyCons.name + "_" + std::to_string(num) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
@@ -225,7 +225,7 @@ int main(void)
     fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */
-    name = "Results/Data_Grafos/datos_" + nameCons + "_" + std::to_string(num) + ".csv";
+    name = "ress/Data_Grafos/datos_" + MyCons.name + "_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
     
     //Borro los vectores
@@ -238,7 +238,7 @@ int main(void)
   
   promrec /= (contador*N);
 
-  std::cout << "\nAR " << nameCons << ": " << promrec << std::endl;
+  std::cout << "\nAR " << MyCons.name << ": " << promrec << std::endl;
 
   return 0;
 }

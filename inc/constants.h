@@ -7,6 +7,8 @@ class constants{
 public:
 
   /* Attributes */
+  std::string name;
+
   double xi; //Xi
   double theta; //Theta
   double iota; //Iota
@@ -48,7 +50,7 @@ public:
 
 
   /* Constructor */
-  constants(std::string name);
+  constants();
 
 };
 
