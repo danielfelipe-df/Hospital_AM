@@ -11,3 +11,4 @@ Zips/
 build/
 *.py
 a.out
+html/
