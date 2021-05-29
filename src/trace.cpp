@@ -5,7 +5,7 @@
 #include <trace.h>
 #include <test.h>
 
-void trace_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double time, bool is_traced){
+void trace_reaction(grupo &Out, grupo &In, int index, Workers *family, int typeout, int typein, double time, bool is_traced){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -15,7 +15,7 @@ void trace_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int 
 }
 
 
-void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
+void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time, Crandom &ran){
   int num;
   num = tested_isolated_inf(Val[7], Val[8], Val[6], altos, time, 7, 8, 6, ran); //Presintomáticos altos
   aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, 8, true);
@@ -31,7 +31,7 @@ void main_trace(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *
 }
 
 
-void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, Crandom &ran, double cons1, double cons2, bool type, unsigned int index, bool pre){
+void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, Crandom &ran, double cons1, double cons2, bool type, unsigned int index, bool pre){
   unsigned int contador, aux, aux2, ind, my_size, Gsize, j;
   double value, aux3;
   grupo vaux;
@@ -80,7 +80,7 @@ void aux_main(int num, std::vector<grupo> &Val, std::vector<grupo> &Vba, trabaja
 }
 
 
-int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, int index){
+int reaction_trace(std::vector<grupo> &V, Workers *family, Crandom &ran, int index){
   if(family[index].kind == 0){aux_trace(V[0], V[2], family, 0, 2, index, true);    return 1;} //Susceptible
   else if(family[index].kind == 1){aux_trace(V[1], V[2], family, 1, 2, index, true);    return 1;} //Susceptible testeado
   else if(family[index].kind == 3){aux_trace(V[3], V[5], family, 3, 5, index, true);    return 1;} //Expuesto
@@ -95,7 +95,7 @@ int reaction_trace(std::vector<grupo> &V, trabajadores *family, Crandom &ran, in
 }
 
 
-void aux_trace(grupo &G, grupo &T, trabajadores *family, int typeout, int typein, int index, bool normal){
+void aux_trace(grupo &G, grupo &T, Workers *family, int typeout, int typein, int index, bool normal){
   std::vector<int>::iterator it;
   unsigned int ind;
 
@@ -120,7 +120,7 @@ void eliminar_repetidos(std::vector<int> &y)
 }
 
 
-void trace_massive(grupo &R, grupo &G, trabajadores *family, double time, int typeout, int typein){
+void trace_massive(grupo &R, grupo &G, Workers *family, double time, int typeout, int typein){
   for(size_t i=0; i<R.size(); i++){
     if(family[R[i]].btrace){
       family[R[i]].ttrace += time;
@@ -130,7 +130,7 @@ void trace_massive(grupo &R, grupo &G, trabajadores *family, double time, int ty
 }
 
 
-void trace_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
+void trace_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time){
   trace_massive(Val[2], Val[0], altos, time, 2, 0);  trace_massive(Vba[2], Vba[0], bajos, time, 2, 0); // Susceptible aislado a susceptible
   trace_massive(Val[5], Val[3], altos, time, 5, 3);  trace_massive(Vba[5], Vba[3], bajos, time, 5, 3); // Expuesto aislado a expuesto
   trace_massive(Val[8], Val[6], altos, time, 8, 6);  trace_massive(Vba[8], Vba[6], bajos, time, 8, 6); // Presintomático aislado a presintomático

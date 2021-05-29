@@ -28,7 +28,7 @@ target_sources(Project PRIVATE
   src/Random64.cpp
   src/reaction.cpp
   src/test.cpp
-  src/trabajadores.cpp
+  src/workers.cpp
   src/trace.cpp
   src/other_CSV.cpp
   )

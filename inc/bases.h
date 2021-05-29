@@ -1,12 +1,19 @@
+/**
+ * @file bases.h
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief File containing the Constants variable, aliases of different objects and other constants aren't in Constants class
+ */
+
+
 #ifndef BASES_H
 #define BASES_H
 
 /* Clase de constantes ****************************************************/
 
 #include <constants.h>
-#include <string>
 
-const constants MyCons;
+const Constants MyCons;
 
 
 /* Índice de personas *****************************************************/
@@ -60,4 +67,4 @@ const lognormal_d dist_Tt(0.51192, 0.41694); //Distribución de los tiempos de e
 
 /**************************************************************************/
 
-#endif
+#endif /* BASES_H */

@@ -1,4 +1,12 @@
-﻿#ifndef OTHER_CSV_H
+﻿/**
+ * @file other_CSV.h
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief Header containing the functions to read files
+ */
+
+
+#ifndef OTHER_CSV_H
 #define OTHER_CSV_H
 
 #include <vector>
@@ -65,4 +73,4 @@ void mayor_a_menor(std::vector<T> &y)
 }
 
 
-#endif
+#endif /* OTHER_CSV_H */

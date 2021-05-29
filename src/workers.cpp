@@ -1,8 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
-#include <trabajadores.h>
+#include <workers.h>
 
-void trabajadores::init(){
+void Workers::init(){
   kind = 0;
   time = 0;
   tmax = 0;
@@ -17,7 +17,7 @@ void trabajadores::init(){
 }
 
 
-void trabajadores::change(unsigned int now, unsigned int past){
+void Workers::change(unsigned int now, unsigned int past){
   if(kind == past){kind = now;}
   else{
     std::cerr << "Error: Tipo de trabajador no coincide.\nSe debio ingresar " << kind << " pero se ingresa " << past << std::endl;

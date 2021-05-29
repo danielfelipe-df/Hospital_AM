@@ -2,17 +2,17 @@
 #include <other_functions.h>
 
 
-void update_times(grupo &G, trabajadores *family, double time){
+void update_times(grupo &G, Workers *family, double time){
   for(unsigned int i=0; i<G.size(); i++){family[G[i]].tstate += time;}
 }
 
 
-void update_massive(grupo &G, trabajadores *family, double time){
+void update_massive(grupo &G, Workers *family, double time){
   for(unsigned int i=0; i<G.size(); i++){family[G[i]].time += time;}
 }
 
 
-void update_times_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
+void update_times_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time){
   update_times(Val[3], altos, time);	update_times(Vba[3], bajos, time); //Expuestos
   update_times(Val[4], altos, time);	update_times(Vba[4], bajos, time); //Expuestos testeados
   update_times(Val[5], altos, time);	update_times(Vba[5], bajos, time); //Expuestos aislados
@@ -26,7 +26,7 @@ void update_times_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajad
 }
 
 
-void update_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
+void update_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time){
   update_massive(Val[1], altos, time);	update_massive(Vba[1], bajos, time); //Susceptibles testeados
   update_massive(Val[4], altos, time);	update_massive(Vba[4], bajos, time); //Expuestos testeados
   update_massive(Val[14], altos, time);	update_massive(Vba[14], bajos, time); //Recuperados testeados
@@ -88,7 +88,7 @@ void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
 }
 
 
-void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, std::string name){
+void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, std::string name){
   std::ofstream fout;
   fout.open(name);
 

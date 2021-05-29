@@ -1,26 +1,34 @@
+/**
+ * @file other_functions.h
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief Header containing the functions to update times and print prevalences
+ */
+
+
 #ifndef OTHER_FUNCTIONS_H
 #define OTHER_FUNCTIONS_H
 
 #include <string>
 #include <vector>
 #include <bases.h>
-#include <trabajadores.h>
+#include <workers.h>
 
 
 /* Con esta función actualizo los tiempos de estado de ese grupo */
-void update_times(grupo &G, trabajadores *family, double time);
+void update_times(grupo &G, Workers *family, double time);
 
 
 /* Con esta función actualizo los tiempos de los testeados masivamente */
-void update_massive(grupo &G, trabajadores *family, double time);
+void update_massive(grupo &G, Workers *family, double time);
 
 
 /* Con esta función actualizo los tiempos de estado de todos los grupos */
-void update_times_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time);
+void update_times_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time);
 
 
 /* Con esta función actualizo los tiempos de todos los testeados masivamente */
-void update_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time);
+void update_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time);
 
 
 /* Con esta función imprimo cada uno de los vectores */
@@ -36,7 +44,7 @@ void print_inf(std::vector<grupo> &Val, std::vector<grupo> &Vba, double time, st
 
 
 /* Con esta función imprimo los vínculos de la red de contagio */
-void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, std::string name);
+void print_net(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, std::string name);
 
 
-#endif
+#endif /* OTHER_FUNCTIONS_H */

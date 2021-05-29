@@ -2,7 +2,7 @@
 #include <trace.h>
 
 
-void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein, double value, bool dist){
+void tested_reaction(grupo &Out, grupo &In, int index, Workers *family, int typeout, int typein, double value, bool dist){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -13,14 +13,14 @@ void tested_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 }
 
 
-void tested_lev_ais(int agent, trabajadores *family, double value, bool dist){
+void tested_lev_ais(int agent, Workers *family, double value, bool dist){
   family[agent].tlev = 0.0;
   if(dist){family[agent].tlevmax = quantile(dist_Tt, value);}
   else{family[agent].tlevmax = value;}
 }
 
 
-void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos){
+void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos){
   unsigned int M = Val[0].size() + Vba[0].size() + Val[3].size() + Vba[3].size() + Val[6].size() + Vba[6].size() + Val[9].size() + Vba[9].size() + Val[13].size() + Vba[13].size();
   unsigned int num = (int)(ran.r()*M);
 
@@ -57,7 +57,7 @@ void massive_reaction(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom 
 }
 
 
-int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, double time, int typeout, int typein1, int typein2, Crandom &ran){
+int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, Workers *family, double time, int typeout, int typein1, int typein2, Crandom &ran){
   int index, contador = 0;
   for(unsigned int i=0; i<T.size(); i++){
     index = T[i];      family[index].time += time;
@@ -79,7 +79,7 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, trabajadores *family, dou
 }
 
 
-void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int typeout, int typein){
+void tested_massive(grupo &T, grupo &G, Workers *family, double time, int typeout, int typein){
   for(unsigned int i=0; i<T.size(); i++){
     family[T[i]].time += time;
     if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0, false);      i--;}
@@ -87,14 +87,14 @@ void tested_massive(grupo &T, grupo &G, trabajadores *family, double time, int t
 }
 
 
-void move_massive(grupo &T, grupo &G, trabajadores *family, unsigned int typeout, unsigned int typein){
+void move_massive(grupo &T, grupo &G, Workers *family, unsigned int typeout, unsigned int typein){
   for(unsigned int i=0; i<T.size(); i++){
     if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0, false);      i--;}
   }
 }
 
 
-void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time, Crandom &ran){
+void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time, Crandom &ran){
   int index;
   unsigned int contador = 0;
   for(unsigned int i=0; i<Val[11].size()-contador; i++){
@@ -134,14 +134,14 @@ void result_lev_ais(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajador
 }
 
 
-void move_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos){
+void move_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos){
   move_massive(Val[1], Val[0], altos, 1, 0);      move_massive(Vba[1], Vba[0], bajos, 1, 0); //Susceptible testeado a susceptible
   move_massive(Val[4], Val[3], altos, 4, 3);      move_massive(Vba[4], Vba[3], bajos, 4, 3); //Expuesto testeado a expuesto
   move_massive(Val[14], Val[13], altos, 14, 13);      move_massive(Vba[14], Vba[13], bajos, 14, 13); //Recuperado testeado a recuperado
 }
 
 
-void tested_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, trabajadores *altos, trabajadores *bajos, double time){
+void tested_massive_all(std::vector<grupo> &Val, std::vector<grupo> &Vba, Workers *altos, Workers *bajos, double time){
   tested_massive(Val[1], Val[0], altos, time, 1, 0);  tested_massive(Vba[1], Vba[0], bajos, time, 1, 0); //Susceptible testeado a susceptible
   tested_massive(Val[4], Val[3], altos, time, 4, 3);  tested_massive(Vba[4], Vba[3], bajos, time, 4, 3); //Expuesto testeado a expuesto
   tested_massive(Val[14], Val[13], altos, time, 14, 13);  tested_massive(Vba[14], Vba[13], bajos, time, 14, 13); //Recuperado testeado a recuperado

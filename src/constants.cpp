@@ -1,8 +1,16 @@
+/**
+ * @file constants.cpp
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief Source file containing the Constants class
+ */
+
+
 #include <vector>
 #include <constants.h>
 #include <other_CSV.h>
 
-constants::constants(){
+Constants::Constants(){
   std::vector<std::vector<std::wstring> > data;
 
   this->name = "template";
@@ -12,19 +20,19 @@ constants::constants(){
   this->xi = std::stod(data[0][2]); //Xi
   this->theta = std::stod(data[1][2]); //Theta
   this->iota = std::stod(data[2][2]); //Iota
-  
+
   this->N95 = std::stod(data[3][2]); //N95
   this->TBQ = std::stod(data[4][2]); //TBQ
   this->HW = std::stod(data[5][2]); //HW
   this->SDP = std::stod(data[6][2]); //SDP
-  
+
   this->alpha = std::stod(data[7][2]); //Alpha
   this->mu = std::stod(data[8][2]); //Mu
   this->chi = std::stod(data[9][2]); //Chi
   this->phi1 = std::stod(data[10][2]); //Phi1
   this->eta = std::stod(data[11][2]); //Eta
   this->lambda = std::stod(data[12][2]); //Lambda
-  
+
   this->trace = std::stoi(data[13][2]); //Trace
   this->trace_net = std::stoi(data[14][2]); //Trace_net
 
@@ -64,4 +72,19 @@ constants::constants(){
   this->lim_betaF[N_betaF] = std::stod(data[28][2+N_betaF]); //lim_betaF
 
   this->AisLev = ((std::stoi(data[29][2]) == 1) ? true : false); //AisLev
+}
+
+
+Constants::~Constants(){
+  delete[] this->A_gauss;
+  delete[] this->Mu_gauss;
+  delete[] this->Sigma_gauss;
+
+  delete[] this->m_betaL;
+  delete[] this->b_betaL;
+  delete[] this->lim_betaL;
+
+  delete[] this->m_betaF;
+  delete[] this->b_betaF;
+  delete[] this->lim_betaF;
 }

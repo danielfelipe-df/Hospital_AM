@@ -1,9 +1,17 @@
+/**
+ * @file constants.h
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief Header containing the Constants class
+ */
+
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
 #include <string>
 
-class constants{
+class Constants{
 public:
 
   /* Attributes */
@@ -50,8 +58,11 @@ public:
 
 
   /* Constructor */
-  constants();
+  Constants();
+
+  /* Destructor */
+  ~Constants();
 
 };
 
-#endif
+#endif /* CONSTANTS_H */

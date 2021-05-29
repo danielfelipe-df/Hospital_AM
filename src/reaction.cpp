@@ -3,7 +3,7 @@
 #include <trace.h>
 #include <test.h>
 
-void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int typeout, int typein){
+void mother_reaction(grupo &Out, grupo &In, int index, Workers *family, int typeout, int typein){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -12,7 +12,7 @@ void mother_reaction(grupo &Out, grupo &In, int index, trabajadores *family, int
 }
 
 
-int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value){
+int index_time(grupo &Out, Workers *family, lognormal_d &dist, double value){
   //Jose
   unsigned int n = Out.size(), agent;
   double times[n];
@@ -26,7 +26,7 @@ int index_time(grupo &Out, trabajadores *family, lognormal_d &dist, double value
 }
 
 
-int infected(trabajadores *family, int max){
+int infected(Workers *family, int max){
   int kind;
   for(int i=0; i<(max-1); i++){
     kind = family[i].kind;
@@ -38,7 +38,7 @@ int infected(trabajadores *family, int max){
 
 
 /* Susceptible a expuesto. Alto */
-void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   int agentS;
   unsigned int index;
   double auxind;
@@ -84,7 +84,7 @@ void reaction0(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Susceptible a expuesto. Bajo */
-void reaction1(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction1(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   int agentS;
   unsigned int index;
   double auxind;
@@ -128,7 +128,7 @@ void reaction1(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Expuesto a Pre-sintomático. Alto */
-void reaction2(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction2(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Val[3].size(); i++){if(altos[Val[3][i]].tstate > TM){aux.push_back(Val[3][i]);}} //Expuesto
@@ -158,7 +158,7 @@ void reaction2(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Expuesto a Pre-sintomático. Bajo */
-void reaction3(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction3(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Vba[3].size(); i++){if(bajos[Vba[3][i]].tstate > TM){aux.push_back(Vba[3][i]);}} //Expuesto
@@ -188,7 +188,7 @@ void reaction3(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Pre-sintomático a Leve. Alto */
-void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Val[6].size(); i++){if(altos[Val[6][i]].tstate > TM){aux.push_back(Val[6][i]);}} //Presintomático
@@ -237,7 +237,7 @@ void reaction4(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Pre-sintomático a Leve. Bajo */
-void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Vba[6].size(); i++){if(bajos[Vba[6][i]].tstate > TM){aux.push_back(Vba[6][i]);}} //Presintomático
@@ -286,7 +286,7 @@ void reaction5(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Pre-sintomático a Grave. Alto */
-void reaction6(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction6(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Val[6].size(); i++){if(altos[Val[6][i]].tstate > TM){aux.push_back(Val[6][i]);}} //Presintomático
@@ -322,7 +322,7 @@ void reaction6(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Pre-sintomático a Grave. Bajo */
-void reaction7(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction7(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Vba[6].size(); i++){if(bajos[Vba[6][i]].tstate > TM){aux.push_back(Vba[6][i]);}} //Presintomático
@@ -358,7 +358,7 @@ void reaction7(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Pre-sintomático a Recuperado. Alto */
-void reaction8(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction8(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Val[6].size(); i++){if(altos[Val[6][i]].tstate > TM){aux.push_back(Val[6][i]);}} //Presintomático
@@ -396,7 +396,7 @@ void reaction8(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Pre-sintomático a Recuperado. Bajo */
-void reaction9(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction9(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Vba[6].size(); i++){if(bajos[Vba[6][i]].tstate > TM){aux.push_back(Vba[6][i]);}} //Presintomático
@@ -434,7 +434,7 @@ void reaction9(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, t
 
 
 /* Leve a Recuperado. Alto */
-void reaction10(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction10(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Val[9].size(); i++){if(altos[Val[9][i]].tstate > TM){aux.push_back(Val[9][i]);}} //Leve
@@ -472,7 +472,7 @@ void reaction10(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, 
 
 
 /* Leve a Recuperado. Bajo */
-void reaction11(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction11(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Vba[9].size(); i++){if(bajos[Vba[9][i]].tstate > TM){aux.push_back(Vba[9][i]);}} //Leve
@@ -510,7 +510,7 @@ void reaction11(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, 
 
 
 /* Grave a Recuperado. Alto */
-void reaction12(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction12(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Val[12].size(); i++){if(altos[Val[12][i]].tstate > TM){aux.push_back(Val[12][i]);}} //Grave
@@ -526,7 +526,7 @@ void reaction12(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, 
 
 
 /* Grave a Recuperado. Bajo */
-void reaction13(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction13(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   std::vector<int> aux;
 
   for(unsigned int i=0; i<Vba[12].size(); i++){if(bajos[Vba[12][i]].tstate > TM){aux.push_back(Vba[12][i]);}} //Grave

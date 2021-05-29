@@ -1,9 +1,17 @@
-#ifndef TRABAJADORES_H
-#define TRABAJADORES_H
+/**
+ * @file workers.h
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief Header containing Workers class
+ */
+
+
+#ifndef WORKERS_H
+#define WORKERS_H
 
 #include <vector>
 
-class trabajadores{
+class Workers{
 public:
 
   /* Defino qué tipo de persona es
@@ -53,4 +61,4 @@ public:
   void change(unsigned int now, unsigned int past);
 };
 
-#endif
+#endif /* WORKERS_H */

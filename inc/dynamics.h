@@ -1,10 +1,18 @@
+/**
+ * @file dynamics.h
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief Header containing the functions that return time step and number of reaction. The auxiliar functions for the algorithm are here.
+ */
+
+
 #ifndef DYNAMICS_H
 #define DYNAMICS_H
 
 #include <vector>
 #include <Random64.h>
 #include <bases.h>
-#include <trabajadores.h>
+#include <workers.h>
 
 
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción y qué reacción es. */
@@ -53,4 +61,4 @@ double function_beta(double x, const double* lim_beta, const double* m_beta, con
 size_t index_beta(double x, const double* lim_beta, const size_t N_beta);
 
 
-#endif
+#endif /* DYNAMICS_H */

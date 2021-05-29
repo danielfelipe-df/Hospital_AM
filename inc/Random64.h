@@ -1,3 +1,11 @@
+/**
+ * @file Random64.h
+ * @author José Daniel Muñoz
+ * @date ???
+ * @brief Header containing the Crandom class
+ */
+
+
 #ifndef RANDOM64_H
 #define RANDOM64_H
 
@@ -14,4 +22,4 @@ public:
   double gauss(float mu,float sigma);
 };
 
-#endif
+#endif /* RANDOM64_H */

@@ -1,3 +1,11 @@
+/**
+ * @file code.cpp
+ * @author Daniel Felipe
+ * @date 2020
+ * @brief File containing the main function of the Hospital_AM model
+ */
+
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -5,19 +13,19 @@
 #include <time.h>
 #include <Random64.h>
 #include <bases.h>
-#include <trabajadores.h>
+#include <workers.h>
 #include <dynamics.h>
 #include <test.h>
 #include <trace.h>
 #include <reaction.h>
 #include <other_functions.h>
 
-typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, trabajadores *altos, trabajadores *bajos, std::vector<lognormal_d> &dist, int agentI);
+typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI);
 
 int main(void)
 {
   //Creo los arreglos de cada tipo
-  trabajadores altos[Na], bajos[Nb];
+  Workers altos[Na], bajos[Nb];
 
   //Creo los vectores en donde están las personas de cada estadío
   std::vector<grupo> vecal, vecba; //En el hospital
@@ -209,11 +217,11 @@ int main(void)
 	
 	//Imprimo los datos
         print_inf(vecal, vecba, t, name);
-	
+
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
       }
-      
+
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
     }
@@ -227,7 +235,7 @@ int main(void)
     /* Imprimo la Red */
     name = "ress/Data_Grafos/datos_" + MyCons.name + "_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
-    
+
     //Borro los vectores
     vecal.clear();    vecba.clear();
 
@@ -235,7 +243,7 @@ int main(void)
     num++;
   }
   fout.close();
-  
+
   promrec /= (contador*N);
 
   std::cout << "\nAR " << MyCons.name << ": " << promrec << std::endl;
