@@ -20,7 +20,7 @@ const Constants MyCons;
 
 #include <vector>
 
-typedef std::vector<int> grupo; //Redefino el vector de índices de personas como grupo
+typedef std::vector<unsigned int> group; //Redefino el vector de índices de personas como grupo
 
 
 /* Distribuciones *********************************************************/

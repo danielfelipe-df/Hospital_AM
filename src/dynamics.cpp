@@ -2,7 +2,7 @@
 #include <dynamics.h>
 
 
-std::vector<double> contagio(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, double t, double* tj){
+std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* tj){
   //Calculo los tamaños de cada vector
   double Sa, Sb, STa, STb, SAa, SAb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
   Sa = Val["SUS"].size();  STa = Val["SUST"].size();  SAa = Val["SUSA"].size();
@@ -169,23 +169,23 @@ double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double
 }
 
 
-int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb){  
+int who_infected(group &Pa, group &Pb, group &PTa, group &PTb, group &PTAa, group &PTAb, group &La, group &Lb, group &LTa, group &LTb, group &LTAa, group &LTAb, group &IAa, group &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb){
   //Reviso si la infección se realizó dentro del hospital o afuera
   if(t - std::floor(t) < MyCons.lim_betaL[1]){// Si fue adentro, entonces acoto las propensidades a las que pertenecen a la dinámica interna
     //Parámetros Gaussiana
     double value = 0;
     for(size_t i=0; i<MyCons.N_gauss; i++){value += function_gauss(t, MyCons.A_gauss[i], MyCons.Mu_gauss[i], MyCons.Sigma_gauss[i]);}
-    
-    //Calculo la propensidad de cada grupo
+
+    //Calculo la propensidad de cada group
     double num[5];
     num[0] = cons1*TBa*(Pa.size() + PTa.size() + La.size() + LTa.size())/(double)Na;
     num[1] = cons2*TBb*(Pb.size() + PTb.size() + Lb.size() + LTb.size())/(double)Nb;
     num[2] = (1-MyCons.alpha)*cons1*TBa*(IAa.size() + PTAa.size() + LTAa.size())/(double)Na;
     num[3] = (1-MyCons.alpha)*cons2*TBb*(IAb.size() + PTAb.size() + LTAb.size())/(double)Nb;
     num[4] = alti*MyCons.eta*MyCons.N95*value;
-    
+
     //Hallo el individuo que contagia
-    grupo aux;
+    group aux;
     double num2 = ran.r()*(num[0] + num[1] + num[2] + num[3] + num[4]);
     if(num2 < num[0]){return selection_infectious(Pa, PTa, La, LTa, ran);}
     else if(num2 < num[0] + num[1]){return selection_infectious(Pb, PTb, Lb, LTb, ran) + Na;}
@@ -199,7 +199,7 @@ int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grup
 }
 
 
-int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran){
+int selection_infectious(group &Ga, group &Gb, group &Gc, group &Gd, Crandom &ran){
   double num = ran.r()*(Ga.size() + Gb.size() + Gc.size() + Gd.size());
   int ind, agent;
   if(num < Ga.size()){ind = (int)(ran.r()*Ga.size());    agent = Ga[ind];}
@@ -220,7 +220,7 @@ void aux_phi_function(double t0, double diff, double &gnum, double &bnum, const 
   for(size_t i=1; i<(N_beta+1); i++){//Hacemos un ciclo sobre los tiempos de cambio del beta (se omite el primero porque es 0.0)
     if(t0 < lim_beta[i]){ //Revisamos si t0 está en el intervalo
       //Si lo está entonces usamos el algoritmo de integración
-      
+
       for(size_t j=0; j<(i-1); j++){//Hacemos el algoritmo de integración acumulado durante los intervalos anteriores
 	bnum += int_beta(lim_beta[j], lim_beta[j+1], m_beta[j], b_beta[j]);
 	for(size_t k=0; k<MyCons.N_gauss; k++){

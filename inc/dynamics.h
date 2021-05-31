@@ -16,7 +16,7 @@
 
 
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción y qué reacción es. */
-std::vector<double> contagio(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, double t, double* tj);
+std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* tj);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */
@@ -32,11 +32,11 @@ double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double
 
 
 /* Con esta función identifico a la persona que hico la infección */
-int who_infected(grupo &Pa, grupo &Pb, grupo &PTa, grupo &PTb, grupo &PTAa, grupo &PTAb, grupo &La, grupo &Lb, grupo &LTa, grupo &LTb, grupo &LTAa, grupo &LTAb, grupo &IAa, grupo &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb);
+int who_infected(group &Pa, group &Pb, group &PTa, group &PTb, group &PTAa, group &PTAb, group &La, group &Lb, group &LTa, group &LTb, group &LTAa, group &LTAb, group &IAa, group &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb);
 
 
 /* Esta es la función madre para la selección del que infectó */
-int selection_infectious(grupo &Ga, grupo &Gb, grupo &Gc, grupo &Gd, Crandom &ran);
+int selection_infectious(group &Ga, group &Gb, group &Gc, group &Gd, Crandom &ran);
 
 
 /* Esta es la función gaussiana */

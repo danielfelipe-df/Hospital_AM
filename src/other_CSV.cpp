@@ -127,7 +127,7 @@ void csv_f(std::vector<std::vector<float> > &w, std::string archivo, wint_t wc){
   char *locale = setlocale(LC_ALL, "");
   wint_t c;
 
-  FILE * pFile2 = fopen(archivo.c_str(), "r");  
+  FILE * pFile2 = fopen(archivo.c_str(), "r");
   std::wstring ws = L"";
 
   int k=0;

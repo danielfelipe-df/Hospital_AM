@@ -2,7 +2,7 @@
 #include <trace.h>
 
 
-void tested_reaction(grupo &Out, grupo &In, int index, Workers *family, Stages typeout, Stages typein, double value, bool dist){
+void tested_reaction(group &Out, group &In, int index, Workers *family, Stages typeout, Stages typein, double value, bool dist){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -20,7 +20,7 @@ void tested_lev_ais(int agent, Workers *family, double value, bool dist){
 }
 
 
-void massive_reaction(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos){
+void massive_reaction(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos){
   unsigned int M = Val["SUS"].size() + Vba["SUS"].size() + Val["EXP"].size() + Vba["EXP"].size() + Val["PRE"].size() + Vba["PRE"].size() + Val["MSYM"].size() + Vba["MSYM"].size() + Val["RECI"].size() + Vba["RECI"].size();
   unsigned int num = (int)(ran.r()*M);
 
@@ -57,7 +57,7 @@ void massive_reaction(std::map<std::string, grupo> &Val, std::map<std::string, g
 }
 
 
-int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, Workers *family, double time, Stages typeout, Stages typein1, Stages typein2, Crandom &ran){
+int tested_isolated_inf(group &T, group &TA, group &G, Workers *family, double time, Stages typeout, Stages typein1, Stages typein2, Crandom &ran){
   int index, contador = 0;
   for(size_t i=0; i<T.size(); i++){
     index = T[i];      family[index].time += time;
@@ -79,7 +79,7 @@ int tested_isolated_inf(grupo &T, grupo &TA, grupo &G, Workers *family, double t
 }
 
 
-void tested_massive(grupo &T, grupo &G, Workers *family, double time, Stages typeout, Stages typein){
+void tested_massive(group &T, group &G, Workers *family, double time, Stages typeout, Stages typein){
   for(size_t i=0; i<T.size(); i++){
     family[T[i]].time += time;
     if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0, false);      i--;}
@@ -87,14 +87,14 @@ void tested_massive(grupo &T, grupo &G, Workers *family, double time, Stages typ
 }
 
 
-void move_massive(grupo &T, grupo &G, Workers *family, Stages typeout, Stages typein){
+void move_massive(group &T, group &G, Workers *family, Stages typeout, Stages typein){
   for(size_t i=0; i<T.size(); i++){
     if(family[T[i]].time > family[T[i]].tmax){tested_reaction(T, G, i, family, typeout, typein, 0.0, false);      i--;}
   }
 }
 
 
-void result_lev_ais(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, double time, Crandom &ran){
+void result_lev_ais(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, double time, Crandom &ran){
   int index;
   unsigned int contador = 0;
   for(size_t i=0; i<Val["MSYMA"].size()-contador; i++){
@@ -136,14 +136,14 @@ void result_lev_ais(std::map<std::string, grupo> &Val, std::map<std::string, gru
 }
 
 
-void move_massive_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos){
+void move_massive_all(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos){
   move_massive(Val["SUST"], Val["SUS"], altos, SUST, SUS);      move_massive(Vba["SUST"], Vba["SUS"], bajos, SUST, SUS); //Susceptible testeado a susceptible
   move_massive(Val["EXPT"], Val["EXP"], altos, EXPT, EXP);      move_massive(Vba["EXPT"], Vba["EXP"], bajos, EXPT, EXP); //Expuesto testeado a expuesto
   move_massive(Val["RECT"], Val["RECI"], altos, RECT, RECI);      move_massive(Vba["RECT"], Vba["RECI"], bajos, RECT, RECI); //Recuperado testeado a recuperado
 }
 
 
-void tested_massive_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, double time){
+void tested_massive_all(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, double time){
   tested_massive(Val["SUST"], Val["SUS"], altos, time, SUST, SUS);  tested_massive(Vba["SUST"], Vba["SUS"], bajos, time, SUST, SUS); //Susceptible testeado a susceptible
   tested_massive(Val["EXPT"], Val["EXP"], altos, time, EXPT, EXP);  tested_massive(Vba["EXPT"], Vba["EXP"], bajos, time, EXPT, EXP); //Expuesto testeado a expuesto
   tested_massive(Val["RECT"], Val["RECI"], altos, time, RECT, RECI);  tested_massive(Vba["RECT"], Vba["RECI"], bajos, time, RECT, RECI); //Recuperado testeado a recuperado

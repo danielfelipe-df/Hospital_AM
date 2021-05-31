@@ -2,17 +2,17 @@
 #include <other_functions.h>
 
 
-void update_times(grupo &G, Workers *family, double time){
+void update_times(group &G, Workers *family, double time){
   for(unsigned int i=0; i<G.size(); i++){family[G[i]].tstate += time;}
 }
 
 
-void update_massive(grupo &G, Workers *family, double time){
+void update_massive(group &G, Workers *family, double time){
   for(unsigned int i=0; i<G.size(); i++){family[G[i]].time += time;}
 }
 
 
-void update_times_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, double time){
+void update_times_all(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, double time){
   update_times(Val["EXP"], altos, time);	update_times(Vba["EXP"], bajos, time); //Expuestos
   update_times(Val["EXPT"], altos, time);	update_times(Vba["EXPT"], bajos, time); //Expuestos testeados
   update_times(Val["EXPA"], altos, time);	update_times(Vba["EXPA"], bajos, time); //Expuestos aislados
@@ -26,14 +26,14 @@ void update_times_all(std::map<std::string, grupo> &Val, std::map<std::string, g
 }
 
 
-void update_massive_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, double time){
+void update_massive_all(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, double time){
   update_massive(Val["SUST"], altos, time);	update_massive(Vba["SUST"], bajos, time); //Susceptibles testeados
   update_massive(Val["EXPT"], altos, time);	update_massive(Vba["EXPT"], bajos, time); //Expuestos testeados
   update_massive(Val["RECT"], altos, time);	update_massive(Vba["RECT"], bajos, time); //Recuperados testeados
 }
 
 
-void print_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, double time, std::string name){
+void print_all(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, double time, std::string name){
   std::ofstream fout;
   fout.open(name, std::ios_base::app);
 
@@ -60,7 +60,7 @@ void print_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 }
 
 
-void print_types(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, double time, std::string name){
+void print_types(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, double time, std::string name){
   unsigned int veca[6] = {}, vecb[6] = {};
 
   // Susceptibles
@@ -91,7 +91,7 @@ void print_types(std::map<std::string, grupo> &Val, std::map<std::string, grupo>
   veca[5] += Val["RECT"].size();  vecb[5] += Vba["RECT"].size();
   veca[5] += Val["RECA"].size();  vecb[5] += Vba["RECA"].size();
 
-  
+
   std::ofstream fout;
   fout.open(name, std::ios_base::app);
 
@@ -103,7 +103,7 @@ void print_types(std::map<std::string, grupo> &Val, std::map<std::string, grupo>
 }
 
 
-void print_inf(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, double time, std::string name){
+void print_inf(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, double time, std::string name){
   unsigned int veca[3] = {}, vecb[3] = {};
 
   // Pre-sintomáticos
@@ -122,7 +122,7 @@ void print_inf(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
   double value1, value2;
   value1 = veca[0] + veca[1] + veca[2];
   value2 = vecb[0] + vecb[1] + vecb[2];
-  
+
   std::ofstream fout;
   fout.open(name, std::ios_base::app);
   fout << time << '\t' << value1 << '\t' << value2 << '\t' << value1 + value2 << std::endl;
@@ -130,7 +130,7 @@ void print_inf(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 }
 
 
-void print_net(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, std::string name){
+void print_net(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, std::string name){
   std::string names[3] = {"RECI", "RECT", "RECA"};
   std::ofstream fout;
   fout.open(name);

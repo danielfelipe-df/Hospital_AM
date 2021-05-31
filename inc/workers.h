@@ -73,7 +73,7 @@ public:
   double ttrace;
 
   //Guardo a las personas que infecto si soy infeccioso
-  std::vector<int> my_inf;
+  std::vector<unsigned int> my_inf;
 
   //Guardo la identidad de la persona que me infectó
   int DF;

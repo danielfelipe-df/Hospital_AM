@@ -1,9 +1,8 @@
-#include <iostream>
 #include <reaction.h>
 #include <trace.h>
 #include <test.h>
 
-void mother_reaction(grupo &Out, grupo &In, int index, Workers *family, Stages typeout, Stages typein){
+void mother_reaction(group &Out, group &In, int index, Workers *family, Stages typeout, Stages typein){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -12,7 +11,7 @@ void mother_reaction(grupo &Out, grupo &In, int index, Workers *family, Stages t
 }
 
 
-int index_time(grupo &Out, Workers *family, lognormal_d &dist, double value){
+int index_time(group &Out, Workers *family, lognormal_d &dist, double value){
   //Jose
   unsigned int n = Out.size(), agent;
   double times[n];
@@ -40,7 +39,7 @@ int infected(Workers *family, int max){
 
 
 /* Susceptible a expuesto. Alto */
-void reaction0(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction0(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   int agentS;
   unsigned int index;
   double auxind;
@@ -75,21 +74,21 @@ void reaction0(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     if(agentS != -1){/* Si la infección debido al externo se realizó */
       /* Susceptible a Expuesto */
       if(altos[agentS].kind == SUS){
-	std::vector<int>::iterator it = std::find(Val["SUS"].begin(), Val["SUS"].end(), agentS);
+	group::iterator it = std::find(Val["SUS"].begin(), Val["SUS"].end(), agentS);
 	index = std::distance(Val["SUS"].begin(), it);
 	mother_reaction(Val["SUS"], Val["EXP"], index, altos, SUS, EXP);
       }
-      
+
       /* Susceptible testeado a Expuesto testado */
       else if(altos[agentS].kind == SUST){
-	std::vector<int>::iterator it = std::find(Val["SUST"].begin(), Val["SUST"].end(), agentS);
+	group::iterator it = std::find(Val["SUST"].begin(), Val["SUST"].end(), agentS);
 	index = std::distance(Val["SUST"].begin(), it);
 	mother_reaction(Val["SUST"], Val["EXPT"], index, altos, SUST, EXPT);
       }
 
       /* Susceptible aislado a Expuesto aislado */
       else{
-	std::vector<int>::iterator it = std::find(Val["SUSA"].begin(), Val["SUSA"].end(), agentS);
+	group::iterator it = std::find(Val["SUSA"].begin(), Val["SUSA"].end(), agentS);
 	index = std::distance(Val["SUSA"].begin(), it);
 	mother_reaction(Val["SUSA"], Val["EXPA"], index, altos, SUSA, EXPA);
       }
@@ -99,20 +98,20 @@ void reaction0(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Susceptible a expuesto. Bajo */
-void reaction1(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+void reaction1(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
   int agentS;
   unsigned int index;
   double auxind;
   if(agentI > -1){
     auxind = (ran.r()*(Vba["SUS"].size() + Vba["SUST"].size() + (1-MyCons.alpha)*Vba["SUSA"].size()));
-    
+
     /* Susceptible a Expuesto */
     if(auxind < Vba["SUS"].size()){
       index = (int)(ran.r()*Vba["SUS"].size());      agentS = Vba["SUS"][index];
       mother_reaction(Vba["SUS"], Vba["EXP"], index, bajos, SUS, EXP);
       bajos[Vba["EXP"].back()].DF = agentI;
     }
-    
+
     /* Susceptible testeado a Expuesto testeado */
     else if(auxind < Vba["SUS"].size() + Vba["SUST"].size()){
       index = (int)(ran.r()*Vba["SUST"].size());      agentS = Vba["SUST"][index];
@@ -125,7 +124,7 @@ void reaction1(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
       mother_reaction(Vba["SUSA"], Vba["EXPA"], index, bajos, SUSA, EXPA);
       bajos[Vba["EXPA"].back()].DF = agentI;
     }
-    
+
     /* Guardo a la persona que infecté */
     if(agentI < Na){altos[agentI].my_inf.push_back(agentS + Na);}
     else{bajos[agentI-Na].my_inf.push_back(agentS + Na);}
@@ -135,19 +134,19 @@ void reaction1(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     if(agentS != -1){/* Si la infección debido al externo se realizó */
       /* Susceptible a Expuesto */
       if(bajos[agentS].kind == SUS){
-	std::vector<int>::iterator it = std::find(Vba["SUS"].begin(), Vba["SUS"].end(), agentS);
+	group::iterator it = std::find(Vba["SUS"].begin(), Vba["SUS"].end(), agentS);
 	index = std::distance(Vba["SUS"].begin(), it);
 	mother_reaction(Vba["SUS"], Vba["EXP"], index, bajos, SUS, EXP);
       }
       /* Susceptible testeado a Expuesto testado */
       else if(bajos[agentS].kind == SUST){
-	std::vector<int>::iterator it = std::find(Vba["SUST"].begin(), Vba["SUST"].end(), agentS);
+	group::iterator it = std::find(Vba["SUST"].begin(), Vba["SUST"].end(), agentS);
 	index = std::distance(Vba["SUST"].begin(), it);
 	mother_reaction(Vba["SUST"], Vba["EXPT"], index, bajos, SUST, EXPT);
       }
       /* Susceptible aislado a Expuesto aislado */
       else{
-	std::vector<int>::iterator it = std::find(Vba["SUSA"].begin(), Vba["SUSA"].end(), agentS);
+	group::iterator it = std::find(Vba["SUSA"].begin(), Vba["SUSA"].end(), agentS);
 	index = std::distance(Vba["SUSA"].begin(), it);
 	mother_reaction(Vba["SUSA"], Vba["EXPA"], index, bajos, SUSA, EXPA);
       }
@@ -157,8 +156,8 @@ void reaction1(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Expuesto a Pre-sintomático. Alto */
-void reaction2(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction2(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Val["EXP"].size(); i++){if(altos[Val["EXP"][i]].tstate > TM){aux.push_back(Val["EXP"][i]);}} //Expuesto
   for(unsigned int i=0; i<Val["EXPT"].size(); i++){if(altos[Val["EXPT"][i]].tstate > TM){aux.push_back(Val["EXPT"][i]);}} //Expuesto testeado
@@ -168,7 +167,7 @@ void reaction2(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, altos, dist[0], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Val["EXP"].size() != 0){// Expuesto a Pre-sintomático
       it = std::find(Val["EXP"].begin(), Val["EXP"].end(), agent);
@@ -190,8 +189,8 @@ void reaction2(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Expuesto a Pre-sintomático. Bajo */
-void reaction3(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction3(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Vba["EXP"].size(); i++){if(bajos[Vba["EXP"][i]].tstate > TM){aux.push_back(Vba["EXP"][i]);}} //Expuesto
   for(unsigned int i=0; i<Vba["EXPT"].size(); i++){if(bajos[Vba["EXPT"][i]].tstate > TM){aux.push_back(Vba["EXPT"][i]);}} //Expuesto testeado
@@ -201,7 +200,7 @@ void reaction3(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, bajos, dist[1], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Vba["EXP"].size() != 0){// Expuesto a Pre-sintomático
       it = std::find(Vba["EXP"].begin(), Vba["EXP"].end(), agent);
@@ -223,8 +222,8 @@ void reaction3(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Pre-sintomático a Leve. Alto */
-void reaction4(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction4(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Val["PRE"].size(); i++){if(altos[Val["PRE"][i]].tstate > TM){aux.push_back(Val["PRE"][i]);}} //Presintomático
   for(unsigned int i=0; i<Val["PRET"].size(); i++){if(altos[Val["PRET"][i]].tstate > TM){aux.push_back(Val["PRET"][i]);}} //Presintomático testeado
@@ -234,7 +233,7 @@ void reaction4(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, altos, dist[2], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Val["PRE"].size() != 0){// Presintomático a Leve
       it = std::find(Val["PRE"].begin(), Val["PRE"].end(), agent);
@@ -252,7 +251,7 @@ void reaction4(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 	}
       }
     }
-    
+
     if(Val["PRET"].size() != 0){// Presintomático testeado a Leve testeado
       it = std::find(Val["PRET"].begin(), Val["PRET"].end(), agent);
       ind = std::distance(Val["PRET"].begin(), it);
@@ -276,8 +275,8 @@ void reaction4(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Pre-sintomático a Leve. Bajo */
-void reaction5(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction5(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Vba["PRE"].size(); i++){if(bajos[Vba["PRE"][i]].tstate > TM){aux.push_back(Vba["PRE"][i]);}} //Presintomático
   for(unsigned int i=0; i<Vba["PRET"].size(); i++){if(bajos[Vba["PRET"][i]].tstate > TM){aux.push_back(Vba["PRET"][i]);}} //Presintomático testeado
@@ -287,7 +286,7 @@ void reaction5(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, bajos, dist[3], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Vba["PRE"].size() != 0){// Presintomático a Leve
       it = std::find(Vba["PRE"].begin(), Vba["PRE"].end(), agent);
@@ -328,8 +327,8 @@ void reaction5(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Pre-sintomático a Grave. Alto */
-void reaction6(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction6(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Val["PRE"].size(); i++){if(altos[Val["PRE"][i]].tstate > TM){aux.push_back(Val["PRE"][i]);}} //Presintomático
   for(unsigned int i=0; i<Val["PRET"].size(); i++){if(altos[Val["PRET"][i]].tstate > TM){aux.push_back(Val["PRET"][i]);}} //Presintomático testeado
@@ -339,7 +338,7 @@ void reaction6(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, altos, dist[4], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Val["PRE"].size() != 0){// Presintomático a Grave
       it = std::find(Val["PRE"].begin(), Val["PRE"].end(), agent);
@@ -367,8 +366,8 @@ void reaction6(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Pre-sintomático a Grave. Bajo */
-void reaction7(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction7(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Vba["PRE"].size(); i++){if(bajos[Vba["PRE"][i]].tstate > TM){aux.push_back(Vba["PRE"][i]);}} //Presintomático
   for(unsigned int i=0; i<Vba["PRET"].size(); i++){if(bajos[Vba["PRET"][i]].tstate > TM){aux.push_back(Vba["PRET"][i]);}} //Presintomático testeado
@@ -378,7 +377,7 @@ void reaction7(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, bajos, dist[5], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Vba["PRE"].size() != 0){// Presintomático a Grave
       it = std::find(Vba["PRE"].begin(), Vba["PRE"].end(), agent);
@@ -406,8 +405,8 @@ void reaction7(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Pre-sintomático a Recuperado. Alto */
-void reaction8(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction8(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Val["PRE"].size(); i++){if(altos[Val["PRE"][i]].tstate > TM){aux.push_back(Val["PRE"][i]);}} //Presintomático
   for(unsigned int i=0; i<Val["PRET"].size(); i++){if(altos[Val["PRET"][i]].tstate > TM){aux.push_back(Val["PRET"][i]);}} //Presintomático testeado
@@ -417,7 +416,7 @@ void reaction8(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, altos, dist[6], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Val["PRE"].size() != 0){// Presintomático a Recuperado no-detectado
       it = std::find(Val["PRE"].begin(), Val["PRE"].end(), agent);
@@ -447,8 +446,8 @@ void reaction8(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Pre-sintomático a Recuperado. Bajo */
-void reaction9(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction9(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Vba["PRE"].size(); i++){if(bajos[Vba["PRE"][i]].tstate > TM){aux.push_back(Vba["PRE"][i]);}} //Presintomático
   for(unsigned int i=0; i<Vba["PRET"].size(); i++){if(bajos[Vba["PRET"][i]].tstate > TM){aux.push_back(Vba["PRET"][i]);}} //Presintomático testeado
@@ -458,7 +457,7 @@ void reaction9(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
     double value = (double)ran.r();
     unsigned int index = index_time(aux, bajos, dist[7], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Vba["PRE"].size() != 0){// Presintomático a Recuperado no-detectado
       it = std::find(Vba["PRE"].begin(), Vba["PRE"].end(), agent);
@@ -488,8 +487,8 @@ void reaction9(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &
 
 
 /* Leve a Recuperado. Alto */
-void reaction10(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction10(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Val["MSYM"].size(); i++){if(altos[Val["MSYM"][i]].tstate > TM){aux.push_back(Val["MSYM"][i]);}} //Leve
   for(unsigned int i=0; i<Val["MSYMT"].size(); i++){if(altos[Val["MSYMT"][i]].tstate > TM){aux.push_back(Val["MSYMT"][i]);}} //Leve testeado
@@ -499,7 +498,7 @@ void reaction10(std::map<std::string, grupo> &Val, std::map<std::string, grupo> 
     double value = (double)ran.r();
     unsigned int index = index_time(aux, altos, dist[8], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Val["MSYM"].size() != 0){// Leve a Recuperado no-detectado
       it = std::find(Val["MSYM"].begin(), Val["MSYM"].end(), agent);
@@ -529,8 +528,8 @@ void reaction10(std::map<std::string, grupo> &Val, std::map<std::string, grupo> 
 
 
 /* Leve a Recuperado. Bajo */
-void reaction11(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction11(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Vba["MSYM"].size(); i++){if(bajos[Vba["MSYM"][i]].tstate > TM){aux.push_back(Vba["MSYM"][i]);}} //Leve
   for(unsigned int i=0; i<Vba["MSYMT"].size(); i++){if(bajos[Vba["MSYMT"][i]].tstate > TM){aux.push_back(Vba["MSYMT"][i]);}} //Leve testeado
@@ -540,7 +539,7 @@ void reaction11(std::map<std::string, grupo> &Val, std::map<std::string, grupo> 
     double value = (double)ran.r();
     unsigned int index = index_time(aux, bajos, dist[9], value);
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it;
+    group::iterator it;
     unsigned int ind;
     if(Vba["MSYM"].size() != 0){// Leve a Recuperado no-detectado
       it = std::find(Vba["MSYM"].begin(), Vba["MSYM"].end(), agent);
@@ -570,15 +569,15 @@ void reaction11(std::map<std::string, grupo> &Val, std::map<std::string, grupo> 
 
 
 /* Grave a Recuperado. Alto */
-void reaction12(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction12(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Val["SSYMA"].size(); i++){if(altos[Val["SSYMA"][i]].tstate > TM){aux.push_back(Val["SSYMA"][i]);}} //Grave
 
   if(aux.size() != 0){// Grave a Recuperado detectado
     unsigned int index = index_time(aux, altos, dist[10], (double)ran.r());
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it = std::find(Val["SSYMA"].begin(), Val["SSYMA"].end(), agent);
+    group::iterator it = std::find(Val["SSYMA"].begin(), Val["SSYMA"].end(), agent);
     unsigned int ind = std::distance(Val["SSYMA"].begin(), it);
     if(ind < Val["SSYMA"].size()){mother_reaction(Val["SSYMA"], Val["RECA"], ind, altos, SSYMA, RECA);}
   }
@@ -586,15 +585,15 @@ void reaction12(std::map<std::string, grupo> &Val, std::map<std::string, grupo> 
 
 
 /* Grave a Recuperado. Bajo */
-void reaction13(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
-  std::vector<int> aux;
+void reaction13(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI){
+  group aux;
 
   for(unsigned int i=0; i<Vba["SSYMA"].size(); i++){if(bajos[Vba["SSYMA"][i]].tstate > TM){aux.push_back(Vba["SSYMA"][i]);}} //Grave
 
   if(aux.size() != 0){// Grave a Recuperado detectado
     unsigned int index = index_time(aux, bajos, dist[11], (double)ran.r());
     unsigned int agent = aux[index];
-    std::vector<int>::iterator it = std::find(Vba["SSYMA"].begin(), Vba["SSYMA"].end(), agent);
+    group::iterator it = std::find(Vba["SSYMA"].begin(), Vba["SSYMA"].end(), agent);
     unsigned int ind = std::distance(Vba["SSYMA"].begin(), it);
     if(ind < Vba["SSYMA"].size()){mother_reaction(Vba["SSYMA"], Vba["RECA"], ind, bajos, SSYMA, RECA);}
   }

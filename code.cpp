@@ -16,7 +16,7 @@
 #include <reaction.h>
 #include <other_functions.h>
 
-typedef void(*reactions) (std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI);
+typedef void(*reactions) (std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI);
 
 int main(void)
 {
@@ -24,7 +24,7 @@ int main(void)
   Workers altos[Na], bajos[Nb];
 
   //Creo los vectores en donde están las personas de cada estadío
-  std::map<std::string, grupo> vecal{
+  std::map<std::string, group> vecal{
 				     { "SUS", {} }, { "SUST", {} }, { "SUSA", {} },
 				     { "EXP", {} }, { "EXPT", {} }, { "EXPA", {} },
 				     { "PRE", {} }, { "PRET", {} }, { "PREA", {} },
@@ -33,7 +33,7 @@ int main(void)
 				     { "RECI", {} }, { "RECT", {} }, { "RECA", {} }
   };
 
-  std::map<std::string, grupo> vecba{
+  std::map<std::string, group> vecba{
 				     { "SUS", {} }, { "SUST", {} }, { "SUSA", {} },
 				     { "EXP", {} }, { "EXPT", {} }, { "EXPA", {} },
 				     { "PRE", {} }, { "PRET", {} }, { "PREA", {} },
@@ -247,7 +247,7 @@ int main(void)
     print_net(vecal, vecba, altos, bajos, name);
 
     //Borro los vectores
-    for(std::map<std::string, grupo>::iterator it=vecal.begin(); it != vecal.end(); it++){
+    for(std::map<std::string, group>::iterator it=vecal.begin(); it != vecal.end(); it++){
       vecal[it->first].clear();
       vecba[it->first].clear();
     }

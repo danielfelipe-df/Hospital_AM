@@ -3,7 +3,7 @@
 #include <trace.h>
 #include <test.h>
 
-void trace_reaction(grupo &Out, grupo &In, int index, Workers *family, Stages typeout, Stages typein, double time, bool is_traced){
+void trace_reaction(group &Out, group &In, int index, Workers *family, Stages typeout, Stages typein, double time, bool is_traced){
   int agent = Out[index];
   Out.erase(Out.begin() + index);
   In.push_back(agent);
@@ -13,7 +13,7 @@ void trace_reaction(grupo &Out, grupo &In, int index, Workers *family, Stages ty
 }
 
 
-void main_trace(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, double time, Crandom &ran){
+void main_trace(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, double time, Crandom &ran){
   int num;
   num = tested_isolated_inf(Val["PRET"], Val["PREA"], Val["PRE"], altos, time, PRET, PREA, PRE, ran); //Presintomáticos altos
   aux_main(num, Val, Vba, altos, bajos, ran, MyCons.phi1, MyCons.mu, true, "PREA", true);
@@ -29,10 +29,10 @@ void main_trace(std::map<std::string, grupo> &Val, std::map<std::string, grupo> 
 }
 
 
-void aux_main(int num, std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, Crandom &ran, double cons1, double cons2, bool type, std::string s, bool pre){
+void aux_main(int num, std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, Crandom &ran, double cons1, double cons2, bool type, std::string s, bool pre){
   unsigned int contador, aux, aux2, ind, my_size, Gsize, j;
   double value, aux3;
-  grupo vaux;
+  group vaux;
   if(type){Gsize = Val[s].size();}
   else{Gsize = Vba[s].size();}
 
@@ -78,7 +78,7 @@ void aux_main(int num, std::map<std::string, grupo> &Val, std::map<std::string, 
 }
 
 
-int reaction_trace(std::map<std::string, grupo> &V, Workers *family, Crandom &ran, int index){
+int reaction_trace(std::map<std::string, group> &V, Workers *family, Crandom &ran, int index){
   if(family[index].kind == SUS){
     aux_trace(V["SUS"], V["SUSA"], family, SUS, SUSA, index, true);
     return 1;
@@ -127,8 +127,8 @@ int reaction_trace(std::map<std::string, grupo> &V, Workers *family, Crandom &ra
 }
 
 
-void aux_trace(grupo &G, grupo &T, Workers *family, Stages typeout, Stages typein, int index, bool normal){
-  std::vector<int>::iterator it;
+void aux_trace(group &G, group &T, Workers *family, Stages typeout, Stages typein, int index, bool normal){
+  group::iterator it;
   unsigned int ind;
 
   if(normal){
@@ -142,7 +142,7 @@ void aux_trace(grupo &G, grupo &T, Workers *family, Stages typeout, Stages typei
 }
 
 
-void eliminar_repetidos(std::vector<int> &y)
+void eliminar_repetidos(group &y)
 {
   auto end = y.end();
   for(auto it = y.begin(); it != end; it++){
@@ -152,7 +152,7 @@ void eliminar_repetidos(std::vector<int> &y)
 }
 
 
-void trace_massive(grupo &R, grupo &G, Workers *family, double time, Stages typeout, Stages typein){
+void trace_massive(group &R, group &G, Workers *family, double time, Stages typeout, Stages typein){
   for(size_t i=0; i<R.size(); i++){
     if(family[R[i]].btrace){
       family[R[i]].ttrace += time;
@@ -165,7 +165,7 @@ void trace_massive(grupo &R, grupo &G, Workers *family, double time, Stages type
 }
 
 
-void trace_massive_all(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Workers *altos, Workers *bajos, double time){
+void trace_massive_all(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Workers *altos, Workers *bajos, double time){
   trace_massive(Val["SUSA"], Val["SUS"], altos, time, SUSA, SUS);  trace_massive(Vba["SUSA"], Vba["SUS"], bajos, time, SUSA, SUS); // Susceptible aislado a susceptible
   trace_massive(Val["EXPA"], Val["EXP"], altos, time, EXPA, EXP);  trace_massive(Vba["EXPA"], Vba["EXP"], bajos, time, EXPA, EXP); // Expuesto aislado a expuesto
   trace_massive(Val["PREA"], Val["PRE"], altos, time, PREA, PRE);  trace_massive(Vba["PREA"], Vba["PRE"], bajos, time, PREA, PRE); // Presintomático aislado a presintomático
