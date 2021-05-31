@@ -8,19 +8,15 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <vector>
 #include <time.h>
-#include <Random64.h>
-#include <bases.h>
-#include <workers.h>
+
 #include <dynamics.h>
 #include <test.h>
 #include <trace.h>
 #include <reaction.h>
 #include <other_functions.h>
 
-typedef void(*reactions) (std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI);
+typedef void(*reactions) (std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, Workers *altos, Workers *bajos, std::vector<lognormal_d> &dist, int agentI);
 
 int main(void)
 {
@@ -28,7 +24,23 @@ int main(void)
   Workers altos[Na], bajos[Nb];
 
   //Creo los vectores en donde están las personas de cada estadío
-  std::vector<grupo> vecal, vecba; //En el hospital
+  std::map<std::string, grupo> vecal{
+				     { "SUS", {} }, { "SUST", {} }, { "SUSA", {} },
+				     { "EXP", {} }, { "EXPT", {} }, { "EXPA", {} },
+				     { "PRE", {} }, { "PRET", {} }, { "PREA", {} },
+				     { "MSYM", {} }, { "MSYMT", {} }, { "MSYMA", {} },
+				     { "SSYMA", {} },
+				     { "RECI", {} }, { "RECT", {} }, { "RECA", {} }
+  };
+
+  std::map<std::string, grupo> vecba{
+				     { "SUS", {} }, { "SUST", {} }, { "SUSA", {} },
+				     { "EXP", {} }, { "EXPT", {} }, { "EXPA", {} },
+				     { "PRE", {} }, { "PRET", {} }, { "PREA", {} },
+				     { "MSYM", {} }, { "MSYMT", {} }, { "MSYMA", {} },
+				     { "SSYMA", {} },
+				     { "RECI", {} }, { "RECT", {} }, { "RECA", {} }
+  }; //En el hospital
 
   //Creo el generador de semillas
   Crandom gseed(difftime(time(0),0));
@@ -65,7 +77,7 @@ int main(void)
     lognormal_d my_dist(d_order, d_shape);
     dist.push_back(my_dist);
   }
-  
+
   //Variables auxiliares
   std::vector<double> ti_in;
   unsigned int n1, n2;
@@ -78,40 +90,38 @@ int main(void)
 
   name = "res/Data/datos_" + MyCons.name + ".csv";
   fout.open(name);
-  
+
   contador = 0;
   promrec = 0;
   num = 0;
-  
+
   //Genero las corridas
   while(contador < ensemble){
     std::cout << '\r';
     std::cout << "Vamos en la simulacion numero " << contador << " de " << ensemble << ".";
-    //Los convierto del tamaño que son
-    vecal.resize(16);    vecba.resize(16);
-    
+
     //Le asigno a cada entrada el índice como valor
-    vecal[0].resize(Na);    vecba[0].resize(Nb);
-    for(unsigned int j=0; j<Na; j++){vecal[0][j] = j;    altos[j].init();}
-    for(unsigned int j=0; j<Nb; j++){vecba[0][j] = j;    bajos[j].init();}
+    vecal["SUS"].resize(Na);    vecba["SUS"].resize(Nb);
+    for(unsigned int j=0; j<Na; j++){vecal["SUS"][j] = j;    altos[j].init();}
+    for(unsigned int j=0; j<Nb; j++){vecba["SUS"][j] = j;    bajos[j].init();}
 
     name = "res/Data_Prevalencia/datos_" + MyCons.name + "_" + std::to_string(num) + ".csv";
     //name = "prueba.csv";
     //fout.open(name);
     //fout.close();
-    
+
     //Inicio el tiempo
     t = 0.0;
     ARi = 0.0;
     ARh = 0.0;
     ARc = 0.0;
-    
+
     //Imprimo los datos
     print_inf(vecal, vecba, t, name);
-    
+
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
-    
+
     while(t < T){
       //Región de testeo masivo
       aux = 0.0;
@@ -119,7 +129,7 @@ int main(void)
       while(aux < MyCons.nu){
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(vecal, vecba, gseed, t, tj);
-	
+
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
 
@@ -129,60 +139,60 @@ int main(void)
 	  else if((int)ti_in[2] == -1){ARh++;}
 	  else{ARi++;}
 	}
-	
+
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
-	
+
 	//Actualizo los tiempos de los testeados masivamente que dan negativo
 	update_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-	
+
 	//Actualizo los tiempos de los leves aislado
 	if(MyCons.AisLev){result_lev_ais(vecal, vecba, altos, bajos, ti_in[0], gseed);}
 
 	//Actualizo los tiempos de los rastreados
 	trace_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-	
+
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
-	
+
 	//Genero los tests masivos
 	/* Cuento los sus, exp, pre, lev y recI */
-	aux2 = vecal[0].size() + vecba[0].size() + vecal[3].size() + vecba[3].size() + vecal[3].size() + vecba[6].size();
-	aux2 += vecal[9].size() + vecba[9].size() + vecal[13].size() + vecba[13].size();
+	aux2 = vecal["SUS"].size() + vecba["SUS"].size() + vecal["EXP"].size() + vecba["EXP"].size() + vecal["PRE"].size() + vecba["PRE"].size();
+	aux2 += vecal["MSYM"].size() + vecba["MSYM"].size() + vecal["RECI"].size() + vecba["RECI"].size();
 	n2 = (int)(aux/dt);
 	for(unsigned int k=n1; k<n2 && k<tests && 0<aux2; k++){
 	  massive_reaction(vecal, vecba, gseed, altos, bajos);
-	  aux2 = vecal[0].size() + vecba[0].size() + vecal[3].size() + vecba[3].size() + vecal[3].size() + vecba[6].size();
-	  aux2 += vecal[9].size() + vecba[9].size() + vecal[13].size() + vecba[13].size();
+	  aux2 = vecal["SUS"].size() + vecba["SUS"].size() + vecal["EXP"].size() + vecba["EXP"].size() + vecal["PRE"].size() + vecba["PRE"].size();
+	  aux2 += vecal["MSYM"].size() + vecba["MSYM"].size() + vecal["RECI"].size() + vecba["RECI"].size();
 	}
 	n1 = n2;
-	
+
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist, ti_in[2]);
-	
+
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
 	aux += ti_in[0];
-	
+
 	//Imprimo los datos
 	print_inf(vecal, vecba, t, name);
-	
+
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
       }
-      
+
       //Muevo los testeados masivos a su respectivo lugar
       move_massive_all(vecal, vecba, altos, bajos);
-      
+
       //Si el vector de tiempo e índice no se borró, es porque se rompió el ciclo
       if(ti_in.size() != 0){break;}
-      
+
       //Región sin testeo masivo
       aux = 0.0;
       while(aux < MyCons.delta){
 	//Obtengo el tiempo e índice de la reacción
 	ti_in = contagio(vecal, vecba, gseed, t, tj);
-	
+
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
 
@@ -192,7 +202,7 @@ int main(void)
 	  else if((int)ti_in[2] == -1){ARh++;}
 	  else{ARi++;}
 	}
-	
+
 	//Actualizo los tiempos de los estados que pueden transitar
 	update_times_all(vecal, vecba, altos, bajos, ti_in[0]);
 
@@ -201,20 +211,20 @@ int main(void)
 
 	//Actualizo los tiempos de los rastreados
 	trace_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-	
+
 	//Actualizo los tiempos de los testeados y hago el rastreo de los nuevos aislados
 	main_trace(vecal, vecba, altos, bajos, ti_in[0], gseed);
-	
+
 	//Actualizo los tiempos de los testeados masivamente, y si ya cumplieron tiempo, los devuelvo
 	tested_massive_all(vecal, vecba, altos, bajos, ti_in[0]);
-	
+
 	//Genero la reacción según el índice que acabo de obtener
 	react[(int)ti_in[1]](vecal, vecba, gseed, altos, bajos, dist, ti_in[2]);
-	
+
 	//Sumo el tiempo de la reacción
 	t += ti_in[0];
 	aux += ti_in[0];
-	
+
 	//Imprimo los datos
         print_inf(vecal, vecba, t, name);
 
@@ -228,8 +238,8 @@ int main(void)
     ti_in.clear();
 
     /* Cuento los recI, recT y recA */
-    promrec += vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() + vecal[15].size() + vecba[15].size();
-    fout << vecal[13].size() + vecba[13].size() + vecal[14].size() + vecba[14].size() + vecal[15].size() + vecba[15].size() << '\t';
+    promrec += vecal["RECI"].size() + vecba["RECI"].size() + vecal["RECT"].size() + vecba["RECT"].size() + vecal["RECT"].size() + vecba["RECT"].size();
+    fout << vecal["RECI"].size() + vecba["RECI"].size() + vecal["RECT"].size() + vecba["RECT"].size() + vecal["RECA"].size() + vecba["RECA"].size() << '\t';
     fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */
@@ -237,7 +247,10 @@ int main(void)
     print_net(vecal, vecba, altos, bajos, name);
 
     //Borro los vectores
-    vecal.clear();    vecba.clear();
+    for(std::map<std::string, grupo>::iterator it=vecal.begin(); it != vecal.end(); it++){
+      vecal[it->first].clear();
+      vecba[it->first].clear();
+    }
 
     contador++;
     num++;

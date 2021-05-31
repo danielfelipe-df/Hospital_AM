@@ -3,7 +3,7 @@
 #include <workers.h>
 
 void Workers::init(){
-  kind = 0;
+  kind = SUS;
   time = 0;
   tmax = 0;
   tstate = 0;
@@ -17,9 +17,9 @@ void Workers::init(){
 }
 
 
-void Workers::change(unsigned int now, unsigned int past){
-  if(kind == past){kind = now;}
+void Workers::change(Stages now, Stages past){
+  if(this->kind == past){this->kind = now;}
   else{
-    std::cerr << "Error: Tipo de trabajador no coincide.\nSe debio ingresar " << kind << " pero se ingresa " << past << std::endl;
+    std::cerr << "Error: Tipo de trabajador no coincide.\nSe debio ingresar " << this->kind << " pero se ingresa " << past << std::endl;
     std::exit(EXIT_FAILURE);}
 }

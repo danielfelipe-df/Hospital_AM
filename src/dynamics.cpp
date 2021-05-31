@@ -2,14 +2,19 @@
 #include <dynamics.h>
 
 
-std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, double t, double* tj){
+std::vector<double> contagio(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, double t, double* tj){
   //Calculo los tamaños de cada vector
   double Sa, Sb, STa, STb, SAa, SAb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
-  Sa = Val[0].size();  Sb = Vba[0].size();  STa = Val[1].size();  STb = Vba[1].size();  SAa = Val[2].size();  SAb = Vba[2].size();
-  Ea = Val[3].size();  Eb = Vba[3].size();  ETa = Val[4].size();  ETb = Vba[4].size();  EAa = Val[5].size();  EAb = Val[5].size();
-  Pa = Val[6].size();  Pb = Vba[6].size();  PTa = Val[7].size();  PTb = Vba[7].size();  PTAa = Val[8].size();  PTAb = Vba[8].size();
-  La = Val[9].size();  Lb = Vba[9].size();  LTa = Val[10].size();  LTb = Vba[10].size();  LTAa = Val[11].size();  LTAb = Vba[11].size();
-  IAa = Val[12].size();  IAb = Vba[12].size();
+  Sa = Val["SUS"].size();  STa = Val["SUST"].size();  SAa = Val["SUSA"].size();
+  Sb = Vba["SUS"].size();  STb = Vba["SUST"].size();  SAb = Vba["SUSA"].size();
+  Ea = Val["EXP"].size();  ETa = Val["EXPT"].size();  EAa = Val["EXPA"].size();
+  Eb = Vba["EXP"].size();  ETb = Vba["EXPT"].size();  EAb = Val["EXPA"].size();
+  Pa = Val["PRE"].size();  PTa = Val["PRET"].size();  PTAa = Val["PREA"].size();
+  Pb = Vba["PRE"].size();  PTb = Vba["PRET"].size();  PTAb = Vba["PREA"].size();
+  La = Val["MSYM"].size();  LTa = Val["MSYMT"].size();  LTAa = Val["MSYMA"].size();
+  Lb = Vba["MSYM"].size();  LTb = Vba["MSYMT"].size();  LTAb = Vba["MSYMA"].size();
+  IAa = Val["SSYMA"].size();
+  IAb = Vba["SSYMA"].size();
 
   //Número de propensidades
   const unsigned int n = 14;
@@ -82,8 +87,8 @@ std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, C
 
   //Escojo a la persona que contagia, si hay infección
   int conta = 0;
-  if((int)index == 0){conta = who_infected(Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], Val[12], Vba[12], MyCons.phi1, MyCons.mu, ran, 1, t, MyCons.N95, MyCons.N95);}
-  else if((int)index == 1){conta = who_infected(Val[6], Vba[6], Val[7], Vba[7], Val[8], Vba[8], Val[9], Vba[9], Val[10], Vba[10], Val[11], Vba[11], Val[12], Vba[12], MyCons.phi1, MyCons.mu, ran, 0, t, MyCons.N95, MyCons.TBQ);}
+  if((int)index == 0){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.phi1, MyCons.mu, ran, 1, t, MyCons.N95, MyCons.N95);}
+  else if((int)index == 1){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.phi1, MyCons.mu, ran, 0, t, MyCons.N95, MyCons.TBQ);}
 
   //Creo el vector resultados
   std::vector<double> result(3);

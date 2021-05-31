@@ -9,14 +9,14 @@
 #ifndef DYNAMICS_H
 #define DYNAMICS_H
 
-#include <vector>
+#include <map>
 #include <Random64.h>
 #include <bases.h>
 #include <workers.h>
 
 
 /* Esta función me dice cuánto tiempo se demora en hacerse una reacción y qué reacción es. */
-std::vector<double> contagio(std::vector<grupo> &Val, std::vector<grupo> &Vba, Crandom &ran, double t, double* tj);
+std::vector<double> contagio(std::map<std::string, grupo> &Val, std::map<std::string, grupo> &Vba, Crandom &ran, double t, double* tj);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */

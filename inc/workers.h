@@ -2,14 +2,38 @@
  * @file workers.h
  * @author Daniel Felipe
  * @date 2020
- * @brief Header containing Workers class
+ * @brief Header containing Workers class and Stages enum.
  */
 
 
 #ifndef WORKERS_H
 #define WORKERS_H
 
+
+// Enumeration of the stages in the model
+enum Stages
+  {
+   SUS = 0, // Susceptible
+   SUST = 1, // Susceptible Tested
+   SUSA = 2, // Susceptible Isolated
+   EXP = 3, // Exposed
+   EXPT = 4, // Exposed Tested
+   EXPA = 5, // Exposed Isolated
+   PRE = 6, // Pre-symptomatic
+   PRET = 7, // Pre-symptomatic Tested
+   PREA = 8, // Pre-symptomatic Isolated
+   MSYM = 9, // Mild-symptomatic
+   MSYMT = 10, // Mild-symptomatic Tested
+   MSYMA = 11, // Mild-symptomatic Isolated
+   SSYMA = 12, // Severe-symptomatic Isolated
+   RECI = 13, // Recovered No-detected
+   RECT = 14, // Recovered Tested
+   RECA = 15 // Recovered Detected
+};
+
+
 #include <vector>
+
 
 class Workers{
 public:
@@ -22,7 +46,7 @@ public:
    * 12:infA,
    * 13:recI, 14:recT, 15:recA
   */
-  unsigned int kind;
+  Stages kind;
 
   //Defino la variable que me contabiliza el tiempo que dura testeado
   double time;
@@ -58,7 +82,7 @@ public:
   void init();
 
   //Función de campio de estado
-  void change(unsigned int now, unsigned int past);
+  void change(Stages now, Stages past);
 };
 
 #endif /* WORKERS_H */
