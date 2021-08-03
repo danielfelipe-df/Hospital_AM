@@ -15,11 +15,42 @@
 #include <workers.h>
 
 
-/* Esta función me dice cuánto tiempo se demora en hacerse una reacción y qué reacción es. */
+/**
+ * @brief This function uses the Modified Gillespie Algorithm for Non-Markovian distributions to calculate the time and number of the the
+ * next reaction. Also, if the reaction is either 0 or 1 (infection reactions), it give me the agent's index of new infected.
+ *
+ * @param Val Map container of the different states in the high risk staff.
+ * @param Vba Map container of the different states in the low risk staff.
+ * @param ran Crandom (random) variable for the stochastic process.
+ * @param t Currently time in the system evolution
+ * @param tj Array of auxiliar times for each reaction. This count the time since the reaction was done.
+ *
+ * @return Returns a vector with the next inputs:
+ * <ol>
+ * <li> Time the next reaction will happen.
+ * <li> Number of the next reaction will happen.
+ * <li> If the reaction is either 0 or 1, then returns the agent's index.
+ * </ol>
+ */
 std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* tj);
 
 
 /* Esta función implementa el método de bisección para hallar el tiempo */
+/**
+ * @brief This function implements the Bisection algorithm to find the root that give me the time of the next reaction.
+ *
+ * @param A Array containing all propensity functions.
+ * @param t Current time.
+ * @param Ba1 Propensity given by the interaction between high risk staff and patients.
+ * @param Ba2 Propensity given by the interaction between high risk staff and familiars.
+ * @param Bb Propensity given by the interaction between low risk staff and familiars.
+ * @param ranr Random number in (0,1)
+ * @param tj Array of auxiliar times for each reaction. This count the time since the reaction was done.
+ * @param n Number of propensities.
+ * @param dist Distribution (in this case lognormal but is used exponential) for the Non-Markovian process.
+ *
+ * @return Time for the next reaction.
+ */
 double biseccion(double* A, double t, double Ba1, double Ba2, double Bb, double ranr, double* tj, int n, std::vector<lognormal_d> &dist);
 
 

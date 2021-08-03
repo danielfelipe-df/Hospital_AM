@@ -38,14 +38,6 @@ enum Stages
 class Workers{
 public:
 
-  /* Defino qué tipo de persona es
-   * 0:sus, 1:susT, 2:susA
-   * 3:exp, 4:expT, 5:expA
-   * 6:pre, 7:preT, 8:preTA
-   * 9:lev, 10:levT, 11:levTA,
-   * 12:infA,
-   * 13:recI, 14:recT, 15:recA
-  */
   Stages kind;
 
   //Defino la variable que me contabiliza el tiempo que dura testeado
