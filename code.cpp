@@ -117,7 +117,7 @@ int main(void)
     ARc = 0.0;
 
     //Imprimo los datos
-    print_inf(vecal, vecba, t, name);
+    print_all(vecal, vecba, t, name);
 
     //Inicio los tiempos propios de cada reacción
     for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
@@ -175,7 +175,7 @@ int main(void)
 	aux += ti_in[0];
 
 	//Imprimo los datos
-	print_inf(vecal, vecba, t, name);
+	print_all(vecal, vecba, t, name);
 
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -226,7 +226,7 @@ int main(void)
 	aux += ti_in[0];
 
 	//Imprimo los datos
-        print_inf(vecal, vecba, t, name);
+        print_all(vecal, vecba, t, name);
 
 	//Borro el vector de tiempo e índice
 	ti_in.clear();
@@ -238,12 +238,12 @@ int main(void)
     ti_in.clear();
 
     /* Cuento los recI, recT y recA */
-    promrec += vecal["RECI"].size() + vecba["RECI"].size() + vecal["RECT"].size() + vecba["RECT"].size() + vecal["RECT"].size() + vecba["RECT"].size();
+    promrec += vecal["RECI"].size() + vecba["RECI"].size() + vecal["RECT"].size() + vecba["RECT"].size() + vecal["RECA"].size() + vecba["RECA"].size();
     fout << vecal["RECI"].size() + vecba["RECI"].size() + vecal["RECT"].size() + vecba["RECT"].size() + vecal["RECA"].size() + vecba["RECA"].size() << '\t';
     fout << ARi << '\t' << ARh << '\t' << ARc << std::endl;
 
     /* Imprimo la Red */
-    name = "ress/Data_Grafos/datos_" + MyCons.name + "_" + std::to_string(num) + ".csv";
+    name = "res/Data_Grafos/datos_" + MyCons.name + "_" + std::to_string(num) + ".csv";
     print_net(vecal, vecba, altos, bajos, name);
 
     //Borro los vectores
