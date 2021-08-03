@@ -15,7 +15,7 @@ project(Hospital
 add_executable(Project code.cpp)
 
 # Set the name of executable
-set_target_properties(Project PROPERTIES OUTPUT_NAME "x.code")
+set_target_properties(Project PROPERTIES OUTPUT_NAME "${MY_COMPILE_NAME}")
 
 # Add the dir of the headers
 include_directories(${CMAKE_SOURCE_DIR}/inc)
