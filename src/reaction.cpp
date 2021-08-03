@@ -246,7 +246,7 @@ void reaction4(std::map<std::string, group> &Val, std::map<std::string, group> &
 	    tested_lev_ais(Val["MSYMA"].back(), altos, ran.r(), true);
 	  }
 	  else{ // No aislamiento de leves
-	    tested_reaction(Val["MSYM"], Val["MSYMT"], Val["MSYM"].size()-1, altos, MSYM, MSYMA, ran.r(), true);
+	    tested_reaction(Val["MSYM"], Val["MSYMT"], Val["MSYM"].size()-1, altos, MSYM, MSYMT, ran.r(), true);
 	  }
 	}
       }
