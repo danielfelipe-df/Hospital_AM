@@ -8,22 +8,22 @@ void main_scenario(std::string name, double xi, double theta, double iota, doubl
   fout << "Sensibilidad de la prueba" << '\t' << "xi" << '\t' << xi << std::endl;
   fout << "Cobertura Testeo Masivo" << '\t' << "theta" << '\t' << theta << std::endl;
   fout << "Proporción sintomáticos leves testeados continuamente" << '\t' << "iota" << '\t' << iota << std::endl;
-  
+
   fout << "Tapabocas N95" << '\t' << "N95" << '\t' << N95 << std::endl;
   fout << "Tapabocas quirúrgico" << '\t' << "TBQ" << '\t' << TBQ << std::endl;
   fout << "Lavado de manos" << '\t' << "HW" << '\t' << HW << std::endl;
   fout << "Distanciamiento físico" << '\t' << "SDP" << '\t' << SDP << std::endl;
-  
+
   fout << "Adherencia al aislamiento" << '\t' << "alpha" << '\t' << alpha << std::endl;
   fout << "Contacto cruzado" << '\t' << "mu" << '\t' << mu << std::endl;
   fout << "Contacto bajo-bajo" << '\t' << "chi" << '\t' << chi << std::endl;
   fout << "Contacto alto-alto" << '\t' << "phi1" << '\t' << phi1 << std::endl;
   fout << "Contacto hospitalizados" << '\t' << "eta" << '\t' << eta << std::endl;
   fout << "Contacto familiares" << '\t' << "lambda" << '\t' << lambda << std::endl;
-  
+
   fout << "Personas rastreos" << '\t' << "trace" << '\t' << trace << std::endl;
   fout << "Red de posibles rastreos" << '\t' << "trace_net" << '\t' << trace_net << std::endl;
-  
+
   fout << "Días con testeo masivo" << '\t' << "nu" << '\t' << nu << std::endl;
   fout << "Días sin testeo masivo" << '\t' << "delta" << '\t' << delta << std::endl;
 

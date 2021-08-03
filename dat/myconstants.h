@@ -29,13 +29,13 @@ const double Sigma_gaussB[N_gaussB] = {5.5e1, 4.15e1};
 // Tasa de contagio laboral
 const size_t N_betaL = 2;
 const double m_betaL[N_betaL] = {0.0, 0.0};
-const double b_betaL[N_betaL] = {2.65, 0.0};
+const double b_betaL[N_betaL] = {0.88, 0.0};
 const double lim_betaL[N_betaL+1] = {0.0, 1/3.0, 1.0};
 
 // Tasa de contagio familiar
 const size_t N_betaF = 2;
 const double m_betaF[N_betaF] = {0.0, 0.0};
-const double b_betaF[N_betaF] = {0.0, 2.65};
+const double b_betaF[N_betaF] = {0.0, 0.88};
 const double lim_betaF[N_betaF+1] = {0.0, 1/3.0, 1.0};
 
 /******************************************************/
