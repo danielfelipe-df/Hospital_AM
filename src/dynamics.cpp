@@ -1,3 +1,4 @@
+#include <iostream>
 #include <math.h>
 #include <dynamics.h>
 
@@ -58,7 +59,7 @@ std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::st
   //for(unsigned int i=2; i<n; i++){lognormal_d my_dist(1.5, 1.0/As[i]);    dist.push_back(my_dist);}
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
-  double Ba1 = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.eta, Ba2 = MyCons.HW*MyCons.SDP*(Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.lambda, Bb = MyCons.HW*MyCons.SDP*(Sb+STb+(1-MyCons.alpha)*SAb)*MyCons.lambda;
+  double Ba1 = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.eta, Ba2 = (Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.lambda, Bb = (Sb+STb+(1-MyCons.alpha)*SAb)*MyCons.lambda;
   double tau = 0, index = 0;
   tau = biseccion(As, t, Ba1, Ba2, Bb, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
@@ -87,8 +88,12 @@ std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::st
 
   //Escojo a la persona que contagia, si hay infección
   int conta = 0;
-  if((int)index == 0){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.phi1, MyCons.mu, ran, 1, t, MyCons.N95, MyCons.N95);}
-  else if((int)index == 1){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.phi1, MyCons.mu, ran, 0, t, MyCons.N95, MyCons.TBQ);}
+  if((int)index == 0){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.phi1, MyCons.mu, ran, 1, t+tau, MyCons.N95, MyCons.N95);}
+  else if((int)index == 1){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.mu, MyCons.chi, ran, 0, t+tau, MyCons.N95, MyCons.TBQ);}
+
+  if((int)index == 0 || (int)index == 1){
+    std::cout << t << '\t' << As[0] << '\t' << As[1] << '\t' << Ba1 << '\t' << Ba2 << '\t' << Bb << std::endl;
+  }
 
   //Creo el vector resultados
   std::vector<double> result(3);
