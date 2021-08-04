@@ -3,7 +3,7 @@
 #include <dynamics.h>
 
 
-std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* tj){
+std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* Tj, double* Sj){
   //Calculo los tamaños de cada vector
   double Sa, Sb, STa, STb, SAa, SAb, Ea, Eb, ETa, ETb, EAa, EAb, Pa, Pb, PTa, PTb, PTAa, PTAb, La, Lb, LTa, LTb, LTAa, LTAb, IAa, IAb;
   Sa = Val["SUS"].size();  STa = Val["SUST"].size();  SAa = Val["SUSA"].size();
@@ -60,40 +60,42 @@ std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::st
 
   //Hallo el tiempo en el que va a pasar la siguiente reacción con el método NMGA
   double Ba1 = MyCons.HW*MyCons.SDP*MyCons.N95*(Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.eta, Ba2 = (Sa+STa+(1-MyCons.alpha)*SAa)*MyCons.lambda, Bb = (Sb+STb+(1-MyCons.alpha)*SAb)*MyCons.lambda;
-  double tau = 0, index = 0;
-  tau = biseccion(As, t, Ba1, Ba2, Bb, std::log(ran.r()), tj, n, dist); //Aquí ya está implementada las gaussianas
 
-  if(tau < 1e6){//Si el tiempo en el que pasa la reacción es menor al máximo (1e6), entonces es porque la reacción si sucede
-    //Hallo el vector que me guarda la propensidad acumulada en orden
-    double cumulative[n];
-    double value = 0;
-    for(size_t i=0; i<MyCons.N_gauss; i++){value += function_gauss(t, MyCons.A_gauss[i], MyCons.Mu_gauss[i], MyCons.Sigma_gauss[i]);}
-    cumulative[0] = function_beta(t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL)*As[0] + Ba1*value + Ba2*value;
-    cumulative[1] = cumulative[0] + function_beta(t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF)*As[1] + Bb*value;
-    for(unsigned int i=2; i<n; i++){cumulative[i] = cumulative[i-1] + As[i];}//(pdf(dist[i-2], tj[i]+tau)/cdf(complement(dist[i-2], tj[i]+tau)));}
+  double tau = 1e6, index = -1, auxtau;
 
-    //Escojo la reacción a escoger
-    double lim = (double)(ran.r()*cumulative[n-1]);
-    for(index = 0; index<(n-1); index++){
-      if(lim < cumulative[(int)index]){break;}
-    }
-    if(lim >= cumulative[n-2]){index = n-1;}
+  auxtau = time_A0(As[0], t, Ba1, Ba2, Sj[0], Tj[0]);
+  if(auxtau < tau){tau = auxtau;    index = 0;}
+
+  auxtau = time_A1(As[1], t, Bb, Sj[1], Tj[1]);
+  if(auxtau < tau){tau = auxtau;    index = 1;}
+
+  for(unsigned int i=2; i<n; i++){
+    auxtau = time_Ax(As[i], t, Sj[i], Tj[i]);
+    if(auxtau < tau){tau = auxtau;    index = i;}
   }
 
-  //Le sumo el tau a todos los tiempos tj
-  for(unsigned int i=0; i<n; i++){tj[i] += tau;}
 
-  //Reinicio el tiempo tj de la reacción que se escogió
-  tj[(int)index] = 0.0;
+  if(tau < 1e6){//Si el tiempo en el que pasa la reacción es menor al máximo (1e6), entonces es porque la reacción si sucede
+    double gnumL = 0, bnumL = 0, gnumF = 0, bnumF = 0;
+    double diff = std::floor(t);
+
+    main_aux_phi_function(tau, diff, gnumL, bnumL, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+    main_aux_phi_function(tau, diff, gnumF, bnumF, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+
+    Tj[0] += (As[0]*bnumL + Ba1*gnumL + Ba2*gnumF);
+
+    Tj[1] += (As[1]*bnumL + Bb*gnumF);
+
+    for(unsigned int i=2; i<n; i++){Tj[i] += As[i]*tau;}
+
+    auxtau = -std::log(ran.r());
+    for(unsigned int i=0; i<n; i++){Sj[i] += auxtau;}
+  }
 
   //Escojo a la persona que contagia, si hay infección
   int conta = 0;
   if((int)index == 0){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.phi1, MyCons.mu, ran, 1, t+tau, MyCons.N95, MyCons.N95);}
   else if((int)index == 1){conta = who_infected(Val["PRE"], Vba["PRE"], Val["PRET"], Vba["PRET"], Val["PREA"], Vba["PREA"], Val["MSYM"], Vba["MSYM"], Val["MSYMT"], Vba["MSYMT"], Val["MSYMA"], Vba["MSYMA"], Val["SSYMA"], Vba["SSYMA"], MyCons.mu, MyCons.chi, ran, 0, t+tau, MyCons.N95, MyCons.TBQ);}
-
-  if((int)index == 0 || (int)index == 1){
-    std::cout << t << '\t' << As[0] << '\t' << As[1] << '\t' << Ba1 << '\t' << Ba2 << '\t' << Bb << std::endl;
-  }
 
   //Creo el vector resultados
   std::vector<double> result(3);
@@ -105,15 +107,78 @@ std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::st
 }
 
 
-double biseccion(double* A, double t, double Ba1, double Ba2, double Bb, double ranr, double* tj, int n, std::vector<lognormal_d> &dist){
+double time_A0(double A, double t, double BL, double BF, double S, double T){
   double m,fa,fm;
   double lim = 1e3, min = 0.0;
   double a = min, b = lim, eps = 1e-7, pmax = 100, p=0;
-  fa = phi(A, tj, n, Ba1, Ba2, Bb, a, t, dist) - ranr;
+
+  double gnumL = 0, bnumL = 0, gnumF = 0, bnumF = 0;
+  double diff = std::floor(t);
+  
+  main_aux_phi_function(a, diff, gnumL, bnumL, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(a, diff, gnumF, bnumF, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+  
+  fa = (A*bnumL + BL*gnumL + BF*gnumF) - (S - T);
 
   while(b-a>eps && p<pmax){
     m = (a+b)/2;
-    fm = phi(A, tj, n, Ba1, Ba2, Bb, m, t, dist) - ranr;
+
+    gnumL = 0, bnumL = 0, gnumF = 0, bnumF = 0;
+    main_aux_phi_function(m, diff, gnumL, bnumL, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+    main_aux_phi_function(m, diff, gnumF, bnumF, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+
+    fm = (A*bnumL + BL*gnumL + BF*gnumF) - (S - T);
+    if(fa*fm<0){b = m;}
+    else{a = m; fa = fm;}
+    p++;
+  }
+
+  if(p==pmax || m > lim-(1e-4)){return 1e6;}
+  else{return (a+b)/2;}
+}
+
+
+double time_A1(double A, double t, double B, double S, double T){
+  double m,fa,fm;
+  double lim = 1e3, min = 0.0;
+  double a = min, b = lim, eps = 1e-7, pmax = 100, p=0;
+
+  double gnumL = 0, bnumL = 0, gnumF = 0, bnumF = 0;
+  double diff = std::floor(t);
+  
+  main_aux_phi_function(a, diff, gnumL, bnumL, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+  main_aux_phi_function(a, diff, gnumF, bnumF, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+  
+  fa = (A*bnumL + B*gnumF) - (S - T);
+
+  while(b-a>eps && p<pmax){
+    m = (a+b)/2;
+
+    gnumL = 0, bnumL = 0, gnumF = 0, bnumF = 0;
+    main_aux_phi_function(m, diff, gnumL, bnumL, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
+    main_aux_phi_function(m, diff, gnumF, bnumF, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
+
+    fm = (A*bnumL + B*gnumF) - (S - T);
+    if(fa*fm<0){b = m;}
+    else{a = m; fa = fm;}
+    p++;
+  }
+
+  if(p==pmax || m > lim-(1e-4)){return 1e6;}
+  else{return (a+b)/2;}
+}
+
+
+double time_Ax(double A, double t, double S, double T){
+  double m,fa,fm;
+  double lim = 1e3, min = 0.0;
+  double a = min, b = lim, eps = 1e-7, pmax = 100, p=0;
+  
+  fa = A*a - (S - T);
+
+  while(b-a>eps && p<pmax){
+    m = (a+b)/2;
+    fm = A*m - (S - T);
     if(fa*fm<0){b = m;}
     else{a = m; fa = fm;}
     p++;
@@ -128,51 +193,6 @@ double function(double A, double prom, double sigma, double t, double tau){
   double A2 = std::sqrt(M_PI/2)*A*sigma, USsigma2 = 1.0/(std::sqrt(2)*sigma);
   return A2*(erf((prom-t)*USsigma2) - erf((prom-t-tau)*USsigma2));
 }
-
-
-double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double Bb, double deltat, double t, std::vector<lognormal_d> &dist){
-  double psi_num, psi_den;
-
-  double gnumL1 = 0, gdenL1 = 0, gnumL2 = 0, gdenL2 = 0;
-  double bnumL1 = 0, bdenL1 = 0, bnumL2 = 0, bdenL2 = 0;
-  double gnumF1 = 0, gdenF1 = 0, gnumF2 = 0, gdenF2 = 0;
-  double bnumF1 = 0, bdenF1 = 0, bnumF2 = 0, bdenF2 = 0;
-  double t0 = t - std::floor(t);
-  double diff = std::floor(t);
-
-  main_aux_phi_function(t0, diff, gnumL2, bnumL2, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
-  main_aux_phi_function(t0, diff, gdenL2, bdenL2, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
-  main_aux_phi_function(t0, diff, gnumF2, bnumF2, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
-  main_aux_phi_function(t0, diff, gdenF2, bdenF2, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
-
-  main_aux_phi_function(tj[0]+deltat, diff, gnumL1, bnumL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
-  main_aux_phi_function(tj[0], diff, gdenL1, bdenL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
-  main_aux_phi_function(tj[0]+deltat, diff, gnumF1, bnumF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
-  main_aux_phi_function(tj[0], diff, gdenF1, bdenF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
-
-  psi_num = -A[0]*(bnumL1 - bnumL2) - Ba1*(gnumL1 - gnumL2) - Ba2*(gnumF1 - gnumF2);
-  psi_den = -A[0]*(bdenL1 - bdenL2) - Ba1*(gdenL1 - gdenL2) - Ba2*(gdenF1 - gdenF2);
-
-  gnumL1 = 0;  gdenL1 = 0;  bnumL1 = 0;  bdenL1 = 0;
-  gnumF1 = 0;  gdenF1 = 0;  bnumF1 = 0;  bdenF1 = 0;
-  main_aux_phi_function(tj[1]+deltat, diff, gnumL1, bnumL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
-  main_aux_phi_function(tj[1], diff, gdenL1, bdenL1, t, MyCons.lim_betaL, MyCons.m_betaL, MyCons.b_betaL, MyCons.N_betaL);
-  main_aux_phi_function(tj[1]+deltat, diff, gnumF1, bnumF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
-  main_aux_phi_function(tj[1], diff, gdenF1, bdenF1, t, MyCons.lim_betaF, MyCons.m_betaF, MyCons.b_betaF, MyCons.N_betaF);
-
-  psi_num += -A[1]*(bnumL1 - bnumL2) - Bb*(gnumF1 - gnumF2);
-  psi_den += -A[1]*(bdenL1 - bdenL2) - Bb*(gdenF1 - gdenF2);
-
-  for(unsigned int i=2; i<n; i++){
-    //psi_num += std::log(cdf(complement(dist[i-2], tj[i]+deltat)));
-    //psi_den += std::log(cdf(complement(dist[i-2], tj[i])));
-    psi_num += -A[i]*(tj[i] + deltat);
-    psi_den += -A[i]*tj[i];
-  }
-
-  return psi_num-psi_den;
-}
-
 
 int who_infected(group &Pa, group &Pb, group &PTa, group &PTb, group &PTAa, group &PTAb, group &La, group &Lb, group &LTa, group &LTb, group &LTAa, group &LTAb, group &IAa, group &IAb, double cons1, double cons2, Crandom &ran, int alti, double t, double TBa, double TBb){
   //Reviso si la infección se realizó dentro del hospital o afuera

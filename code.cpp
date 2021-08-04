@@ -58,7 +58,7 @@ int main(void)
   double dt = MyCons.nu/((double)tests);
 
   //Defino la variable de tiempo propio de cada reacción(tj)
-  double tj[14];
+  double Tj[14], Sj[14];
 
   //Defino el número de corridas
   unsigned int ensemble = 1e3;
@@ -120,7 +120,7 @@ int main(void)
     print_all(vecal, vecba, t, name);
 
     //Inicio los tiempos propios de cada reacción
-    for(unsigned int j=0; j<14; j++){tj[j] = 0.0;}
+    for(unsigned int j=0; j<14; j++){Tj[j] = 0.0;      Sj[j] = -std::log(gseed.r());}
 
     while(t < T){
       //Región de testeo masivo
@@ -128,7 +128,7 @@ int main(void)
       n1 = 0;
       while(aux < MyCons.nu){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(vecal, vecba, gseed, t, tj);
+	ti_in = contagio(vecal, vecba, gseed, t, Tj, Sj);
 
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}
@@ -191,7 +191,7 @@ int main(void)
       aux = 0.0;
       while(aux < MyCons.delta){
 	//Obtengo el tiempo e índice de la reacción
-	ti_in = contagio(vecal, vecba, gseed, t, tj);
+	ti_in = contagio(vecal, vecba, gseed, t, Tj, Sj);
 
 	//Si se tiene el tiempo máximo como tiempo mínimo, entonces termino la simulación
 	if(ti_in[0] == 1e6){break;}

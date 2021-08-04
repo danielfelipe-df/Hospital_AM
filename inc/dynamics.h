@@ -32,34 +32,20 @@
  * <li> If the reaction is either 0 or 1, then returns the agent's index.
  * </ol>
  */
-std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* tj);
+std::vector<double> contagio(std::map<std::string, group> &Val, std::map<std::string, group> &Vba, Crandom &ran, double t, double* Tj, double* Sj);
 
 
-/* Esta función implementa el método de bisección para hallar el tiempo */
-/**
- * @brief This function implements the Bisection algorithm to find the root that give me the time of the next reaction.
- *
- * @param A Array containing all propensity functions.
- * @param t Current time.
- * @param Ba1 Propensity given by the interaction between high risk staff and patients.
- * @param Ba2 Propensity given by the interaction between high risk staff and familiars.
- * @param Bb Propensity given by the interaction between low risk staff and familiars.
- * @param ranr Random number in (0,1)
- * @param tj Array of auxiliar times for each reaction. This count the time since the reaction was done.
- * @param n Number of propensities.
- * @param dist Distribution (in this case lognormal but is used exponential) for the Non-Markovian process.
- *
- * @return Time for the next reaction.
- */
-double biseccion(double* A, double t, double Ba1, double Ba2, double Bb, double ranr, double* tj, int n, std::vector<lognormal_d> &dist);
+double time_A0(double A, double t, double BL, double BF, double ranr, double T);
+
+
+double time_A1(double A, double t, double B, double ranr, double T);
+
+
+double time_Ax(double A, double t, double ranr, double T);
 
 
 /* Es la función integrada de la prevalencia externa */
 double function(double A, double prom, double sigma, double t, double tau);
-
-
-/* Es la función phi */
-double phi(double* A, double* tj, unsigned int n, double Ba1, double Ba2, double Bb, double deltat, double t, std::vector<lognormal_d> &dist);
 
 
 /* Con esta función identifico a la persona que hico la infección */
