@@ -272,9 +272,9 @@ void main_aux_phi_function(double t0, double diff, double &gnum, double &bnum, d
 
 
 double int_beta_gauss(double t0, double t1, double prom, double sigma, double A, double m, double b){
-  double A1 = m*A*sigma*sigma, A2 = std::sqrt(M_PI_2)*sigma*A*(m*t0 + b), Un2S = 1/(M_SQRT2*sigma);
+  double A1 = m*A*sigma*sigma, A2 = std::sqrt(M_PI_2)*sigma*A*(m*prom + b), Un2S = 1/(M_SQRT2*sigma);
   double x1 = (t1 - prom)*Un2S, x0 = (t0 - prom)*Un2S;
-  //Retorno la integral de una gaussiana multiplicada por x
+  //Retorno la integral de una gaussiana multiplicada por la ecuación m*t+b
   return A1*(std::exp(-x0*x0) - std::exp(-x1*x1)) + A2*(std::erf(x1) - std::erf(x0));
 }
 
